@@ -204,6 +204,7 @@ calculateSimilarity(const Triplets& trips, Mat& S, double M)
     S = M;
 
     size_t m = trips.size();
+    double lastFitness = 1e100;
     for (size_t iter = 1; iter < 100; ++iter){
 	Mat dS = Mat::zeros(n, n);
 	for (size_t i = 0; i < m; ++i){
@@ -222,6 +223,9 @@ calculateSimilarity(const Triplets& trips, Mat& S, double M)
 
 	S = quickProjectPSDM(S, M);
 	double fitness = modelFit(trips, S);
+	if (lastFitness < fitness + 0.0001)
+	    break; 
+	lastFitness = fitness;
 
 	size_t ns = 20;
 	Mat Ssmall(ns, ns);
