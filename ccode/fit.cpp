@@ -40,6 +40,15 @@ public:
     }
 };
 
+double 
+prob(size_t x, size_t a, size_t b, const Mat& S)
+{
+    double pa = fabs(1.0 + S(x, x) + S(b, b) - 2 * S(x, b)) + 1e-6;
+    double pb = fabs(1.0 + S(x, x) + S(a, a) - 2 * S(x, a)) + 1e-6;
+//    double pb = S(x, b);
+//    double pa = S(x, a);
+    return pa / (pa + pb);
+}
 
 double
 modelFit(const Triplets& trips, const Mat& S)
@@ -49,7 +58,7 @@ modelFit(const Triplets& trips, const Mat& S)
 	size_t x = trips._x[i];
 	size_t a = trips._a[i];
 	size_t b = trips._b[i];
-	double p = S(x, a) / (S(x, a) + S(x, b));
+	double p = prob(x, a, b, S);
 	ret += -log(p);
     }
     return ret;
@@ -92,6 +101,41 @@ quickProjectPSDM(const Mat& S, double M)
 }
 
 Mat
+projectPSDd(const Mat& S, size_t d)
+{
+    size_t n = S.rows();
+
+    
+    Mat SS = (d < n) ? projectPSDd(S, S.rows()) : S;
+    
+    Mat U(n, n);
+    Mat V(n, n);
+    Vec sigVec(n);
+    cout << "calculating SVD...";
+    fflush(0);
+    LaSVD_IP(SS, sigVec, U, V);
+    cout << " done." << endl;
+    fflush(0);
+    
+    Mat sig = Mat::zeros(n, n);
+    for (size_t i = 0; i < d; ++i)
+	sig(i, i) = sigVec(i);
+    for (size_t i = d; i < n; ++i)
+	sig(i, i) = 0;
+    
+    U = addTransposed(U, V);
+    for (size_t i = 0; i < n; ++i)
+	for (size_t j = 0; j < n; ++j)
+	    U(i, j) /= 2.0;
+    
+    Mat temp(n, n);
+    Blas_Mat_Mat_Mult(U, sig, temp, false);
+    Mat ret(n, n);
+    Blas_Mat_Mat_Mult(temp, U, ret, false, true);
+    return ret;
+}
+
+Mat
 projectPSDM(const Mat& S, double M)
 {
     Mat ret = S;
@@ -100,7 +144,9 @@ projectPSDM(const Mat& S, double M)
     Mat SS = S;
     for (size_t i = 0; i < n; ++i)
 	SS(i, i) = M;
-
+    
+    double stepSize = 100.0;
+    double lastDiagNorm = 1e100;
     for (size_t iter = 0; iter < 1000; ++iter){
 	Mat sTemp = S;
 	Mat U(n, n);
@@ -127,9 +173,14 @@ projectPSDM(const Mat& S, double M)
 	    diagNorm += (ret(i, i) - M) * (ret(i, i) - M);
 	if (diagNorm < 1e-5 * n * M)
 	    break;
-	cout << iter << " " << diagNorm << endl;
+	if (diagNorm > lastDiagNorm)
+	    stepSize /= 2.0;
+	if (stepSize < 0.1)
+	    break;
+	lastDiagNorm = diagNorm;
+//	cout << iter << " " << stepSize << " " << diagNorm << endl;
 	for (size_t i = 0; i < n; ++i)
-	    SS(i, i) -= ret(i, i) - M;
+	    SS(i, i) -= stepSize * (ret(i, i) - M);
     }
     return ret;
 }
@@ -149,7 +200,8 @@ factorFitness(const Mat& S, const Mat& dS, const Triplets& trips, double M,
 	      double mu)
 {
     Mat S1 = addWithFactor(S, dS, mu);
-    S1 = quickProjectPSDM(S1, M);
+//    S1 = quickProjectPSDM(S1, M);
+    S1 = projectPSDd(S1, M);
     return modelFit(trips, S1);
  }
 
@@ -158,20 +210,20 @@ findOptimalFactor(const Mat& S, const Mat& dS, const Triplets& trips, double M)
 {
     double baseFitness = modelFit(trips, S);
     double bracket = 100.0;
-    double x0 = 0.0;
+    double x0 = 1.0;
     double x1 = 0.38 * bracket;
     double x2 = (0.38 + 0.38 * 0.62) * bracket;
     double x3 = bracket;
 
     double f1 = factorFitness(S, dS, trips, M, x1);
     double f2 = factorFitness(S, dS, trips, M, x2);
-    for (size_t iter = 0; iter < 20; ++iter){
+    cout << "starting in bracket: " 
+	 << "(" << x0 << ", )" 
+	 << "(" << x1 << ", " << f1 << ")" 
+	 << "(" << x2 << ", " << f2 << ")" 
+	 << "(" << x3 << ", )" << endl;
+    for (size_t iter = 0; iter < 10; ++iter){
 	
-	cout << iter << ": " 
-	     << "(" << x0 << ", )" 
-	     << "(" << x1 << ", " << f1 << ")" 
-	     << "(" << x2 << ", " << f2 << ")" 
-	     << "(" << x3 << ", )" << endl;
 	
 	if (f2 <= f1){
 	    x0 = x1;
@@ -187,6 +239,12 @@ findOptimalFactor(const Mat& S, const Mat& dS, const Triplets& trips, double M)
 	    f2 = f1;
 	    f1 = factorFitness(S, dS, trips, M, x1);
 	}
+	cout << iter << ": " 
+	     << "(" << x0 << ", )" 
+	     << "(" << x1 << ", " << f1 << ")" 
+	     << "(" << x2 << ", " << f2 << ")" 
+	     << "(" << x3 << ", )" << endl;
+
     }    
     if (baseFitness < f1 && baseFitness < f2)
 	return 0.0;
@@ -200,18 +258,21 @@ void
 calculateSimilarity(const Triplets& trips, Mat& S, double M)
 {
     size_t n = trips.maxId()+1;
-    S = Mat(n, n);
-    S = M;
+    S = Mat::eye(n, n);
 
     size_t m = trips.size();
     double lastFitness = 1e100;
     for (size_t iter = 1; iter < 100; ++iter){
+	double fitness = modelFit(trips, S);
+	cout << "------------------------------------" << endl;
+	cout << "iteration " << iter << endl;
+	cout << "fitness: " << fitness << endl;
 	Mat dS = Mat::zeros(n, n);
 	for (size_t i = 0; i < m; ++i){
 	    size_t x = trips._x[i];
 	    size_t a = trips._a[i];
 	    size_t b = trips._b[i];
-	    double p = S(x, b) / (S(x, a) + S(x, b));
+	    double p = prob(x, b, a, S);
 	    double q = 1 - p;
 	    dS(x, a) += p;
 	    dS(a, x) += p;
@@ -220,23 +281,18 @@ calculateSimilarity(const Triplets& trips, Mat& S, double M)
 	}
 	double mu = findOptimalFactor(S, dS, trips, M);
 	S = addWithFactor(S, dS, mu);
+	S = projectPSDd(S, M);
 
-	S = quickProjectPSDM(S, M);
-	double fitness = modelFit(trips, S);
-	if (lastFitness < fitness + 0.0001)
+	fitness = modelFit(trips, S);
+	if (lastFitness < fitness + 0.0001 && iter > 3)
 	    break; 
 	lastFitness = fitness;
 
-	size_t ns = 20;
-	Mat Ssmall(ns, ns);
-	for (size_t i = 0; i < ns; ++i)
-	    for (size_t j = 0; j < ns; ++j)
-		Ssmall(i, j) = S(i, j);
-	cout << "------------------------------------" << endl;
-	cout << "iteration " << iter << endl;
-//	cout << Ssmall;
-	cout << "fitness: " << fitness << endl;
     }
+    double fitness = modelFit(trips, S);
+    cout << "------------------------------------" << endl;
+    cout << "done" << endl;
+    cout << "fitness: " << fitness << endl;
 }
 
 
@@ -365,7 +421,7 @@ svdPlot(const Mat& S, const path& dirName, const string& dataset,
     Mat V(n, n);
     Vec sigVec(n);
     LaSVD_IP(S0, sigVec, U, V);
-    cout << sigVec;
+//    cout << sigVec;
 
     for (size_t j = 0; j < 2; ++j){
 	double rowMin = 1e100;
@@ -415,20 +471,22 @@ svdPlot(const Mat& S, const path& dirName, const string& dataset,
 	f1 << "</span>\n";
     }
     
-    Mat tempS = S;
     for (size_t j = 0; j < n; ++j){
 	size_t ypos = j * (small_image_size + 10) + page_size[1];
+	set<size_t> usedIds;
 	for (size_t i = 0; i < 10; ++i){
 	    size_t xpos = i * (small_image_size + 10);
-	    
-	    size_t rowMax = 0;
+
+	    double rowMax = 0;
 	    size_t id = 0;
-	    for (size_t k = 0; k < n; ++k)
-		if (tempS(j, k) > rowMax){
-		    rowMax = S(j, k);
+	    for (size_t k = 0; k < n; ++k){
+		double p = prob(j, k, j, S);
+		if (p > rowMax && usedIds.count(k) == 0){
+		    rowMax = p;
 		    id = k;
 		}
-	    tempS(j, id) = 0;
+	    }
+	    usedIds.insert(id);
 	    {
 		ostringstream s;
 		s << "<img"
@@ -464,7 +522,7 @@ main(int argc, char* argv[])
 //	cout << trips._x[i] << " " << trips._a[i] << " " << trips._b[i] << endl;
 
     Mat S;
-    calculateSimilarity(trips, S, 100.0);
+    calculateSimilarity(trips, S, 20);
     
     svdPlot(S, argv[1], argv[2], "../images/svd.html");
     
