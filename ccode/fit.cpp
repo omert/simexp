@@ -40,6 +40,16 @@ public:
     }
 };
 
+Mat
+tpose(const Mat& M)
+{
+    Mat ret(M.cols(), M.rows());
+    for (size_t i = 0; i < (size_t) ret.rows(); ++i)
+	for (size_t j = 0; j < (size_t) ret.cols(); ++j)
+	    ret(i, j) = M(j, i);
+    return ret;
+}
+
 double 
 prob(size_t x, size_t a, size_t b, const Mat& S)
 {
@@ -51,28 +61,36 @@ prob(size_t x, size_t a, size_t b, const Mat& S)
 }
 
 double
-modelFit(const Triplets& trips, const Mat& S)
+modelFit(const Triplets& trips, const Mat& S, double& rExpectedFit)
 {
     double ret = 0.0;
+    rExpectedFit = 0.0;
+    size_t correctGuesses = 0;
     for (size_t i = 0; i < trips.size(); ++i){
 	size_t x = trips._x[i];
 	size_t a = trips._a[i];
 	size_t b = trips._b[i];
 	double p = prob(x, a, b, S);
-	ret += -log(p);
+	ret -= log(p);
+	rExpectedFit -= p * log(p) + (1 - p) * log(1 - p);
+	if (p > 0.5)
+	    ++correctGuesses;
     }
+    cout << 100.0 * correctGuesses / trips._x.size() << " correct guess percentage" << endl;
+    rExpectedFit = rExpectedFit / log(2) / trips._x.size();
+    ret = ret / log(2) / trips._x.size();
     return ret;
 }
 
 
 Mat
-addTransposed(const Mat& U, const Mat& V)
+meanWithTransposed(const Mat& U, const Mat& V)
 {
-    Mat ret = U;
     size_t n = U.rows();
+    Mat ret(n, n);
     for (size_t i = 0; i < n; ++i)
 	for (size_t j = 0; j < n; ++j)
-	    ret(i, j) += V(j, i);
+	    ret(i, j) = (U(i, j) + V(j, i)) / 2;
     return ret;
 }
 
@@ -123,15 +141,114 @@ projectPSDd(const Mat& S, size_t d)
     for (size_t i = d; i < n; ++i)
 	sig(i, i) = 0;
     
-    U = addTransposed(U, V);
-    for (size_t i = 0; i < n; ++i)
-	for (size_t j = 0; j < n; ++j)
-	    U(i, j) /= 2.0;
+    U = meanWithTransposed(U, V);
     
     Mat temp(n, n);
     Blas_Mat_Mat_Mult(U, sig, temp, false);
     Mat ret(n, n);
     Blas_Mat_Mat_Mult(temp, U, ret, false, true);
+    return ret;
+}
+
+bool
+moreEqualThanOpposite(const Mat& r1, const Mat& r2)
+{
+    double sumP = 0.0;
+    double sumN = 0.0;
+    for (size_t i = 0; i < (size_t)r1.rows(); ++i){
+	sumP += fabs(r1(i, 0) - r2(0, i));
+	sumN += fabs(r1(i, 0) + r2(0, i));
+    }
+    return sumP < sumN;
+
+}
+
+double 
+sum(const Vec& v)
+{
+    double ret = 0.0;
+    for (size_t i = 0; i < (size_t) v.size(); ++i)
+	ret += v(i);
+    return ret;
+}
+
+double 
+nonZeroMin(const Vec& v)
+{
+    double ret = 1e300;
+    for (size_t i = 0; i < (size_t) v.size(); ++i)
+	if (v(i) > 1e-10 && v(i) < ret)
+	    ret = v(i);
+    return ret;
+}
+
+size_t 
+numNonZero(const Vec& v)
+{
+    size_t ret = 0;
+    for (size_t i = 0; i < (size_t) v.size(); ++i)
+	if (v(i) > 1e-10)
+	    ++ret;
+    return ret;
+}
+
+void
+printPositive(const Vec& v)
+{
+    for (size_t i = 0; i < (size_t) v.size(); ++i)
+	if (v(i) > 1e-10)
+	    cout << v(i) << " ";
+    cout << endl;
+}
+
+Mat
+projectPSDtr(const Mat& S, double maxTr)
+{
+    size_t n = S.rows();
+
+    
+    Mat SS = S;
+    
+    Mat U(n, n);
+    Mat V(n, n);
+    Vec s(n);
+    cout << "calculating SVD...";
+    fflush(0);
+    LaSVD_IP(SS, s, U, V);
+    cout << " done." << endl;
+    fflush(0);
+    
+
+    for (size_t i = 0; i < n; ++i)
+	if (!moreEqualThanOpposite(U.col(i), V.row(i)))
+	    s(i) = 0.0;
+    while (true){
+	double tr = sum(s);
+	if (tr < maxTr * 1.01)
+	    break;
+	double dtr = tr - maxTr;
+	double smin = nonZeroMin(s);
+	size_t m  = numNonZero(s);
+	if (smin * m < dtr)
+	    for (size_t i = 0; i < n; ++i)
+		s(i) = max(0.0, s(i) - smin);
+	else
+	    for (size_t i = 0; i < n; ++i)
+		s(i) = max(0.0, s(i) - dtr / m);
+    }
+//    printPositive(s);
+    Mat sig = Mat::zeros(n, n);
+    for (size_t i = 0; i < n; ++i)
+	sig(i, i) = s(i);
+    
+
+    Mat temp(n, n);
+    Blas_Mat_Mat_Mult(U, sig, temp, false);
+    Mat ret(n, n);
+    Blas_Mat_Mat_Mult(temp, V, ret, false);
+    cout << "matrix rank: " << numNonZero(s) << endl;
+//    for (size_t i = 0; i < (size_t)ret.rows(); ++i)
+//	cout << ret(i, i) << " ";
     return ret;
 }
 
@@ -159,10 +276,7 @@ projectPSDM(const Mat& S, double M)
 	for (size_t i = 0; i < n; ++i)
 	    sig(i, i) = sigVec(i);
 
-	U = addTransposed(U, V);
-	for (size_t i = 0; i < n; ++i)
-	    for (size_t j = 0; j < n; ++j)
-		U(i, j) /= 2.0;
+	U = meanWithTransposed(U, V);
 	
 	Mat temp(n, n);
 	Blas_Mat_Mat_Mult(U, sig, temp, false);
@@ -201,15 +315,17 @@ factorFitness(const Mat& S, const Mat& dS, const Triplets& trips, double M,
 {
     Mat S1 = addWithFactor(S, dS, mu);
 //    S1 = quickProjectPSDM(S1, M);
-    S1 = projectPSDd(S1, M);
-    return modelFit(trips, S1);
+    S1 = projectPSDtr(S1, M);
+    double temp;
+    return modelFit(trips, S1, temp);
  }
 
 double
 findOptimalFactor(const Mat& S, const Mat& dS, const Triplets& trips, double M)
 {
-    double baseFitness = modelFit(trips, S);
-    double bracket = 100.0;
+    double temp;
+    double baseFitness = modelFit(trips, S, temp);
+    double bracket = 10.0;
     double x0 = 1.0;
     double x1 = 0.38 * bracket;
     double x2 = (0.38 + 0.38 * 0.62) * bracket;
@@ -222,7 +338,7 @@ findOptimalFactor(const Mat& S, const Mat& dS, const Triplets& trips, double M)
 	 << "(" << x1 << ", " << f1 << ")" 
 	 << "(" << x2 << ", " << f2 << ")" 
 	 << "(" << x3 << ", )" << endl;
-    for (size_t iter = 0; iter < 10; ++iter){
+    for (size_t iter = 0; iter < 4; ++iter){
 	
 	
 	if (f2 <= f1){
@@ -255,7 +371,8 @@ findOptimalFactor(const Mat& S, const Mat& dS, const Triplets& trips, double M)
 }
 
 void
-calculateSimilarity(const Triplets& trips, Mat& S, double M)
+calculateSimilarity(const Triplets& trips, Mat& S, double M, 
+		    const Triplets& heldouts)
 {
     size_t n = trips.maxId()+1;
     S = Mat::eye(n, n);
@@ -263,10 +380,20 @@ calculateSimilarity(const Triplets& trips, Mat& S, double M)
     size_t m = trips.size();
     double lastFitness = 1e100;
     for (size_t iter = 1; iter < 100; ++iter){
-	double fitness = modelFit(trips, S);
+	double expectedFitness;
 	cout << "------------------------------------" << endl;
 	cout << "iteration " << iter << endl;
-	cout << "fitness: " << fitness << endl;
+
+	cout << "sample" << endl;
+	double fitness = modelFit(trips, S, expectedFitness);
+	cout << "    fitness: " << fitness << endl;
+	cout << "    expected fitness: " << expectedFitness << endl;
+
+	cout << "heldouts" << endl;
+	double heldoutFit = modelFit(heldouts, S, expectedFitness);
+	cout << "    fit to heldouts: " <<  heldoutFit << endl;
+	cout << "    expected fit to heldouts: " <<  expectedFitness << endl;
+
 	Mat dS = Mat::zeros(n, n);
 	for (size_t i = 0; i < m; ++i){
 	    size_t x = trips._x[i];
@@ -279,17 +406,20 @@ calculateSimilarity(const Triplets& trips, Mat& S, double M)
 	    dS(x, b) -= q;
 	    dS(b, x) -= q;
 	}
-	double mu = findOptimalFactor(S, dS, trips, M);
+//	double mu = findOptimalFactor(S, dS, trips, M);
+	double mu = 0.01 / sqrt(iter);
 	S = addWithFactor(S, dS, mu);
-	S = projectPSDd(S, M);
-
-	fitness = modelFit(trips, S);
-	if (lastFitness < fitness + 0.0001 && iter > 3)
-	    break; 
+	S = projectPSDtr(S, M);
+	
+	double temp;
+	fitness = modelFit(trips, S, temp);
+//	if (lastFitness < fitness + 0.0001 && iter > 20)
+//	    break; 
 	lastFitness = fitness;
 
     }
-    double fitness = modelFit(trips, S);
+    double temp;
+    double fitness = modelFit(trips, S, temp);
     cout << "------------------------------------" << endl;
     cout << "done" << endl;
     cout << "fitness: " << fitness << endl;
@@ -319,6 +449,8 @@ splitString(const std::basic_string<B>& s,
 void
 readFile(const string& fileName, Triplets& rTrips)
 {
+    cout << "parsing file " << fileName << endl;
+    size_t oldSize = rTrips.size();
     ifstream tripsFile(fileName.c_str());
     
     if (!tripsFile.is_open()){
@@ -345,6 +477,7 @@ readFile(const string& fileName, Triplets& rTrips)
 	}
     }
     tripsFile.close();
+    cout << "found " << rTrips.size() - oldSize << " comparisons" << endl;
 }
 
 
@@ -504,9 +637,21 @@ svdPlot(const Mat& S, const path& dirName, const string& dataset,
     }
 }
 
+void
+testSVD()
+{
+    size_t n = 50;
+    Mat M(n, n);
+    for (size_t i = 0 ; i < n; ++i)
+	for (size_t j = i ; j < n; ++j)
+	    M(i, j) = M(j, i) = (1.0 * rand()) / RAND_MAX - 0.5;
+    projectPSDtr(M, 1);
+}
+
 int 
 main(int argc, char* argv[])
 {
+//    testSVD();    return 0;
     if (argc < 3){
 	cout << "usage: " << argv[0] 
 	     << " <triplets directory> <dataset>" << endl;
@@ -515,14 +660,20 @@ main(int argc, char* argv[])
     Triplets trips;
     regex fileDesc(".*\\.out");
     readDirectory(argv[1], fileDesc, trips);
+
+    Triplets heldouts;
+    readFile(string(argv[1]) + string("heldout"), heldouts);
+    
+    
     cout << "read " << trips._x.size() << " triplets" << endl;
     cout << "maximum id: " << trips.maxId() << endl;
     cout << "distinct ids: " << trips._ids.size() << endl;
+    cout << "read " << heldouts._x.size() << " heldout triplets" << endl;
 //    for (size_t i = 0; i < trips._x.size(); ++i)
 //	cout << trips._x[i] << " " << trips._a[i] << " " << trips._b[i] << endl;
 
     Mat S;
-    calculateSimilarity(trips, S, 20);
+    calculateSimilarity(trips, S, 100.0, heldouts);
     
     svdPlot(S, argv[1], argv[2], "../images/svd.html");
     
