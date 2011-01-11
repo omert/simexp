@@ -407,7 +407,7 @@ calculateSimilarity(const Triplets& trips, Mat& S, double M,
 	    dS(b, x) -= q;
 	}
 //	double mu = findOptimalFactor(S, dS, trips, M);
-	double mu = 0.01 / sqrt(iter);
+	double mu = 1.0 / sqrt(iter);
 	S = addWithFactor(S, dS, mu);
 	S = projectPSDtr(S, M);
 	

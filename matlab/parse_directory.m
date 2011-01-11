@@ -7,7 +7,7 @@ IB = [];
 N = [];
 ids = [];
 
-files = dir([dir_name '\*.out']) ;
+files = dir([dir_name '/*.out']) ;
     
 
 for i = 1:length(files)

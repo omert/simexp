@@ -4,7 +4,6 @@
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[] )
 { 
-    
     /* Check for proper number of arguments */
     
     if (nrhs != 5) { 
@@ -22,7 +21,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[] )
     
 
     plhs[0] = mxCreateDoubleMatrix(1, 1, mxREAL); 
-    double &f = *mxGetPr(plhs[0]);
+    double &f = *mxGetPr(plhs[0]);    
     double *V = mxGetPr(prhs[0]);
     double *ix = mxGetPr(prhs[1]);
     double *ia = mxGetPr(prhs[2]);
@@ -36,6 +35,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[] )
     }
 
     f = 0.0;
+
+    size_t nTotal = 0;
+
     for (size_t iComp = 0; iComp < numComps; ++iComp){
         size_t x = (size_t)ix[iComp] - 1;
         size_t a = (size_t)ia[iComp] - 1;
@@ -53,6 +55,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[] )
         double llhr = log(1 + da) - log(1 + db);
         double p = 1 / (1  + exp(llhr));
         f -= n[iComp] * log(p);
+	nTotal += n[iComp];
         if (nlhs > 1){
 //            g[x] += 2 * n[iComp] * (1 - p) * V[x] / (1 + da);
 //            g[x] -= 2 * n[iComp] * (1 - p) * V[x] / (1 + db);
@@ -68,6 +71,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[] )
         }
     }
 
+    f = f / log(2) / nTotal;
+    if (nlhs > 1){
+	for (size_t iObj = 0; iObj < numObj; ++iObj)
+	    for (size_t iDim = 0; iDim < numDim; ++iDim)
+		g[iObj + numObj * iDim] = g[iObj + numObj * iDim] / log(2) / nTotal;
+    }
+	    
     return;
     
 }
