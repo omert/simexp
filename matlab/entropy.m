@@ -1,4 +1,5 @@
 function h = entropy(P, dim)
+% entropy function
 
 if nargin < 2
     dim = 2;
