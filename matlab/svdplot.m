@@ -58,11 +58,11 @@ D = sqrt(xii - 2 * U * U' + xii');
 sort(D, 2);
 for j = 1:length(x)
     [~, I] = sort(D(j, :));
-    ypos = j * (large_image_size + 10) + page_size(2);
+    ypos = j * (small_image_size + 10) + page_size(2);
     for i = 1:10
-        xpos = i * (large_image_size + 10);
+        xpos = i * (small_image_size + 10);
         s = '<img name = "img%d" src = "%s%s" style = "position:absolute; left: %d; top:%d; z-index = %d;" height = %d width = %d title="%s"/>\n';
-        fprintf(f1, s, i, img_base_url, img_files{ids(I(i)) + 1}, floor(xpos), floor(ypos), floor(1000 - 100 * zpos), large_image_size, large_image_size, img_files{ids(I(i)) + 1});
+        fprintf(f1, s, i, img_base_url, img_files{ids(I(i)) + 1}, floor(xpos), floor(ypos), floor(1000 - 100 * zpos), small_image_size, small_image_size, img_files{ids(I(i)) + 1});
         
     end
 end
