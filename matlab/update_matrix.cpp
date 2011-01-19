@@ -24,6 +24,8 @@ prob(size_t x, size_t a, size_t b, const Mat& S)
 {
     double pa = fabs(1.0 + S(x, x) + S(b, b) - 2 * S(x, b)) + 1e-6;
     double pb = fabs(1.0 + S(x, x) + S(a, a) - 2 * S(x, a)) + 1e-6;
+//    double pa = exp(S(x, a));
+//    double pb = exp(S(x, b));
     return pa / (pa + pb);
 }
 
