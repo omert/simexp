@@ -8,8 +8,8 @@ iAA = IA + m * (IA-1);
 iXB = IX + m * (IB-1);
 iXA = IX + m * (IA-1);
 
-pa = 1.0 + S(iXX) + S(iBB) - 2 * S(iXB);
-pb = 1.0 + S(iXX) + S(iAA) - 2 * S(iXA);
-%pa = exp(S(iXA));
-%pb = exp(S(iXB));
+%pa = 1.0 + S(iXX) + S(iBB) - 2 * S(iXB);
+%pb = 1.0 + S(iXX) + S(iAA) - 2 * S(iXA);
+pa = exp(S(iXA));
+pb = exp(S(iXB));
 L = -sum(N .* (log(pa) - log(pa + pb))) / length(IX) / log(2);
