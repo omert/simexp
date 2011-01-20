@@ -57,15 +57,21 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
         size_t x = (size_t)ix[iComp] - 1;
         size_t a = (size_t)ia[iComp] - 1;
         size_t b = (size_t)ib[iComp] - 1;
-	double h = 1.0 / 
-	    (1.0 + exp(-S(b, b) + 2 * S(x, b) - 2 * S(x, a) + S(a, a)));
-	double dlogh = n[iComp] * (1.0 - h);
-	dS(x, a) += 2 * dlogh;
+	double da = 1.0 + S(x, x) - 2 * S(x, b) + S(b, b);
+	double dab = 
+	    1.0 + S(x, x) - 2 * S(x, a) + S(a, a)
+	    + 1.0 + S(x, x) - 2 * S(x, b) + S(b, b);
+	double dlogda = -n[iComp] / da;
+	double dlogdab = n[iComp] / dab;
+
+	dS(x, a) -= - 2.0 * dlogdab;
+	dS(x, b) -= - 2.0 * dlogda - 2.0 * dlogdab;
+	dS(x, x) -= 1.0 * dlogda + 2.0 * dlogdab;
+	dS(b, b) -= 1.0 * dlogda + 1.0 * dlogdab;
+	dS(a, a) -= 1.0 * dlogdab;
+
 	dS(a, x) = dS(x, a);
-	dS(x, b) -= 2 * dlogh;
 	dS(b, x) = dS(x, b);
-	dS(b, b) += dlogh;
-	dS(a, a) -= dlogh;
     }
 
 	    

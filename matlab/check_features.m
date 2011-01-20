@@ -1,4 +1,4 @@
-function check_features(info_file_name, x, ids, dataset, filename, feature_num)
+function check_features(info_file_name, x, ids, dataset, dirname, feature_num)
 
 img_base_url = ['http://65.215.1.20/faces/data/' dataset '/'];
 
@@ -16,7 +16,7 @@ f = ceil (f / max(f) * 24);
 
 img_files = get_image_files(dataset);
 
-f1 = fopen(filename, 'w');
+f1 = fopen([dirname '/att_' names{feature_num} '.html'], 'w');
 fprintf(f1, '<html>\n');
 fprintf(f1, '<head><title>%s</title></head>\n', names{feature_num});
 fprintf(f1, '<body>\n');
