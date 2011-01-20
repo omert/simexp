@@ -19,7 +19,7 @@ fprintf('%d comparisions in control dataset. model dimension %d\n', length(IX), 
 xc = x;
 
 max_sample_size = max([length(IX1), length(IX2)]);
-sample_size = round(linspace(1000, max_sample_size, 40));
+sample_size = round(linspace(1000, max_sample_size, 4));
 llh1 = [];
 llh2 = [];
 
@@ -28,7 +28,7 @@ x1 = xc;
 x2 = xc;
 for i = 1:length(sample_size)
     ss = sample_size(i);
-    I = 1:ss;
+     I = 1:ss;
     if length(IX1) >= ss
         x1 = fit(x1, IX1(I), IA1(I), IB1(I), N1(I), 4);
         llh1(i) = -model_likelihood(x1, IX, IA, IB, N);

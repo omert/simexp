@@ -7,7 +7,7 @@ end
 
 n = length(ids);
 
-freedom_bound =  0.5 * n;
+freedom_bound =  1.0 * n;
 
 if nargin < 7
     S = eye(n);
@@ -25,10 +25,10 @@ max_mu = 10;
 
 for i = 1:iter
     %    S1 = update_matrix(S, IX, IA, IB, N);
-    %S1 = logistic_deriv(S, IX, IA, IB, N);
-    S1 = distance_deriv(S, IX, IA, IB, N);
+    S1 = logistic_deriv(S, IX, IA, IB, N);
+    %S1 = distance_deriv(S, IX, IA, IB, N);
     deriv_norm = norm(S - projectPSD_trace(S + S1, freedom_bound));
-    fprintf(1, 'convergence: %f', deriv_norm);
+    fprintf(1, 'convergence: %f\n', deriv_norm);
     
     mu = fminbnd(@(mu) mat_model_likelihood(projectPSD_trace(S + mu ...
                                                       * S1, freedom_bound), ...
@@ -36,9 +36,10 @@ for i = 1:iter
                  options);
     max_mu = min(mu * 2, 1);
     S = projectPSD_trace(S + mu * S1, freedom_bound);
-    [L percent_right] = mat_model_likelihood(S, IX, IA, IB, N);
+    [L percent_right eL] = mat_model_likelihood(S, IX, IA, IB, N);
     fprintf(1, ' mu: %f    L: %f   percent right: %f\n', mu, L, ...
             percent_right);
+    fprintf(1, 'expected L: %f \n', eL);
     if mu < 0.001 | deriv_norm < 0.1
         break;
     end
