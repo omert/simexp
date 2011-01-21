@@ -1,4 +1,4 @@
-import tools, time, csv
+import tools, time, csv, os
 from PIL import Image
 
 urlstring = "http://www.amazon.com/s?ie=UTF8&keywords=tiles&rh=n%3A324030011%2Ck%3Atiles%2Cp_6%3AA1KVAQN3EOYIIS&page=pG"
@@ -55,7 +55,7 @@ def scrape_amazon_page(html):
 
 
 allresults = []
-for p in range(1,96): 
+for p in range(20,40): 
     url = urlstring.replace("pG",str(p))
     #print url
     html = tools.my_url_open(url).read()
@@ -68,7 +68,9 @@ i=0
 for r in allresults:
     i=i+1
     print "Scraping object",i
-    tools.my_save_web_image(r['image_url'],"c:/temp/tiles2/"+r['ASIN']+".jpg")
+    imfname = "c:/temp/tiles2/"+r['ASIN']+".jpg"
+    if not os.path.exists(imfname):
+        tools.my_save_web_image(r['image_url'],imfname)
     html = tools.my_url_open(r['url']).read()
     r['att_glass']=1 if 'Glass Tiles</a>' in html else 0
     r['att_ceramic']=1 if 'Ceramic Tiles</a>' in html else 0
@@ -83,11 +85,19 @@ for r in allresults:
         r['bestsellers_string'] = html[aaa+33:bbb].strip()
         r['att_bestsellerrank'] = int(r['bestsellers_string'][1:r["bestsellers_string"].find(" ")].replace(",",""))
 
-f=open("c:/temp/tiles2/info.csv","wb")
-c = csv.DictWriter(f,allresults[0].keys())
-header = {}
-for k in allresults[0].keys():
-    header[k]=k
-c.writerow(header)
+
+fname = "c:/temp/tiles2/info.csv"
+if os.path.exists(fname):
+    print "FILE EXISTS, APPENDING"
+    f=open(fname,"ab")
+    c = csv.DictWriter(f,sorted(allresults[0].keys()))
+else:
+    print "CREATING FILE"
+    f=open(fname,"wb")
+    c = csv.DictWriter(f,sorted(allresults[0].keys()))
+    header = {}
+    for k in allresults[0].keys():
+        header[k]=k
+    c.writerow(header)
 c.writerows(allresults)
 f.close()

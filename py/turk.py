@@ -13,14 +13,14 @@ c:\vision\most_popular_100_ids_balanced.txt
 
 ce_root = "c:/vision"
 turk_root = "c:/mturk/bin"
-the_root = "c:/sim"
+the_root = "c:/users/adum/simexp"
 exp_root = the_root+"/turkexps"
 log_root = exp_root+"/logs"
 turk_log = log_root+"/turk.log"
 input_template = exp_root+"/template.input"
 question_template = exp_root+"/template.question"
 properties_template = exp_root+"/template.properties"
-
+recent_bad_work_file = exp_root+"/recent_bad_work.txt"
 
 
 batch_size = 50
@@ -153,7 +153,6 @@ def shortcut_to_server(contents):
     url += urllib.urlencode([("contents",contents)])
     f=tools.my_url_open(url)
     r = f.read().strip()
-    #print r
     assert server_to_shortcut(r).strip().splitlines()==contents.strip().splitlines()
     return r
 
@@ -442,6 +441,16 @@ def get_bad_wids(tripsplus):
 #    print widscores
 #    global v
 #    v= widscores.values()
+    if len(really_bad_wids)>0:
+        f = open(recent_bad_work_file,"a")
+        for wid in really_bad_wids:
+            hids = []
+            for (x,y,z,e,wid2,hid) in tripsplus:
+                if wid2==wid:
+                    if hid not in hids:
+                        hids.append(hid)
+                        f.write(wid+"\t"+hid+"\n");
+        f.close()
     return bad_wids, really_bad_wids
 
     
@@ -476,24 +485,13 @@ def check_results(label=None,outfile=None,init_trips=None):
         assert init_trips!=None
         t = []
         for (a,b,c,e,wid,hid) in trips:
-            if wid not in bad_wids:
+            if wid not in bad_wids and a!=b and a!=c:
                 t.append((a,b,c,e))
         random.shuffle(t)
         t2 = []
-        for (a,b,c) in init_trips:
-            found = False
-            for i in range(len(t)):
-                (x,y,z,e) = t[i]
-                if x==a and (y==b and c==z or y==c and b==z):
-                    t2.append(t[i])
-                    t.pop(i)
-                    found = True
-                    break
-#            if found == False and amdone:
-#                print "TELL ADAM: failed to find trip",(a,b,c)
         
         s = ""
-        for (a,b,c,e) in t2:
+        for (a,b,c,e) in t:
             s+=str(a)+" "+str(b)+" "+str(c)+" "+str(e)+"\n"
         tools.my_write(outfile,s)
 

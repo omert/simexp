@@ -37,4 +37,4 @@ s+= "</body></html>"
 
 tools.my_write(turk.log_root+"/"+commentfile,s)
 
-
+print s
