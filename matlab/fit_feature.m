@@ -1,14 +1,11 @@
-function fit_feature(x, f0, fig, ttl)
-figure(fig);
-clf(fig);
-num_plots = 1;
+function f = fit_feature(x, f0, fig, ttl)
 
-x1 = [x 100*ones(26, 1)];
+x1 = [x 100*ones(length(x), 1)];
 f = zeros(size(f0));
 
 ridge_param = 1;
 
-for i = 1:26
+for i = 1:length(x)
     x2 = x1;
     x2(i, :) = [];
     f2 = f0;
@@ -17,6 +14,12 @@ for i = 1:26
     v1 = x1 * y;
     f(i) = v1(i);
 end
+
+return
+figure(fig);
+clf(fig);
+num_plots = 1;
+
 subplot(1, 1, 1);
 axis([1 26 min([f; f0]) max([f; f0])]);
 axis off

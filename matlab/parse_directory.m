@@ -19,7 +19,7 @@ for i = 1:length(files)
     N = [N; N0];
     ids = unique([ids; ids0]);
 end
-
+fprintf('found a total of %d triplets\n', length(IX));
 if length(x) == 1
     x = rand(length(ids), x);
 end
@@ -37,6 +37,7 @@ for i = 1:length(files)
     IBho = [IBho; IB0];
     Nho = [Nho; N0];
 end
+fprintf('found a total of %d heldout triplets\n', length(IXho));
 
 save_experiement_data([dir_name 'heldout.data.mat'], IXho, IAho, IBho, Nho, ids, dataset, x);
 
