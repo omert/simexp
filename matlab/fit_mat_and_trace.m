@@ -1,4 +1,4 @@
-function S = fit_mat_and_trace(IX, IA, IB, N, ids, iter, ...
+function [x S] = fit_mat_and_trace(IX, IA, IB, N, ids, iter, ...
                                          S)
 
 if nargin < 6
@@ -18,3 +18,5 @@ fprintf(1, 'optimal trace norm: %f\n', trace_norm);
 S = fit_mat(IX, IA, IB, N, ids, iter, S, trace_norm);
 
 
+[U sig temp2] = svds(S, rank(S));
+x = U * sqrt(sig);
