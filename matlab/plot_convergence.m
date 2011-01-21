@@ -19,7 +19,7 @@ fprintf('%d comparisions in control dataset. model dimension %d\n', length(IX), 
 xc = x;
 
 max_sample_size = max([length(IX1), length(IX2)]);
-sample_size = round(linspace(1000, max_sample_size, 4));
+sample_size = round(linspace(1000, max_sample_size, 10));
 llh1 = [];
 llh2 = [];
 
@@ -28,13 +28,14 @@ x1 = xc;
 x2 = xc;
 for i = 1:length(sample_size)
     ss = sample_size(i);
-     I = 1:ss;
+    I = 1:ss;
+    xrand = rand(size(xc));
     if length(IX1) >= ss
-        x1 = fit(x1, IX1(I), IA1(I), IB1(I), N1(I), 4);
+        x1 = fit(xrand, IX1(I), IA1(I), IB1(I), N1(I), 8);
         llh1(i) = -model_likelihood(x1, IX, IA, IB, N);
     end
     if length(IX2) >= ss
-        x2 = fit(x2, IX2(I), IA2(I), IB2(I), N2(I), 4);
+        x2 = fit(xrand, IX2(I), IA2(I), IB2(I), N2(I), 8);
         llh2(i) = -model_likelihood(x2, IX, IA, IB, N);
     end
     plot(llh1, sample_size(1:length(llh1)) / 40 * 0.15, 'r', llh2, sample_size(1:length(llh2)) / 40 * 0.15, 'b');
@@ -44,4 +45,3 @@ for i = 1:length(sample_size)
     fprintf('expected time to finish: %.0f\n', (length(sample_size)^2-i^2) * toc / i^2);
 end
 save convergence_data
-keyboard
