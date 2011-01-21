@@ -1,7 +1,7 @@
 import tools, time, csv, os
 from PIL import Image
 
-urlstring = "http://www.amazon.com/s?ie=UTF8&keywords=tiles&rh=n%3A324030011%2Ck%3Atiles%2Cp_6%3AA1KVAQN3EOYIIS&page=pG"
+urlstring = "http://www.amazon.com/s?ie=UTF8&rh=n%3A324030011%2Cp_6%3AA2U9N7C8EXZMY6&page=pG"
 
 
 s=""
@@ -55,7 +55,7 @@ def scrape_amazon_page(html):
 
 
 allresults = []
-for p in range(20,40): 
+for p in range(1,7): 
     url = urlstring.replace("pG",str(p))
     #print url
     html = tools.my_url_open(url).read()
