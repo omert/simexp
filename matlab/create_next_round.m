@@ -12,7 +12,7 @@ load(datafile);
 % $$$ end
 
 %[x fit_val] = fit(x, IX, IA, IB, N, 6);
-x = fit_mat_and_trace(IX, IA, IB, N, ids, 10);
+x = fit_mat_and_trace(IX, IA, IB, N, ids, 10, x * x');
 
 save_experiement_data(datafile, IX, IA, IB, N, ids, dataset, x);
 
@@ -30,6 +30,8 @@ for i=1:num_obj
     N0 = N(Iobj);
     IXnew(:, i) = i;
     [IAnew(:, i), IBnew(:, i)] = approx_best_paired_comp(x, I0, J0, N0, ones(1, num_obj) / num_obj, i, num_per_obj);
+    fprintf('%f\n', paired_comp_prob(x(i, :), x, IAnew(1, i), IBnew(1, ...
+                                                      i)));
 end
 IXnew = ids(IXnew(:));
 IAnew = ids(IAnew(:));

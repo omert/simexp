@@ -9,8 +9,8 @@ P = zeros(length(I), num_vecs);
 for i = 1:num_vecs
     B = repmat(beta(i, :), length(I), 1);
     %    LLHR = row_norm(B - X(I, :)) - row_norm(B - X(J, :));
-    %    LLHR = sum((B - X(I, :)).^2, 2) - sum((B - X(J, :)).^2, 2);
-    LLHR = sum(B * (X(I, :) - X(J, :))');
+    LLHR = sum((B - X(J, :)).^2, 2) - sum((B - X(I, :)).^2, 2);
+    %    LLHR = sum(B * (X(I, :) - X(J, :))');
     %    LLHR = log(1 + sum((B - X(J, :)).^2, 2)) - log(1 + sum((B - X(I, :)).^2, 2));
     P(:, i) = sigmoid(LLHR);
 end

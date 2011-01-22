@@ -11,11 +11,11 @@ iXA = IX + m * (IA-1);
 %pa = 1.0 + S(iXX) + S(iBB) - 2 * S(iXB);
 %pb = 1.0 + S(iXX) + S(iAA) - 2 * S(iXA);
 
-pa = exp(S(iXA));
-pb = exp(S(iXB));
+%pa = exp(S(iXA));
+%pb = exp(S(iXB));
 
-%pa = exp(S(iXX) - 2*S(iXB) + S(iBB));
-%pb = exp(S(iXX) - 2*S(iXA) + S(iAA));
+pa = exp(S(iXX) - 2*S(iXB) + S(iBB));
+pb = exp(S(iXX) - 2*S(iXA) + S(iAA));
 L = -sum(N .* (log(pa) - log(pa + pb))) / length(IX) / log(2);
 
 if nargout > 1

@@ -1,14 +1,14 @@
-function check_features(info_file_name, x, ids, dataset, dirname, feature_num)
+function corrects = check_features(attributes, names, x, ids, dataset, dirname, feature_num)
 
 img_base_url = ['http://65.215.1.20/faces/data/' dataset '/'];
 
 small_image_size = 70;
 
-[attributes names] = read_info(info_file_name);
 
 %f = fit_feature(x, attributes(:, feature_num));
 f = fit_feature_svm(x, attributes(:, feature_num));
 Iwrong = find(f' ~= attributes(:, feature_num));
+corrects = length(f) - length(Iwrong);
 fprintf('accuracy percentage: %f (%d / %d)\n', 100 - 100 * length(Iwrong) ...
         / length(f), length(f) - length(Iwrong), length(f));
 
@@ -21,7 +21,9 @@ f = ceil (f / max(f) * 24);
 img_files = get_image_files(dataset);
 image_size = 50;
 
-f1 = fopen([dirname '/att_' names{feature_num} '.html'], 'w');
+filename = [dirname '/att_' names{feature_num} '.html'];
+fprintf('writing to %s\n', filename);
+f1 = fopen(filename, 'w');
 fprintf(f1, '<html>\n');
 fprintf(f1, '<head><title>%s</title></head>\n', names{feature_num});
 fprintf(f1, '<body>\n');
@@ -32,9 +34,14 @@ for jj = 1:length(Iwrong)
     xpos = jj * image_size * 1.05;
     s = '<img name = "img%d" src = "%s%s" style = "position:absolute; left: %d; top:%d;" height = %d width = %d title="%s"/>\n';
     fprintf(f1, s, j, img_base_url, img_files{ids(j) + 1}, floor(xpos), ...
-            floor(ypos), image_size, image_size, img_files{ids(j) + 1});
+            floor(ypos), image_size, image_size, img_files{ids(j) + ...
+                        1});
+    %    fprintf('%s %d %f %f\n', img_files{ids(j) + 1}, attributes(j, ...
+    %                                                 feature_num), ...
+    %       xpos, ypos);
 end
 
+%fprintf(f1, 'plot:\n ');
 
 
 [temp I] = sort(((f-mean(f)).^2));
