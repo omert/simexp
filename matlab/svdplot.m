@@ -1,6 +1,6 @@
 function svdplot(x, ids, dataset, filename)
 
-img_base_url = ['http://65.215.1.20/faces/data/' dataset '/'];
+img_base_url = ['/home/tamuz/dev/simexp/images/' dataset '/'];
 
 small_image_size = 70;
 page_size = [1500 1000 small_image_size];
@@ -53,8 +53,8 @@ for i = 1:length(U)
 %    fprintf(f1, '</a>\n');
 end
 
-xii = repmat(row_norm(U), 1, length(x)).^2;
-D = sqrt(xii - 2 * U * U' + xii');
+xii = repmat(row_norm(x), 1, length(x)).^2;
+D = sqrt(xii - 2 * x * x' + xii');
 sort(D, 2);
 for j = 1:length(x)
     [~, I] = sort(D(j, :));
