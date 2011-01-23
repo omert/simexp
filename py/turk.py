@@ -11,9 +11,15 @@ c:\vision\most_popular_100_ids_balanced.txt
 @author: adum
 """
 
+import os
+
 ce_root = "c:/vision"
-turk_root = "c:/mturk/bin"
-the_root = "c:/users/adum/simexp"
+if os.name == 'nt':
+    turk_root = "c:/mturk/bin"
+    the_root = "c:/users/adum/simexp"
+else:
+    turk_root = "/home/tamuz/mturk/bin"
+    the_root = "/home/tamuz/dev/simexp"
 exp_root = the_root+"/turkexps"
 log_root = exp_root+"/logs"
 turk_log = log_root+"/turk.log"
@@ -61,7 +67,7 @@ def my_log(st):
     f.close()
 
 def get_balance():
-    text = tools.my_run("getbalance",turk_root).strip()
+    text = tools.my_run("getBalance",turk_root).strip()
     s = text.find("$")
     if s==-1:
         my_log("[BALANCE] getbalance\nCould not get balance: "+text)

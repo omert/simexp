@@ -2,13 +2,14 @@ function [ibest, jbest] = approx_best_paired_comp(x, I0, J0, N0, prior0, exclusi
 
 [num_obj d] = size(x);
 
-I = zeros(n * 100, 1);
-J = zeros(n * 100, 1);
+I = zeros(n * 250, 1);
+J = zeros(n * 250, 1);
 sample_dist = prior0';
+fprintf('checking %d pairs\n', length(I));
 sample_dist(exclusions) = 1e-100;
 for i = 1:length(I)
-    pair =  sample_from_dist(sample_dist, 2);
-    I(i)  = pair(1);
+    pair = sample_from_dist(sample_dist, 2);
+    I(i) = pair(1);
     J(i) = pair(2);
 end
 

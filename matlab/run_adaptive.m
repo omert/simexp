@@ -6,15 +6,16 @@ if length(config_file) ~= 1
     return;
 end
 
+datafile = [dir_name 'all.data.mat'];
 
 for i = 1:num_rounds
-    datafile = [dir_name 'all.data.mat'];
     load(datafile);
     fprintf('found data for %d comparisons\n', length(IX));
-    filename = [dir_name 'adaptive' sprintf('%d',floor(rand*100000)) '.trips'];
-    create_next_round(datafile , filename, dataset, num_per_round);
+    filename = [dir_name 'adaptive' sprintf('%10.0f',mod(now*1000000, 100000000)) '.trips'];
+    create_next_round(datafile , filename, dataset, num_per_round, ids);
     run_turk([dir_name config_file(1).name], filename, [filename '.out']);
     parse_directory(dir_name, dataset, x);
 end
-x=fit(x, IX, IA, IB, N, 200);
+x = fit_mat_and_trace(IX, IA, IB, N, ids, 10);
+%x = fit(x, IX, IA, IB, N, 10);
 save_experiement_data([dir_name 'all.data.mat'], IX, IA, IB, N, ids, dataset, x);

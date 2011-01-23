@@ -1,7 +1,7 @@
 dataset = 'newtiles';
 
 load(['../turkexps/' dataset '/all.data.mat'])
-Sfit = fit_mat_and_trace(IX, IA, IB, N, ids, 20);
+[xtemp Sfit] = fit_mat_and_trace(IX, IA, IB, N, ids, 20);
 xfit = x;
 %xfit = fit(rand(size(x)), IX, IA, IB, N, 6);
 %save_experiement_data(['../turkexps/' dataset '/small/all.data.mat'], IX, IA, IB, N, ids, dataset, xfit);
