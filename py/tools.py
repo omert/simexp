@@ -44,7 +44,10 @@ def save_matrix(M,filename):
 def my_run(st,dir = None):
     if dir != None:
         os.chdir(dir)
-    pipe =os.popen(st+" 2>&1",'r')
+    if os.name == 'nt':
+        pipe =os.popen(st+" 2>&1",'r')
+    else:    
+        pipe =os.popen("./"+st+" 2>&1",'r')
     text = pipe.read()
     sts = pipe.close()
     if sts:
