@@ -261,7 +261,7 @@ def posts(S,trips,readem=True):
     for i in range(n):
         for j in range(n):
             lps[i,j]/=counts[i]
-    np.save(postfilename,lps)
+    np.save(postfilename,lps) 
     print "Saved in",postfilename 
     return lps
 
