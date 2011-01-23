@@ -1,8 +1,8 @@
-import tools, time, csv, os
+import tools, time, csv, os, sys
 from PIL import Image
 
-urlstring = "http://www.amazon.com/s?ie=UTF8&rh=n%3A324030011%2Cp_6%3AA2U9N7C8EXZMY6&page=pG"
-
+#urlstring = "http://www.amazon.com/s?ie=UTF8&rh=n%3A324030011%2Cp_6%3AA2U9N7C8EXZMY6&page=pG"
+urlstring = "http://www.amazon.com/s?ie=UTF8&rh=n%3A324030011&page=pG"
 
 s=""
 for i in range(163):
@@ -54,50 +54,55 @@ def scrape_amazon_page(html):
     return results
 
 
-allresults = []
-for p in range(1,7): 
+for p in range(326,328): 
+    allresults = []
     url = urlstring.replace("pG",str(p))
     #print url
     html = tools.my_url_open(url).read()
-    allresults=allresults+scrape_amazon_page(html)
+    allresults=scrape_amazon_page(html)
     print "results page",p, len(allresults), len(allresults)/24., len(tools.uniqueify(allresults))
+  
+    i=0
+    ar2 = []
+    for r in allresults:
+        i=i+1
+        imfname = "c:/temp/tiles2/"+r['ASIN']+".jpg"
+        if not os.path.exists(imfname):
+            try:
+                print "Scraping object",i,"page",p,(p-1)*24+i
+                html = tools.my_url_open(r['url']).read()
+                r['att_glass']=1 if 'Glass Tiles</a>' in html else 0
+                r['att_ceramic']=1 if 'Ceramic Tiles</a>' in html else 0
+                r['att_stone']=1 if 'Stone Tiles</a>' in html else 0
+                r['att_limestone']=1 if 'Limestone Tiles</a>' in html else 0
+                r['att_marble']=1 if 'Marble Tiles</a>' in html else 0
+                r['bestsellers_string']=""
+                r['att_bestsellerrank'] = -1
+                if "<b>Amazon Bestsellers Rank:</b>" in html:
+                    aaa = html.find("<b>Amazon Bestsellers Rank:</b>")
+                    bbb = aaa+html[aaa:].find("(")
+                    r['bestsellers_string'] = html[aaa+33:bbb].strip()
+                    r['att_bestsellerrank'] = int(r['bestsellers_string'][1:r["bestsellers_string"].find(" ")].replace(",",""))
+                tools.my_save_web_image(r['image_url'],imfname)
+                ar2.append(r)
+            except:
+                print "EXCEPTION",sys.exc_info()[0]
+                print r
+    if len(ar2)==0:
+        continue
     
-#now get images and other info! 
-allresults = tools.uniqueify(allresults)
-i=0
-for r in allresults:
-    i=i+1
-    print "Scraping object",i
-    imfname = "c:/temp/tiles2/"+r['ASIN']+".jpg"
-    if not os.path.exists(imfname):
-        tools.my_save_web_image(r['image_url'],imfname)
-    html = tools.my_url_open(r['url']).read()
-    r['att_glass']=1 if 'Glass Tiles</a>' in html else 0
-    r['att_ceramic']=1 if 'Ceramic Tiles</a>' in html else 0
-    r['att_stone']=1 if 'Stone Tiles</a>' in html else 0
-    r['att_limestone']=1 if 'Limestone Tiles</a>' in html else 0
-    r['att_marble']=1 if 'Marble Tiles</a>' in html else 0
-    r['bestsellers_string']=""
-    r['att_bestsellerrank'] = -1
-    if "<b>Amazon Bestsellers Rank:</b>" in html:
-        aaa = html.find("<b>Amazon Bestsellers Rank:</b>")
-        bbb = aaa+html[aaa:].find("(")
-        r['bestsellers_string'] = html[aaa+33:bbb].strip()
-        r['att_bestsellerrank'] = int(r['bestsellers_string'][1:r["bestsellers_string"].find(" ")].replace(",",""))
-
-
-fname = "c:/temp/tiles2/info.csv"
-if os.path.exists(fname):
-    print "FILE EXISTS, APPENDING"
-    f=open(fname,"ab")
-    c = csv.DictWriter(f,sorted(allresults[0].keys()))
-else:
-    print "CREATING FILE"
-    f=open(fname,"wb")
-    c = csv.DictWriter(f,sorted(allresults[0].keys()))
-    header = {}
-    for k in allresults[0].keys():
-        header[k]=k
-    c.writerow(header)
-c.writerows(allresults)
-f.close()
+    fname = "c:/temp/tiles2/info.csv"
+    if os.path.exists(fname):
+        print "FILE EXISTS, APPENDING"
+        f=open(fname,"ab")
+        c = csv.DictWriter(f,sorted(ar2[0].keys()))
+    else:
+        print "CREATING FILE"
+        f=open(fname,"wb")
+        c = csv.DictWriter(f,sorted(ar2[0].keys()))
+        header = {}
+        for k in ar2[0].keys():
+            header[k]=k
+        c.writerow(header)
+    c.writerows(ar2)
+    f.close()
