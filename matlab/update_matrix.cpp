@@ -22,8 +22,8 @@ private:
 double 
 prob(size_t x, size_t a, size_t b, const Mat& S)
 {
-    double pa = fabs(1.0 + S(x, x) + S(b, b) - 2 * S(x, b)) + 1e-6;
-    double pb = fabs(1.0 + S(x, x) + S(a, a) - 2 * S(x, a)) + 1e-6;
+    double pa = fabs(2 * S(x, x) + S(b, b) - 2 * S(x, b));
+    double pb = fabs(2 * S(x, x) + S(a, a) - 2 * S(x, a));
 //    double pa = exp(S(x, a));
 //    double pb = exp(S(x, b));
     return pa / (pa + pb);
@@ -67,12 +67,28 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
         size_t a = (size_t)ia[iComp] - 1;
         size_t b = (size_t)ib[iComp] - 1;
 	double p = prob(x, b, a, S);
-	double q = 1 - p;
+	
+	double w = 4 * S(x, x) - 2 * S(x, a) - 2 * S(x, b) + S(a, a) + S(b, b);
+	w = 1.0 / w;
+//	double w = 1.0;
+
+	dS(x, a) += n[iComp] * 2 * (1 - p) * p / w;
+	dS(x, b) -= n[iComp] * 2 * (1 - p) * (1 - p) / w;
+
+	dS(a, a) -= n[iComp] * (1 - p) * p / w;
+	dS(b, b) += n[iComp] * (1 - p) * (1 - p) / w;
+	dS(x, x) += n[iComp] * 2 * (1 - p) * (1 - 2 * p) / w;
+	
+	/*
+        q = 1 - p;
 	p *= n[iComp];
 	q *= n[iComp];
 	dS(x, a) += p;
-	dS(a, x) = dS(x, a);
 	dS(x, b) -= q;
+	*/
+
+
+	dS(a, x) = dS(x, a);
 	dS(b, x) = dS(x, b);
     }
 

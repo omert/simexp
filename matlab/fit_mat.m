@@ -1,4 +1,4 @@
-function S = fit_mat(IX, IA, IB, N, ids, iter, S, trace_norm)
+function [x S] = fit_mat(IX, IA, IB, N, ids, iter, trace_norm)
 %load(filename)
 
 if nargin < 6
@@ -11,9 +11,7 @@ n = length(ids);
 
 freedom_bound =  trace_norm * n;
 
-if nargin < 7
-    S = eye(n);
-end
+S = eye(n);
 
 options = optimset('maxfunevals', 5, 'display', 'off');
 
@@ -26,16 +24,18 @@ L = mat_model_likelihood(S, IX, IA, IB, N);
 max_mu = 10;
 
 for i = 1:iter
-    %    S1 = update_matrix(S, IX, IA, IB, N);
+    %S1 = update_matrix(S, IX, IA, IB, N);
     S1 = logistic_deriv(S, IX, IA, IB, N);
     %S1 = distance_deriv(S, IX, IA, IB, N);
     deriv_norm = norm(S - projectPSD_trace(S + S1, freedom_bound));
     %    fprintf(1, 'convergence: %f\n', deriv_norm);
     
     mu = fminbnd(@(mu) mat_model_likelihood(projectPSD_trace(S + mu ...
-                                                      * S1, freedom_bound), ...
+                                                      * S1, ...
+                                                      freedom_bound), ...
                                             IX, IA, IB, N), 0, max_mu, ...
                  options);
+    %    mu = 1 / sqrt(i);
     max_mu = min(mu * 2, 1);
     S = projectPSD_trace(S + mu * S1, freedom_bound);
     [L percent_right eL] = mat_model_likelihood(S, IX, IA, IB, N);
@@ -47,3 +47,5 @@ for i = 1:iter
     end
 end
 
+[U sig temp2] = svds(S, rank(S));
+x = U * sqrt(sig);
