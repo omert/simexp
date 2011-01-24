@@ -16,6 +16,6 @@ for i = 1:num_rounds
     run_turk([dir_name config_file(1).name], filename, [filename '.out']);
     parse_directory(dir_name, dataset, x);
 end
-x = fit_mat_and_trace(IX, IA, IB, N, ids, 10);
+x = fit_mat(IX, IA, IB, N, ids, 10, 1.5, x * x');
 %x = fit(x, IX, IA, IB, N, 10);
 save_experiement_data([dir_name 'all.data.mat'], IX, IA, IB, N, ids, dataset, x);

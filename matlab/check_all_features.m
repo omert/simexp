@@ -1,6 +1,8 @@
-function check_all_features(info_file_name, x, ids, dataset, ...
-                            dirname)
+function check_all_features(x, ids, dataset)
 
+    dirname = ['../data/' dataset '/'];
+    info_file_name = [dirname 'info.csv'];
+                     
 [attributes names] = read_info(info_file_name, ids);
 
 

@@ -1,4 +1,7 @@
 
+run_adaptive('../turkexps/neckties/small/random/','neckties',1,1);
+return
+
 load('c:\sim\turkexps\tiles\all.data.mat');
 create_decision_tree('c:\sim\trees\tiles.tree9',x,9,3,ids);
 load('c:\sim\turkexps\fonts\adaptive\all.data.mat')

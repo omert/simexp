@@ -1,5 +1,6 @@
-function svdplot(x, ids, dataset, filename, IX, IA, IB, N)
+function svdplot(x, ids, dataset, IX, IA, IB, N)
 
+filename = ['../data/' dataset '/svd.html'];
 img_base_url = ['/home/tamuz/dev/simexp/images/' dataset '/'];
 
 small_image_size = 70;
