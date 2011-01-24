@@ -61,9 +61,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 	    size_t a = (size_t)ia[iComp] - 1;
 	    size_t b = (size_t)ib[iComp] - 1;
 	    
-	    C(x, y) += log(prob(S, y, a, b));
-	    C(a, y) += log(prob(S, x, y, b));
-	    C(b, y) += log(prob(S, x, a, y));
+	    C(x, y) += n[iComp] * log(prob(S, y, a, b));
+	    C(a, y) += n[iComp] * log(prob(S, x, y, b));
+	    C(b, y) += n[iComp] * log(prob(S, x, a, y));
 	}
     for (size_t x = 0; x < numObj; ++x){
 	for (size_t y = 0; y < numObj; ++y)

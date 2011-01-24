@@ -113,10 +113,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
     
     Mat S(prhs[0]);    
     Mat T(plhs[0]);
-    double *ix = mxGetPr(prhs[1]);
-    double *ia = mxGetPr(prhs[2]);
-    double *ib = mxGetPr(prhs[3]);
-    double *n = mxGetPr(prhs[4]);
 
     mxArray* plhs1[1];
 

@@ -1,4 +1,4 @@
-function corrects = check_features(attributes, names, x, ids, dataset, dirname, feature_num)
+function [corrects f] = check_features(attributes, names, x, ids, dataset, dirname, feature_num)
 
 img_files = get_image_files(dataset);
 

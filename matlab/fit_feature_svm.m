@@ -3,17 +3,15 @@ function f = fit_feature_svm(x, f0)
 opts = optimset('quadprog');
 opts.maxIter = 40000;
 
-n = length(x)
-length(f0)
+n = length(x);
 Irand = randperm(n);
 
 K = round(linspace(1, n, 10));
 for i=2:length(K)
 
-
+    
     I = Irand(K(i -1):K(i));
     J = setdiff(Irand, I);
-
 
 
     svm_res = svmtrain(f0(J), x(J, :), '-t 0');

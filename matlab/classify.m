@@ -1,4 +1,4 @@
-function classify(dataset, ids, x)
+function classify(dataset, ids, x, att_name)
 
 n = length(ids);
 
@@ -32,6 +32,8 @@ while true
         fprintf('classified %s as %d\n', img_files{id}, f0(id));
     end
     if button == 2
+        save_new_attribute(dataset, ids, f0, att_name);
+        
         I = find(f0 > -1);
         fprintf('training on a sample of %d\n', length(I));
         svm_res = svmtrain(f0(I), x(I, :), '-t 0');

@@ -28,7 +28,9 @@ for i = 2:length(lines)
     if length(fields) == length(header)
         for j = 1:length(atts)
             k = find(ids == id);
-            f(k, j) = sscanf(fields{atts(j)}, '%f');
+            if length(k) == 1
+                f(k, j) = sscanf(fields{atts(j)}, '%f');
+            end
         end
     end
 end

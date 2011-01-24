@@ -3,4 +3,4 @@ mexfiles = logistic_deriv.mexglx confusion_matrix.mexglx model_likelihood.mexglx
 all: $(mexfiles)
 
 $(mexfiles): %.mexglx: %.cpp model.h Mat.h Makefile
-	mex  CFLAGS="-Wall -O3 -pedantic" $< 
+	mex  CXXFLAGS#"-Wall -O3" $< 

@@ -57,7 +57,6 @@ xii = repmat(row_norm(x), 1, length(x)).^2;
 D = sqrt(xii - 2 * x * x' + xii');
 
 D = confusion_matrix(x * x', IX, IA, IB, N);
-
 for j = 1:length(x)
     [~, I] = sort(-D(j, :));
     I = [j I];
