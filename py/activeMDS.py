@@ -193,6 +193,50 @@ def grad_proj(trips,test_trips,its,step_size = 100.,tracenorm=15.,Sinit = None):
         S = np.dot(np.dot(M,np.diag(v)),M.T)
     return S
     
+def grad_proj2(trips,test_trips,its,step_size = 100.,tracenorm=15.,Sinit = None):
+    if mode==0:
+        grad = exp_grad
+        score = log_score_exp
+    if mode==1:
+        grad = exp2_grad
+        score = log_score_exp2
+    n = np.max(trips)+1
+    if Sinit==None:
+        S = np.eye(n)*tracenorm
+    else:
+        S = Sinit+0.
+    score1 = score(trips,S)
+    for i in range(its):
+        print "Iteration",i,"step size",step_size, "tracenorm",tracenorm,"scores:",score(trips,S),score(test_trips,S)
+        #print S
+        print "average diagonal sq deviation",scipy.linalg.norm(np.diag(S)-tracenorm*np.ones(n))**2/n
+        if i%6==3:
+            score2 = score(trips,S)
+            step_size *=0.4
+        if i%6==0 and i!=0:
+            score3 = score(trips,S)
+            if score1-score2>score2-score3:
+                step_size*=2
+            score1 = score3
+        g = np.zeros([n,n])
+        for (a,b,c) in trips:
+            grad(S,g,a,b,c)
+        print "gradient norm",scipy.linalg.norm(g)
+        S += (step_size/np.sqrt(len(trips)))*g
+        S += (tracenorm*np.eye(n)- np.diag(np.diag(S)))
+        S = (S+S.T)/2
+        #print "expensive step..."
+        [v,M] = np.linalg.eigh(S)
+        m = len(v)
+        #print "              ... done"
+        #first project down to svd and tracenorm
+        for j in range(m):
+            if(v[j]<0.): 
+#                print "******* ZEROING"
+                v[j]=0.
+        S = np.dot(np.dot(M,np.diag(v)),M.T)
+    return S
+    
 
 def create_rand_trips(data,ntrips):
     trips = []
@@ -258,18 +302,18 @@ def posts(S,trips,readem=True):
             lps[a,i]-=np.log2(p(S,i,b,c))
             lps[b,i]-=np.log2(p(S,a,i,c))
             lps[c,i]-=np.log2(p(S,a,b,i))
-    for i in range(n):
-        for j in range(n):
-            lps[i,j]/=counts[i]
+#    for i in range(n):
+#        for j in range(n):
+#            lps[i,j]/=counts[i]
     np.save(postfilename,lps) 
     print "Saved in",postfilename 
     return lps
 
 
-def show_posts(S,trips):
+def show_posts(S,trips,readem=True):
     n = S.shape[0]
     st = "<html><head></head><body><table border=1>"
-    lps = posts(S,trips)
+    lps = posts(S,trips,readem)
     for i in range(n):
         st+="<tr>"
         r = [(lps[i,j],j) for j in range(n)]
@@ -291,9 +335,9 @@ def test_small_ties():
     print len(random_trips),"random trips"
     control_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/control/*.out"))
     print len(control_trips),"control trips"
-    S=grad_proj(random_trips,control_trips,2,step_size=10.,tracenorm=2)
+    S=grad_proj2(random_trips,control_trips,100,step_size=10.,tracenorm=2)
     show_nn(S)
-    show_posts(S,random_trips)
+    show_posts(S,random_trips,False)
 
 filenames = None
 fdir = "c:\\data\\neckties"
