@@ -37,7 +37,8 @@ for i = 1:iter
     %                                                  freedom_bound), ...
     %                                        IX, IA, IB, N), 0, max_mu, ...
     %             options);
-    mu = 1 / sqrt(i);
+    %mu = 1 / sqrt(i);
+    mu = 80;
     max_mu = min(mu * 2, 1);
     S = projectPSD_norm(S + mu * S1, freedom_bound);
     [L percent_right eL] = mat_model_likelihood(S, IX, IA, IB, N);

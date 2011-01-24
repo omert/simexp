@@ -32,7 +32,6 @@ else
     IXnew = T(:, 1);
     IAnew = T(:, 2);
     IBnew = T(:, 3);
-    keyboard
 end
 
 IXnew = ids(IXnew(:));

@@ -42,6 +42,11 @@ prob(const Mat& S, const size_t x, const size_t a, const size_t b)
 #ifdef EXP_DIST
     return 1.0 / (1.0 + exp(-S(b, b) + 2 * S(x, b) - 2 * S(x, a) + S(a, a)));
 #endif
+#ifdef REL_DIST
+    double pa = fabs(2 * S(x, x) + S(b, b) - 2 * S(x, b));
+    double pb = fabs(2 * S(x, x) + S(a, a) - 2 * S(x, a));
+    return pa / (pa + pb);
+#endif
  
 }
 
