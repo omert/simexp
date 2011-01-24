@@ -8,14 +8,15 @@ import os
 
 random.seed(10)
 
-mode = 0 
+mode = 2
+alpha = 0.1
 
 if mode==0:
     print "Mode: 1/(1+exp(Sac-Sab))"
 if mode==1:
     print "Mode: 1/(1+exp(Sbb^2-Scc^2+2Sac-2Sab))"
 if mode==2:
-    print "Mode: (1+Saa+Scc-2Sac)/(2+2Saa+Sbb+Scc-2Sab-2Sac)"
+    print "Mode: (alpha+Saa+Scc-2Sac)/(2alpha+2Saa+Sbb+Scc-2Sab-2Sac)"
 
  
 
@@ -52,8 +53,8 @@ def fake_sim_exp2(data,a,b,c):
     dab = 1.+np.dot(d,d)
     return random.random()< 1./(1.+np.exp(dab-dac))
 
-
 def fake_sim(data,a,b,c):
+    global mode, alpha
     if mode==0:
         Sab = np.dot(data[a],data[b])
         Sac = np.dot(data[a],data[c])
@@ -64,20 +65,18 @@ def fake_sim(data,a,b,c):
         d = data[a]-data[b]
         dab = 1.+np.dot(d,d)
         return random.random()< 1./(1.+np.exp(dab-dac))
-
-
-def fake_sim_rel(data,a,b,c):
-    d = data[a]-data[c]
-    dac = 1.+np.dot(d,d)
-    d = data[a]-data[b]
-    dab = 1.+np.dot(d,d)
-    return random.random()< dac/(dac+dab)
+    if mode==2:
+        return random.random()< 1./(1.+(alpha+scipy.linalg.norm(data[a]-data[b]))/(alpha+scipy.linalg.norm(data[a]-data[c])))
 
 def p(S,a,b,c):
+    global mode, alpha
     if mode==0:
         return 1./(1.+np.exp(S[a,c]-S[a,b]))
     if mode==1:
         return 1./(1.+np.exp(S[b,b]-S[c,c]+2*S[a,c]-2*S[a,b]))
+    if mode==2:
+        return 1./(1.+(alpha+))
+
 
 #add eta times the gradient of an a~b/c trip to matrix g
 def exp_grad(S,g,a,b,c):
