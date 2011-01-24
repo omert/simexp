@@ -194,7 +194,7 @@ def grad_proj(trips,test_trips,its,step_size = 100.,tracenorm=15.,Sinit = None):
     return S
 
 memoize = None
-def project_to_t(S,t,eps=0.05):
+def project_to_t(S,t,eps=0.001):
     global memoize
     n = S.shape[0]
     if memoize==None or memoize.shape[0]!=n:
@@ -302,7 +302,7 @@ def read_out_files(fnames):
         res += [map(int,i.split()[:3]) for i in tools.my_read(f).strip().splitlines()]
     return res
 
-postfilename = "c:/temp/lps.npy"
+postfilename = "c:/temp/lps_exp.npy"
 def posts(S,trips,readem=True):
     if readem and os.path.exists(postfilename):
         return np.load(postfilename)        
@@ -338,9 +338,11 @@ def show_posts(S,trips,readem=True):
         r = [(lps[i,j],j) for j in range(n)]
         r.sort()
         r = [(-10000,i)]+r
+        ttt = np.array([2**(lps[i,i]-lps[i,j]) for j in range(n)])
+        ttt /= sum(ttt)
         for j in range(n):
             k=r[j][1]
-            st+='<td><img alt="lg '+str(lps[i,k]-lps[i,i])+'" src="'+im_filename(k)+'"></td>'
+            st+='<td><img alt="p '+str(ttt[k])+'" src="'+im_filename(k)+'"></td>'
         st+="</tr>\n"
     st+= "</table></body></html>"
     tools.my_write("c:/temp/posts.html",st)
@@ -354,7 +356,7 @@ def test_small_ties():
     print len(random_trips),"random trips"
     control_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/control/*.out"))
     print len(control_trips),"control trips"
-    S=grad_proj2(random_trips,control_trips,50,step_size=1,tracenorm=0.5)
+    S=grad_proj2(random_trips,control_trips,5,step_size=1,tracenorm=1.)
     show_nn(S)
     show_posts(S,random_trips,False)
 
@@ -386,7 +388,6 @@ def show_nn(S):
 
 
 test_small_ties()
-
 
 
 
