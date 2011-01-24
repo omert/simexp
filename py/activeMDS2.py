@@ -41,18 +41,6 @@ def create_fake_tree_data(n,depth):
     
         
 # true means a is more similar to b than c
-def fake_sim_exp(data,a,b,c):
-    Sab = np.dot(data[a],data[b])
-    Sac = np.dot(data[a],data[c])
-    return random.random()< 1./(1.+np.exp(Sac-Sab))
-
-def fake_sim_exp2(data,a,b,c):
-    d = data[a]-data[c]
-    dac = 1.+np.dot(d,d)
-    d = data[a]-data[b]
-    dab = 1.+np.dot(d,d)
-    return random.random()< 1./(1.+np.exp(dab-dac))
-
 def fake_sim(data,a,b,c):
     global mode, alpha
     if mode==0:
@@ -75,7 +63,7 @@ def p(S,a,b,c):
     if mode==1:
         return 1./(1.+np.exp(S[b,b]-S[c,c]+2*S[a,c]-2*S[a,b]))
     if mode==2:
-        return 1./(1.+(alpha+))
+        return 1./(1.+(alpha+S[a,a]+S[b,b]-2.*S[a,b])/(alpha+S[a,a]+S[c,c]-2.*S[a,c]))
 
 
 #add eta times the gradient of an a~b/c trip to matrix g
@@ -96,6 +84,13 @@ def exp2_grad(S,g,a,b,c):
     g[c,a]-=t
 
 
+def rel_update(S,g,a,b,c):
+    dab = alpha + S[a,a]+S[b,b]-2.*S[a,b]
+    dac = alpha + S[a,a]+S[c,c]-2.*S[a,c]
+    p = dac/(dab+dac)
+    t=(1-p)/(dab+dac)
+    g[a,b]+=dac*dab/((dab+dac)**3)
+    g[a,c]-=dab*dab/((dab+dac)**3)
 
 def log_score_exp(trips,S):
     ls = 0.
@@ -111,13 +106,12 @@ def log_score_exp2(trips,S):
 
 
 def log_score_rel(trips,S):
+    global alpha
     ls = 0.
     for (a,b,c) in trips:
-        d = data[a]-data[c]
-        dac = 1.+np.dot(d,d)
-        d = data[a]-data[b]
-        dab = 1.+np.dot(d,d)
-        ls+=np.log2(dac/(dac+dab))
+        dac = alpha+S[a,a]+S[c,c]-2.*S[a,c]
+        dab = alpha+S[a,a]+S[b,b]-2.*S[a,b]
+        ls-=np.log2(dac/(dac+dab))
     return ls/len(trips)
 
 def class_score_exp(trips,S):
@@ -139,61 +133,9 @@ def class_score_exp2(trips,S):
     return ls/len(trips)
     
     
-# tracenorm is an average
-def grad_proj(trips,test_trips,its,step_size = 100.,tracenorm=15.,Sinit = None):
-    if mode==0:
-        grad = exp_grad
-        score = log_score_exp
-    if mode==1:
-        grad = exp2_grad
-        score = log_score_exp2
-    n = np.max(trips)+1
-    if Sinit==None:
-        S = np.zeros([n,n])
-    else:
-        S = Sinit+0.
-    score1 = score(trips,S)
-    for i in range(its):
-        print "Iteration",i,"step size",step_size, "tracenorm",tracenorm,"scores:",score(trips,S),score(test_trips,S)
-        #print S
-        if i%6==3:
-            score2 = score(trips,S)
-            step_size *=0.6
-        if i%6==0 and i!=0:
-            score3 = score(trips,S)
-            if score1-score2>score2-score3:
-                step_size*=2
-            score1 = score3
-        g = np.zeros([n,n])
-        for (a,b,c) in trips:
-            grad(S,g,a,b,c)
-        print scipy.linalg.norm(g)
-        S += step_size*g
-        S = (S+S.T)/2
-        #print "expensive step..."
-        [v,M] = np.linalg.eigh(S)
-        m = len(v)
-        #print "              ... done"
-        #first project down to svd and tracenorm
-        for j in range(m):
-            if(v[j]<0.): 
-#                print "******* ZEROING"
-                v[j]=0.
-            else:
-                s = sum(v)
-                if s>tracenorm*n:
-#                    import pdb; pdb.set_trace()
-#                    print "+++++++ SHRINKING"
-                    vv = min(v[j],(s-tracenorm*n)/(m-j))
-                    for k in range(j,m):
-                        v[k]-=vv
-                else:
-                    break
-        S = np.dot(np.dot(M,np.diag(v)),M.T)
-    return S
 
 memoize = None
-def project_to_t(S,t,eps=0.05):
+def project_to_t(S,t,eps=0.01):
     global memoize
     n = S.shape[0]
     if memoize==None or memoize.shape[0]!=n:
@@ -217,21 +159,23 @@ def project_to_t(S,t,eps=0.05):
 
 
 
-def grad_proj2(trips,test_trips,its,step_size = 100.,tracenorm=15.,Sinit = None):
-    if mode==0:
-        grad = exp_grad
-        score = log_score_exp
-    if mode==1:
-        grad = exp2_grad
-        score = log_score_exp2
+def grad_proj2(trips,test_trips,its,step_size = 1.,alpha=.1,Sinit = None):
+    grad = rel_update
+    score = log_score_rel
+#    if mode==0:
+#        grad = exp_grad
+#        score = log_score_exp
+#    if mode==1:
+#        grad = exp2_grad
+#        score = log_score_exp2
     n = np.max(trips)+1
     if Sinit==None:
-        S = np.eye(n)*tracenorm
+        S = np.eye(n)
     else:
         S = Sinit+0.
     score1 = score(trips,S)
     for i in range(its):
-        print "Iteration",i,"step size",step_size, "tracenorm",tracenorm,"scores:",score(trips,S),score(test_trips,S)
+        print "Iteration",i,"step size",step_size, "alpha",alpha,"scores:",score(trips,S),score(test_trips,S)
         #print S
         if i%6==3:
             score2 = score(trips,S)
@@ -252,7 +196,7 @@ def grad_proj2(trips,test_trips,its,step_size = 100.,tracenorm=15.,Sinit = None)
         m = len(v)
         #print "              ... done"
         #first project down to svd and tracenorm
-        S=project_to_t(S,tracenorm)
+        S=project_to_t(S,1.)
     return S
     
 
@@ -301,7 +245,7 @@ def read_out_files(fnames):
         res += [map(int,i.split()[:3]) for i in tools.my_read(f).strip().splitlines()]
     return res
 
-postfilename = "c:/temp/lps.npy"
+postfilename = "c:/temp/lps_rel.npy"
 def posts(S,trips,readem=True):
     if readem and os.path.exists(postfilename):
         return np.load(postfilename)        
@@ -342,20 +286,9 @@ def show_posts(S,trips,readem=True):
             st+='<td><img alt="lg '+str(lps[i,k]-lps[i,i])+'" src="'+im_filename(k)+'"></td>'
         st+="</tr>\n"
     st+= "</table></body></html>"
-    tools.my_write("c:/temp/posts.html",st)
+    tools.my_write("c:/temp/posts_rel.html",st)
 
 
-def test_small_ties():
-    print "Testing neckties"
-    adaptive_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/*.out"))
-    print len(adaptive_trips),"adaptive trips"
-    random_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/random/*.out"))
-    print len(random_trips),"random trips"
-    control_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/control/*.out"))
-    print len(control_trips),"control trips"
-    S=grad_proj2(random_trips,control_trips,50,step_size=1,tracenorm=0.5)
-    show_nn(S)
-    show_posts(S,random_trips,False)
 
 filenames = None
 fdir = "c:\\data\\neckties"
@@ -380,8 +313,22 @@ def show_nn(S):
             st+='<td><img src="'+im_filename(dists[j][1])+'"></td>'
         st+="</tr>\n"
     st+= "</table></body></html>"
-    tools.my_write("c:/temp/nn.html",st)
+    tools.my_write("c:/temp/nn_rel.html",st)
         
+
+
+def test_small_ties():
+    print "Testing neckties"
+    adaptive_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/*.out"))
+    print len(adaptive_trips),"adaptive trips"
+    random_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/random/*.out"))
+    print len(random_trips),"random trips"
+    control_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/control/*.out"))
+    print len(control_trips),"control trips"
+    S=grad_proj2(random_trips,control_trips,25,step_size=10,alpha=0.1)
+    show_nn(S)
+    show_posts(S,random_trips,False)
+
 
 
 test_small_ties()
