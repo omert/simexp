@@ -23,6 +23,12 @@ prob(const Mat& S, const size_t x, const size_t a, const size_t b)
 
 }
 
+double 
+log2(double x)
+{
+    return log(x) / log(2.0);
+}
+
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 { 
@@ -47,42 +53,53 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
     }
     
 
-    mxArray* mxC = mxCreateDoubleMatrix((int)numObj, (int)numObj, mxREAL); 
-
     Mat S(prhs[0]);    
-    Mat C(mxC);
 
     double *ix = mxGetPr(prhs[1]);
     double *ia = mxGetPr(prhs[2]);
     double *ib = mxGetPr(prhs[3]);
     double *n = mxGetPr(prhs[4]);
 
-    vector<size_t> numTrips(numObj);
+    mxArray* mxP = mxCreateDoubleMatrix((int)numObj, (int)numObj, mxREAL); 
+    Mat P(mxP);
+
+
     for (size_t y = 0; y < numObj; ++y)
 	for (size_t iComp = 0; iComp < numComps; ++iComp){
 	    size_t x = (size_t)ix[iComp] - 1;
 	    size_t a = (size_t)ia[iComp] - 1;
 	    size_t b = (size_t)ib[iComp] - 1;
 	    
-	    C(x, y) += n[iComp] * log(prob(S, y, a, b));
-	    ++numTrips[x];
+	    P(x, y) += n[iComp] * log(prob(S, y, a, b));
 	}
     for (size_t x = 0; x < numObj; ++x){
 	for (size_t y = 0; y < numObj; ++y)
-	    C(x, y) = exp(C(x, y));
+	    P(x, y) = exp(P(x, y));
 	double sum = 0.0;
 	for (size_t y = 0; y < numObj; ++y)
-	    sum += C(x, y);
+	    sum += P(x, y);
 	for (size_t y = 0; y < numObj; ++y)
-	    C(x, y) = C(x, y) / sum;
+	    P(x, y) = P(x, y) / sum;
     }
 
     plhs[0] = mxCreateDoubleMatrix((int)1, (int)1, mxREAL); 
-    Mat igain(plhs[0]);
+    double& igain = *mxGetPr(plhs[0]);
     for (size_t x = 0; x < numObj; ++x){
-	igain(0, 0) = 0.0;
+//	mexPrintf("%f\n", -log2(numObj) - log2(P(x, x)));
+//	igain += log2(numObj) + log2(P(x, x));
+	size_t position = 0;
+	for (size_t y = 0; y < numObj; ++y)
+	    if (P(x, y) >= P(x, x))
+		++position;
+	igain += position;
+	
     }    
-    mxDestroyArray(mxC);
+    igain = igain / numObj;
+
+
+//    mexPrintf("%f\n", igain);
+
+    mxDestroyArray(mxP);
 
 	    
     return;

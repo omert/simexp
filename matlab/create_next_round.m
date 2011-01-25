@@ -9,7 +9,6 @@ load(datafile);
 %x = fit_mat(IX, IA, IB, N, ids, 5, 1, x * x');
 %save_experiement_data(datafile, IX, IA, IB, N, ids, dataset, x);
 
-model_likelihood(x, IX, IA, IB, N)
 
 if 0
     IXnew = zeros(num_per_obj, num_obj);

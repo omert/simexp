@@ -18,27 +18,29 @@ end
 options = optimset('maxfunevals', 5, 'display', 'off');
 
 S = projectPSD_norm(S, freedom_bound, 0);
-L = mat_model_likelihood(S, IX, IA, IB, N);
-%fprintf(1, 'likelihood after projection: %f\n', L);
+
+T = S;
 
 max_mu = 10;
 
 for i = 1:iter
-    %S1 = update_matrix(S, IX, IA, IB, N);
-    S1 = logistic_deriv(S, IX, IA, IB, N);
-    %S1 = distance_deriv(S, IX, IA, IB, N);
-    %deriv_norm = norm(S - projectPSD_norm(S + S1, freedom_bound));
+    %dS = update_matrix(S, IX, IA, IB, N);
+    dS = logistic_deriv(S, IX, IA, IB, N);
+    %dS = distance_deriv(S, IX, IA, IB, N);
+    %deriv_norm = norm(S - projectPSD_norm(S + dS, freedom_bound));
     %    fprintf(1, 'convergence: %f\n', deriv_norm);
     
     %mu = fminbnd(@(mu) mat_model_likelihood(projectPSD_norm(S + mu ...
-    %                                                  * S1, ...
+    %                                                  * dS, ...
     %                                                  freedom_bound), ...
     %                                        IX, IA, IB, N), 0, max_mu, ...
     %             options);
     %mu = 1 / sqrt(i);
     mu = 2;
     %max_mu = mu * 2;
-    S = projectPSD_norm(S + mu * S1, freedom_bound);
+    T = S + mu * dS;
+    
+    S = projectPSD_norm(T, freedom_bound);
     [L percent_right eL] = mat_model_likelihood(S, IX, IA, IB, N);
     fprintf(1, ' mu: %f    L: %f   percent right: %f\n', mu, L, ...
             percent_right);

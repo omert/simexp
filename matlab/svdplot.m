@@ -54,8 +54,8 @@ for i = 1:length(U)
 %    fprintf(f1, '</a>\n');
 end
 
-xii = repmat(row_norm(x), 1, length(x)).^2;
-D = sqrt(xii - 2 * x * x' + xii');
+%xii = repmat(row_norm(x), 1, length(x)).^2;
+%D = sqrt(xii - 2 * x * x' + xii');
 
 D = confusion_matrix(x * x', IX, IA, IB, N);
 for j = 1:length(x)

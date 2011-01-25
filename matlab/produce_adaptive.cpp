@@ -43,8 +43,8 @@ prob(const Mat& S, const size_t x, const size_t a, const size_t b)
     return 1.0 / (1.0 + exp(-S(b, b) + 2 * S(x, b) - 2 * S(x, a) + S(a, a)));
 #endif
 #ifdef REL_DIST
-    double pa = fabs(2 * S(x, x) + S(b, b) - 2 * S(x, b));
-    double pb = fabs(2 * S(x, x) + S(a, a) - 2 * S(x, a));
+    double pa = fabs(1.0 + S(x, x) + S(b, b) - 2 * S(x, b));
+    double pb = fabs(1.0 + S(x, x) + S(a, a) - 2 * S(x, a));
     return pa / (pa + pb);
 #endif
  
@@ -62,15 +62,17 @@ expecetedEntropy(const Mat& S, const Mat& P, const size_t numObj,
     vector<double> pa = p0;
     vector<double> pb = p0;
 
+    
+    double p = 0.0;
     for (size_t y = 0; y < numObj; ++y){
 	double pab = prob(S, y, a, b);
 	pa[y] *= pab;
 	pb[y] *= (1 - pab);
+	p += pab * p0[y];
     }
     normalize(pa);
     normalize(pb);
 
-    double p = prob(S, x, a, b);
     return p * entropy(pa) + (1 - p) * entropy(pb);
 }
 
@@ -85,7 +87,7 @@ produce_triplet(const Mat& S, const Mat& P, const size_t numObj,
 	for (size_t b = a + 1; b < numObj; ++b){
 	    if (b == x)
 		continue;
-	    if (frand() < 0.5)
+	    if (frand() < 0.8)
 		continue;
 	    double ent = expecetedEntropy(S, P, numObj, x, a, b);
 	    if (ent < bestEntropy){
