@@ -1,17 +1,27 @@
-function M1 = projectPSD_norm(M, max_trace)
+function M1 = projectPSD_norm(M, max_trace, recalc_d)
 
 % Project to positive semidefinites. M assumed to be symmetric
 
+persistent d;
 
 M = (M + M')/2;
-[V D] = eig(M);
+n = length(M);
+max_norm = max_trace / n;
 
-D = max(D, 0);
-M1 = V * D * V';
-M1 = (M1 + M1')/2;
+max_err = 0.02;
 
-d = min(1.0, sqrt(max_trace / length(M) ./ (1e-10 + diag(M1))));
-for i = 1:length(M1);
-    M1(:, i) = M1(:, i) * d(i);
-    M1(i, :) = M1(i, :) * d(i);
+if length(d) ~= n || nargin >= 3
+    d = max_norm - diag(M);
 end
+
+for iter = 1:500
+    M1 = projectPSD(M + diag(d));
+    d = d + max_norm - diag(M1);
+    er = max(abs(diag(M1) - max_norm));
+    if er < max_err * max_norm
+        break;
+    end
+end
+fprintf('projectPSD_norm iterations: %d\n', iter);
+
+

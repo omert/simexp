@@ -28,7 +28,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[] )
     double *ib = mxGetPr(prhs[3]);
     double *n = mxGetPr(prhs[4]);
 
-    double *g;
+    double *g = 0;
     if (nlhs > 1){
         plhs[1] = mxCreateDoubleMatrix((int)numObj, (int)numDim, mxREAL); 
         g = mxGetPr(plhs[1]);

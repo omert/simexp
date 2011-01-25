@@ -7,6 +7,12 @@
 
 using namespace std;
 
+double 
+frand()
+{
+    return 1.0 * rand() / RAND_MAX;
+}
+
 void 
 normalize(vector<double>& rP)
 {
@@ -36,13 +42,18 @@ prob(const Mat& S, const size_t x, const size_t a, const size_t b)
 #ifdef EXP_DIST
     return 1.0 / (1.0 + exp(-S(b, b) + 2 * S(x, b) - 2 * S(x, a) + S(a, a)));
 #endif
+#ifdef REL_DIST
+    double pa = fabs(2 * S(x, x) + S(b, b) - 2 * S(x, b));
+    double pb = fabs(2 * S(x, x) + S(a, a) - 2 * S(x, a));
+    return pa / (pa + pb);
+#endif
  
 }
 
 
 double
-informationGain(const Mat& S, const Mat& P, const size_t numObj,
-		const size_t x, const size_t a, const size_t b)
+expecetedEntropy(const Mat& S, const Mat& P, const size_t numObj,
+		 const size_t x, const size_t a, const size_t b)
 {
     vector<double> p0(numObj);
     for (size_t i = 0; i < numObj; ++i)
@@ -67,22 +78,25 @@ void
 produce_triplet(const Mat& S, const Mat& P, const size_t numObj,
 		size_t x, size_t& rA, size_t& rB)
 {
-    double bestInfoGain = 0.0;
+    double bestEntropy = numObj;
     for (size_t a = 0; a < numObj; ++a){
 	if (a == x)
+	    continue;
+	if (frand() < 0.5)
 	    continue;
 	for (size_t b = a + 1; b < numObj; ++b){
 	    if (b == x)
 		continue;
-	    double infoGain = informationGain(S, P, numObj, x, a, b);
-	    if (infoGain > bestInfoGain){
-		bestInfoGain = infoGain;
+	    if (frand() < 0.5)
+		continue;
+	    double ent = expecetedEntropy(S, P, numObj, x, a, b);
+	    if (ent < bestEntropy){
+		bestEntropy = ent;
 		rA = a;
 		rB = b;
 	    }
 	}
     }
-    
 }
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
@@ -120,18 +134,24 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
 		  "confusion_matrix");
     Mat P(plhs1[0]);
     
-    for (size_t x = 0; x < 1; ++x){
-	size_t a;
-	size_t b;
+    for (size_t x = 0; x < numObj; ++x){
+	size_t a = 0;
+	size_t b = 0;
 	produce_triplet(S, P, numObj, x, a, b);
-	T(x, 0) = x + 1;
-	T(x, 1) = a + 1;
-	T(x, 2) = b + 1;
+	mexPrintf("%d ~ %d / %d: p = %f,  P(x, a) = %f, P(x, b) = %f\n",
+		  x, a, b, prob(S, x, a, b), P(x, a), P(x, b));
+	T(x, 0) = x;
+	T(x, 1) = a;
+	T(x, 2) = b;
     }
-	
+    for (size_t x = 0; x < numObj; ++x){
+	T(x, 0) += 1;
+	T(x, 1) += 1;
+	T(x, 2) += 1;
+    }	
 
 
-    mxDestroyArray(plhs[0]);
+    mxDestroyArray(plhs1[0]);
 	    
     return;
     

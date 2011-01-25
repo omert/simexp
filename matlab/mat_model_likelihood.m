@@ -8,14 +8,14 @@ iAA = IA + m * (IA-1);
 iXB = IX + m * (IB-1);
 iXA = IX + m * (IA-1);
 
-%pa = 1.0 + S(iXX) + S(iBB) - 2 * S(iXB);
-%pb = 1.0 + S(iXX) + S(iAA) - 2 * S(iXA);
+pa = 1.0 + S(iXX) + S(iBB) - 2 * S(iXB);
+pb = 1.0 + S(iXX) + S(iAA) - 2 * S(iXA);
 
 %pa = 2 * S(iXX) + S(iBB) - 2 * S(iXB);
 %pb = 2 * S(iXX) + S(iAA) - 2 * S(iXA);
 
-pa = exp(S(iXA));
-pb = exp(S(iXB));
+%pa = exp(S(iXA));
+%pb = exp(S(iXB));
 
 %pa = exp(S(iXX) - 2*S(iXB) + S(iBB));
 %pb = exp(S(iXX) - 2*S(iXA) + S(iAA));
