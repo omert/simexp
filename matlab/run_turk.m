@@ -3,5 +3,5 @@ function run_turk(config_file, trips_file, out_file)
 fprintf('running turk on %s %s %s\n', config_file, trips_file, out_file);
 [status, result] = system(sprintf(['python ../py/runtrips.py %s %s ' ...
 '%s&'], config_file, trips_file, out_file), '-echo')
-fprintf('sleeping for four minutes\n');
-pause(4 * 60);
+fprintf('sleeping for six minutes\n');
+pause(6 * 60);
