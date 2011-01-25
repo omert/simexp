@@ -4,19 +4,19 @@ import scipy.linalg
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import random, tools, glob
-import os
+import os, csv
 
 random.seed(10)
 
 mode = 2
-alpha = 0.1
+alpha = 0.2
 
 if mode==0:
     print "Mode: 1/(1+exp(Sac-Sab))"
 if mode==1:
     print "Mode: 1/(1+exp(Sbb^2-Scc^2+2Sac-2Sab))"
 if mode==2:
-    print "Mode: (alpha+Saa+Scc-2Sac)/(2alpha+2Saa+Sbb+Scc-2Sab-2Sac)"
+    print "Mode: (alpha+Saa+Scc-2Sac)/(2alpha+2Saa+Sbb+Scc-2Sab-2Sac), alpha =",alpha
 
  
 
@@ -54,7 +54,7 @@ def fake_sim(data,a,b,c):
         dab = 1.+np.dot(d,d)
         return random.random()< 1./(1.+np.exp(dab-dac))
     if mode==2:
-        return random.random()< 1./(1.+(alpha+scipy.linalg.norm(data[a]-data[b]))/(alpha+scipy.linalg.norm(data[a]-data[c])))
+        return random.random()< 1./(1.+(1.+scipy.linalg.norm(data[a]-data[b]))/(1.+scipy.linalg.norm(data[a]-data[c])))
 
 def p(S,a,b,c):
     global mode, alpha
@@ -63,7 +63,7 @@ def p(S,a,b,c):
     if mode==1:
         return 1./(1.+np.exp(S[b,b]-S[c,c]+2*S[a,c]-2*S[a,b]))
     if mode==2:
-        return 1./(1.+(alpha+S[a,a]+S[b,b]-2.*S[a,b])/(alpha+S[a,a]+S[c,c]-2.*S[a,c]))
+        return 1./(1.+(1.+S[a,a]+S[b,b]-2.*S[a,b])/(1.+S[a,a]+S[c,c]-2.*S[a,c]))
 
 
 #add eta times the gradient of an a~b/c trip to matrix g
@@ -85,12 +85,23 @@ def exp2_grad(S,g,a,b,c):
 
 
 def rel_update(S,g,a,b,c):
-    dab = alpha + S[a,a]+S[b,b]-2.*S[a,b]
-    dac = alpha + S[a,a]+S[c,c]-2.*S[a,c]
-    p = dac/(dab+dac)
-    t=(1-p)/(dab+dac)
-    g[a,b]+=dac*dab/((dab+dac)**3)
-    g[a,c]-=dab*dab/((dab+dac)**3)
+    dab = 1. + S[a,a]+S[b,b]-2.*S[a,b]
+    dac = 1. + S[a,a]+S[c,c]-2.*S[a,c]
+    g[a,b]+=S[a,a]*dac*dab/((dab+dac)**3)
+    g[a,c]-=S[a,a]*dab*dab/((dab+dac)**3)
+    g[b,a]+=S[a,a]*dac*dab/((dab+dac)**3)
+    g[c,a]-=S[a,a]*dab*dab/((dab+dac)**3)
+
+def rel_update2(S,g,a,b,c):
+    dab = 1. + S[a,a]+S[b,b]-2.*S[a,b]
+    dac = 1. + S[a,a]+S[c,c]-2.*S[a,c]
+    R = 1./alpha
+    g[a,b]+=R/(dab+dac)
+    g[a,c]+=R/(dab+dac)-R/dac
+    g[b,a]+=R/(dab+dac)
+    g[c,a]+=R/(dab+dac)-R/dac
+
+
 
 def log_score_exp(trips,S):
     ls = 0.
@@ -109,8 +120,8 @@ def log_score_rel(trips,S):
     global alpha
     ls = 0.
     for (a,b,c) in trips:
-        dac = alpha+S[a,a]+S[c,c]-2.*S[a,c]
-        dab = alpha+S[a,a]+S[b,b]-2.*S[a,b]
+        dac = 1.+S[a,a]+S[c,c]-2.*S[a,c]
+        dab = 1.+S[a,a]+S[b,b]-2.*S[a,b]
         ls-=np.log2(dac/(dac+dab))
     return ls/len(trips)
 
@@ -134,15 +145,18 @@ def class_score_exp2(trips,S):
     
     
 
+
+
+
 memoize = None
 def project_to_t(S,t,eps=0.01):
-    global memoize
+    global memoize,alpha
     n = S.shape[0]
     if memoize==None or memoize.shape[0]!=n:
         memoize=np.zeros(n)
     err = eps+1
     j = 0
-    while err>eps:
+    while err>eps/alpha:
         j+=1
         [v,M] = np.linalg.eigh(S+np.diag(memoize))
         for i in range(n):
@@ -159,46 +173,45 @@ def project_to_t(S,t,eps=0.01):
 
 
 
-def grad_proj2(trips,test_trips,its,step_size = 1.,alpha=.1,Sinit = None):
-    grad = rel_update
+
+def grad_proj2(trips,test_trips,its=None,step_size = 1.,Sinit = None):
+    global alpha
+    grad = rel_update2
     score = log_score_rel
-#    if mode==0:
-#        grad = exp_grad
-#        score = log_score_exp
-#    if mode==1:
-#        grad = exp2_grad
-#        score = log_score_exp2
     n = np.max(trips)+1
     if Sinit==None:
-        S = np.eye(n)
+        S = np.eye(n)/alpha
     else:
         S = Sinit+0.
     score1 = score(trips,S)
+    if its == None:
+        its = 1000000
+    lastscore =score(test_trips,S)
     for i in range(its):
-        print "Iteration",i,"step size",step_size, "alpha",alpha,"scores:",score(trips,S),score(test_trips,S)
+        print "Iteration",i,"step size",step_size, "alpha",alpha,"scores:",score(trips,S),lastscore
         #print S
-        if i%6==3:
-            score2 = score(trips,S)
-            step_size *=0.6
-        if i%6==0 and i!=0:
-            score3 = score(trips,S)
-            if score1-score2>score2-score3:
-                step_size*=2
-            score1 = score3
+#        if i%6==3:
+#            score2 = score(trips,S)
+#            step_size *=0.6
+#        if i%6==0 and i!=0:
+#            score3 = score(trips,S)
+#            if score1-score2>score2-score3:
+#                step_size*=2
+#            score1 = score3
         g = np.zeros([n,n])
         for (a,b,c) in trips:
             grad(S,g,a,b,c)
         print "gradient norm",scipy.linalg.norm(g)
-        S += step_size*g
-        S = (S+S.T)/2
-        #print "expensive step..."
-        [v,M] = np.linalg.eigh(S)
-        m = len(v)
-        #print "              ... done"
-        #first project down to svd and tracenorm
-        S=project_to_t(S,1.)
+        T = S + step_size*g
+        T = (T+T.T)/2
+        T=project_to_t(T,1./alpha)
+        newscore = score(test_trips,T)
+        if newscore>=lastscore-0.001 and its == 1000000:
+            return S
+        S = T
+        lastscore = newscore
     return S
-    
+
 
 def create_rand_trips(data,ntrips):
     trips = []
@@ -245,7 +258,7 @@ def read_out_files(fnames):
         res += [map(int,i.split()[:3]) for i in tools.my_read(f).strip().splitlines()]
     return res
 
-postfilename = "c:/temp/lps_rel.npy"
+postfilename = "c:/temp/lps_rel"+str(alpha)+".npy"
 def posts(S,trips,readem=True):
     if readem and os.path.exists(postfilename):
         return np.load(postfilename)        
@@ -255,11 +268,8 @@ def posts(S,trips,readem=True):
     k=0
     for (a,b,c) in trips:
         k+=1
-        if k%100==0:
+        if k%1000==0:
             print k,"/",len(trips)
-        counts[a]+=1
-        counts[b]+=1
-        counts[c]+=1
         for i in range(n):
             lps[a,i]-=np.log2(p(S,i,b,c))
             lps[b,i]-=np.log2(p(S,a,i,c))
@@ -272,6 +282,27 @@ def posts(S,trips,readem=True):
     return lps
 
 
+def posts2(S,trips):
+    n = S.shape[0]
+    lps = np.zeros([n,n])
+    counts = np.zeros(n)
+    k=0
+    for (a,b,c) in trips:
+        k+=1
+        if k%1000==0:
+            print k,"/",len(trips)
+        for i in range(n):
+            lps[a,i]-=np.log2(p(S,i,b,c))
+#    for i in range(n):
+#        for j in range(n):
+#            lps[i,j]/=counts[i]
+    for i in range(n):
+        lps[i]-=lps[i,i]
+        lps[i]+=np.log2(sum([2**(-lps[i,j]) for j in range(n)]))
+    return lps
+
+
+
 def show_posts(S,trips,readem=True):
     n = S.shape[0]
     st = "<html><head></head><body><table border=1>"
@@ -281,12 +312,15 @@ def show_posts(S,trips,readem=True):
         r = [(lps[i,j],j) for j in range(n)]
         r.sort()
         r = [(-10000,i)]+r
+        ttt = np.array([2**(lps[i,i]-lps[i,j]) for j in range(n)])
+        ttt /= sum(ttt)
         for j in range(n):
             k=r[j][1]
-            st+='<td><img alt="lg '+str(lps[i,k]-lps[i,i])+'" src="'+im_filename(k)+'"></td>'
+            st+='<td><img alt="'+str(ttt[k])+'" src="'+im_filename(k)+'"></td>'
         st+="</tr>\n"
     st+= "</table></body></html>"
-    tools.my_write("c:/temp/posts_rel.html",st)
+    tools.my_write("c:/temp/posts_rel"+str(alpha)+".html",st)
+    print "c:/temp/posts_rel"+str(alpha)+".html"
 
 
 
@@ -313,26 +347,8 @@ def show_nn(S):
             st+='<td><img src="'+im_filename(dists[j][1])+'"></td>'
         st+="</tr>\n"
     st+= "</table></body></html>"
-    tools.my_write("c:/temp/nn_rel.html",st)
-        
-
-
-def test_small_ties():
-    print "Testing neckties"
-    adaptive_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/*.out"))
-    print len(adaptive_trips),"adaptive trips"
-    random_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/random/*.out"))
-    print len(random_trips),"random trips"
-    control_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/control/*.out"))
-    print len(control_trips),"control trips"
-    S=grad_proj2(random_trips,control_trips,25,step_size=10,alpha=0.1)
-    show_nn(S)
-    show_posts(S,random_trips,False)
-
-
-
-test_small_ties()
-
+    tools.my_write("c:/temp/nn_rel"+str(alpha)+".html",st)
+    print "c:/temp/nn_rel"+str(alpha)+".html"
 
 
 
@@ -340,13 +356,117 @@ def doppel_trips(S,trips):
     lps = posts(S,trips,readem=True) #posterior distribution
     n = S.shape[0]
     st = "<html><head></head><body><table>"  
-    for qqq in range(10):
-        st+="<tr>"
-        a = random.randrange(n)
-        scores = []
-        for rrr in range(1000):
+    for a in range(n):
+        prior = np.array([2**(lps[a,a]-lps[a,j]) for j in range(n)])
+        prior[a]=0
+        prior /= sum(prior)
+        # p is posteriors
+        for rrr in range(600):
             b = random.randrange(n)
             c = random.randrange(n)
-            
+            if b==c or b==a or c==a:
+                continue
+            #evaluate quality of trip a b c for a's uncertainty           
+            pb = 0.
+            for j in range(n):
+                pb += prior[j]*p(S,j,b,c)
+            pc = 1-pb    
+            u = 0
+            for j in range(n):
+                t = p(S,j,b,c)
+                if t>1:
+                    print "UH OH: ",j,b,c,S[j,j]+S[b,b]-2.*S[j,b],S[j,j]+S[b,b]-2.*S[j,b]
+                if prior[j]>1e-17:
+                    u += prior[j]*t*np.log2(pb/(prior[j]*t)) + prior[j]*(1-t)*np.log2(pc/(prior[j]*(1-t)))
+            if rrr==0 or u<best:
+                best = u
+                bestb = b
+                bestc = c
+                bestpb = pb
+        print "Best entropy",best
+        st+="<tr>"
+        st+='<td><img src="'+im_filename(a)+'"></td>'
+        st+='<td><img src="'+im_filename(bestb)+'"></td>'
+        st+='<td><img src="'+im_filename(bestc)+'"></td>'
+        st+='<td><table border=1>'
+        b = bestb
+        c = bestc
+        t = [ (prior[j]*(p(S,j,b,c)-bestpb),j) for j in range(n)]
+        t.sort()
+        st+='<tr>'
+        for j in range(20):
+            st+='<td><img src="'+im_filename(t[j][1])+'" alt="'+str(t[j][0])+'"></td>'
+        st+='</tr>'
+        st+='<tr>'
+        for j in range(20):            
+            st+='<td><img src="'+im_filename(t[-j-1][1])+'" alt="'+str(t[-j-1][0])+'"></td>'
+        st+='</tr>'
+        st+="</table></td></tr>\n"
+        tools.my_write("c:/temp/doppels_rel"+str(alpha)+".html",st+ "</table></body></html>")
+        print "c:/temp/doppels_rel"+str(alpha)+".html"
 
-        
+
+
+def learn(S,y):
+    pass
+    
+
+
+
+Sfilename = "c:/temp/S_rel"+str(alpha)+".npy"
+def test_small_ties(readem=True):
+    print "Testing neckties"
+    adaptive_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/*.out"))
+    print len(adaptive_trips),"adaptive trips"
+    random_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/random/*.out"))
+    print len(random_trips),"random trips"
+    control_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/control/*.out"))
+    print len(control_trips),"control trips"
+    if readem and os.path.exists(Sfilename):
+        S = np.load(Sfilename)        
+    else:
+        S=grad_proj2(random_trips,control_trips,step_size=50)
+        np.save(Sfilename,S)
+    n=S.shape[0]
+    print "n=",n
+    show_nn(S)
+    ps = posts2(S,control_trips)
+    print "Should be 1:", sum([2**(-ps[1,j]) for j in range(n)])
+    print "The information gain score is:",np.log2(n)-sum(np.diag(ps))/n
+    tot = 0
+    tot2 = 0
+    for i in range(n):
+        soo = 0
+        for j in range(n):
+            if ps[i][j]<=ps[i][i]:
+                soo+=1
+        tot+= soo
+        tot2+=np.log2(soo)
+    print "The average depth is:",tot/n
+    print "The average log-depth is:",tot2/n
+    
+    show_posts(S,random_trips)
+    
+    doppel_trips(S,random_trips) #also loads posts from file
+    
+
+
+def test_omers_fit():
+    print "Testing Omer's neckties"
+    adaptive_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/*.out"))
+    print len(adaptive_trips),"adaptive trips"
+    random_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/random/*.out"))
+    print len(random_trips),"random trips"
+    control_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/control/*.out"))
+    print len(control_trips),"control trips"
+    M = np.array([[float(b) for b in a.split()] for a in tools.my_read("c:/users/adum/simexp/matlab/neckties_fit_5.txt").strip().splitlines()])
+    S = np.dot(M,M.T)
+    #grad_proj2(random_trips,control_trips,step_size=5,its=2,Sinit=S)
+    print "n=",S.shape[0]
+    show_nn(S)
+    show_posts(S,random_trips)
+    doppel_trips(S,random_trips) #also loads posts from file
+    
+
+
+test_small_ties()

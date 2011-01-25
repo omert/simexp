@@ -348,7 +348,66 @@ def show_posts(S,trips,readem=True):
     tools.my_write("c:/temp/posts.html",st)
 
 
+
+
+
+def doppel_trips(S,trips,radius):
+    lps = posts(S,trips,readem=True) #posterior distribution
+    n = S.shape[0]
+    st = "<html><head></head><body><table>"  
+    for a in range(100):
+        prior = np.array([2**(lps[a,a]-lps[a,j]) for j in range(n)])
+        prior[a]=0
+        prior /= sum(prior)
+        # p is posteriors
+        for rrr in range(300):
+            b = random.randrange(n)
+            c = random.randrange(n)
+            if b==c or b==a or c==a:
+                continue
+            #evaluate quality of trip a b c for a's uncertainty           
+            pb = 0.
+            for j in range(n):
+                pb += prior[j]*p(S,j,b,c)
+            pc = 1-pb    
+            u = 0
+            for j in range(n):
+                t = p(S,j,b,c)
+                if t>1:
+                    print "UH OH: ",j,b,c,S[j,j]+S[b,b]-2.*S[j,b],S[j,j]+S[b,b]-2.*S[j,b]
+                if prior[j]>1e-17:
+                    u += prior[j]*t*np.log2(pb/(prior[j]*t)) + prior[j]*(1-t)*np.log2(pc/(prior[j]*(1-t)))
+            if rrr==0 or u<best:
+                best = u
+                bestb = b
+                bestc = c
+                bestpb = pb
+        print "Best entropy",best
+        st+="<tr>"
+        st+='<td><img src="'+im_filename(a)+'"></td>'
+        st+='<td><img src="'+im_filename(bestb)+'"></td>'
+        st+='<td><img src="'+im_filename(bestc)+'"></td>'
+        st+='<td><table border=1>'
+        b = bestb
+        c = bestc
+        t = [ (prior[j]*(p(S,j,b,c)-bestpb),j) for j in range(n)]
+        t.sort()
+        st+='<tr>'
+        for j in range(20):
+            st+='<td><img src="'+im_filename(t[j][1])+'" alt="'+str(t[j][0])+'"></td>'
+        st+='</tr>'
+        st+='<tr>'
+        for j in range(20):            
+            st+='<td><img src="'+im_filename(t[-j-1][1])+'" alt="'+str(t[-j-1][0])+'"></td>'
+        st+='</tr>'
+        st+="</table></td></tr>\n"
+        tools.my_write("c:/temp/doppels_exp"+str(radius)+".html",st+ "</table></body></html>")
+        print "c:/temp/doppels_exp"+str(radius)+".html"
+
+
+
 def test_small_ties():
+    radius = 1.
     print "Testing neckties"
     adaptive_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/*.out"))
     print len(adaptive_trips),"adaptive trips"
@@ -356,10 +415,11 @@ def test_small_ties():
     print len(random_trips),"random trips"
     control_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/control/*.out"))
     print len(control_trips),"control trips"
-    S=grad_proj2(random_trips,control_trips,5,step_size=1,tracenorm=1.)
+    S=grad_proj2(random_trips,control_trips,10,step_size=1,tracenorm=radius)
     show_nn(S)
-    show_posts(S,random_trips,False)
-
+    show_posts(S,random_trips)
+    doppel_trips(S,random_trips,radius)
+    
 filenames = None
 fdir = "c:\\data\\neckties"
 def im_filename(j):
@@ -388,20 +448,3 @@ def show_nn(S):
 
 
 test_small_ties()
-
-
-
-def doppel_trips(S,trips):
-    lps = posts(S,trips,readem=True) #posterior distribution
-    n = S.shape[0]
-    st = "<html><head></head><body><table>"  
-    for qqq in range(10):
-        st+="<tr>"
-        a = random.randrange(n)
-        scores = []
-        for rrr in range(1000):
-            b = random.randrange(n)
-            c = random.randrange(n)
-            
-
-        
