@@ -1,5 +1,5 @@
 
-run_adaptive('../turkexps/neckties/small/random/','neckties',1,1);
+run_adaptive('/home/tamuz/dev/simexp/turkexps/newtiles/testrun/','newtiles',2,1);
 return
 
 load('c:\sim\turkexps\tiles\all.data.mat');

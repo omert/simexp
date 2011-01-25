@@ -52,7 +52,7 @@ prob(const Mat& S, const size_t x, const size_t a, const size_t b)
 
 
 double
-expecetedEntropy(const Mat& S, const Mat& P, const size_t numObj,
+expectedEntropy(const Mat& S, const Mat& P, const size_t numObj,
 		 const size_t x, const size_t a, const size_t b)
 {
     vector<double> p0(numObj);
@@ -87,9 +87,9 @@ produce_triplet(const Mat& S, const Mat& P, const size_t numObj,
 	for (size_t b = a + 1; b < numObj; ++b){
 	    if (b == x)
 		continue;
-	    if (frand() < 0.8)
+	    if (frand() < 0.9)
 		continue;
-	    double ent = expecetedEntropy(S, P, numObj, x, a, b);
+	    double ent = expectedEntropy(S, P, numObj, x, a, b);
 	    if (ent < bestEntropy){
 		bestEntropy = ent;
 		rA = a;
