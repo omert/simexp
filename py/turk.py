@@ -15,8 +15,12 @@ import os
 
 ce_root = "c:/vision"
 if os.name == 'nt':
-    turk_root = "c:/mturk/bin"
-    the_root = "c:/users/adum/simexp"
+    if os.path.exists("c:/mech-turk-tools-1.3.0/bin"):
+        turk_root = "c:/mech-turk-tools-1.3.0/bin"
+        the_root = "d:/sim/newgit/simexp"
+    else:
+        turk_root = "c:/mturk/bin"
+        the_root = "c:/users/adum/simexp"
 else:
     turk_root = "/home/tamuz/mturk/bin"
     the_root = "/home/tamuz/dev/simexp"
@@ -38,7 +42,7 @@ import xml.etree.ElementTree as etree
 import os, shutil, string, csv
 import re
 import monitor_workers
-from numpy import *
+#from numpy import *
 import random
 import datetime
 
