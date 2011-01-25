@@ -36,14 +36,14 @@ for i = 1:iter
     %                                        IX, IA, IB, N), 0, max_mu, ...
     %             options);
     %mu = 1 / sqrt(i);
-    mu = 2;
+    mu = 1;
     %max_mu = mu * 2;
     T = S + mu * dS;
     
     S = projectPSD_norm(T, freedom_bound);
     [L percent_right eL] = mat_model_likelihood(S, IX, IA, IB, N);
-    fprintf(1, ' mu: %f    L: %f   percent right: %f\n', mu, L, ...
-            percent_right);
+    fprintf(1, '%d: mu: %f    L: %f   percent right: %f\n', i, mu, ...
+            L, percent_right);
     %    fprintf(1, 'expected L: %f \n', eL);
     %    if mu < 0.001 | deriv_norm < 0.1
     %        break;

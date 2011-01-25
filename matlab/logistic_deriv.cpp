@@ -63,8 +63,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 	double dxb = 1.0 + S(x, x) + S(b, b) - 2 * S(x, b);
 //	dS(x, a) += n[iComp] * S(x, x) * dxa * dxb / pow(dxa + dxb, 3.0);
 //	dS(x, b) -= n[iComp] * S(x, x) * dxa * dxa / pow(dxa + dxb, 3.0);
-	dS(x, a) += n[iComp] * 2.0 / (dxa + dxb);
-	dS(x, b) += n[iComp] * (2.0 / (dxa + dxb) - 2.0 / dxb);
+	dS(x, a) += n[iComp] * S(x, x) * 2.0 / (dxa + dxb);
+	dS(x, b) += n[iComp] * S(x, x) * (2.0 / (dxa + dxb) - 2.0 / dxb);
 #endif
 	dS(a, x) = dS(x, a);
 	dS(b, x) = dS(x, b);
