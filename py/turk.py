@@ -90,7 +90,7 @@ def get_last_label():
     return last if last else "-1"
 
 def get_next_label():
-    return str(int(get_last_label())+1+random.randrange(1000))
+    return str(int(get_last_label())+1+random.randrange(10000))
 
 def load_hit_helper(label,input2, question2, properties2, comment):
     if comment!=None:
