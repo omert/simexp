@@ -82,8 +82,6 @@ produce_triplet(const Mat& S, const Mat& P, const size_t numObj,
     for (size_t a = 0; a < numObj; ++a){
 	if (a == x)
 	    continue;
-	if (frand() < 0.5)
-	    continue;
 	for (size_t b = a + 1; b < numObj; ++b){
 	    if (b == x)
 		continue;
@@ -133,6 +131,14 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
     mexCallMATLAB(1, plhs1, nrhs, const_cast<mxArray**>(prhs), 
 		  "confusion_matrix");
     Mat P(plhs1[0]);
+    for (size_t x = 0; x < numObj; ++x){
+	P(x, x) = 0.0;
+	double sum = 0.0;
+	for (size_t y = 0; y < numObj; ++y)
+	    sum += P(x, y);
+	for (size_t y = 0; y < numObj; ++y)
+	    P(x, y) = P(x, y) / sum;
+    }
     
     for (size_t x = 0; x < numObj; ++x){
 	size_t a = 0;

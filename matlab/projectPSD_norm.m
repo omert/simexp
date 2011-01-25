@@ -8,10 +8,11 @@ M = (M + M')/2;
 n = length(M);
 max_norm = max_trace / n;
 
-max_err = 0.02;
+max_err = 0.01;
 
 if length(d) ~= n || nargin >= 3
     d = max_norm - diag(M);
+    fprintf('producing new diagonal\n');
 end
 
 for iter = 1:500

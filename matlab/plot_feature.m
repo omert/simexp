@@ -5,7 +5,7 @@ img_base_url = ['file:///home/tamuz/dev/simexp/images/' dataset '/'];
 
 small_image_size = 70;
 
-Iwrong = find(f' ~= attribute & attribute > 0);
+Iwrong = find(f' ~= attribute & attribute > -0.5);
 fprintf('accuracy percentage: %f (%d / %d)\n', 100 - 100 * length(Iwrong) ...
         / length(f), length(f) - length(Iwrong), length(f));
 

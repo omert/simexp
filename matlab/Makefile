@@ -1,4 +1,4 @@
-mexfiles = logistic_deriv.mexglx confusion_matrix.mexglx model_likelihood.mexglx distance_deriv.mexglx update_matrix.mexglx produce_adaptive.mexglx
+mexfiles = logistic_deriv.mexglx confusion_matrix.mexglx model_likelihood.mexglx distance_deriv.mexglx update_matrix.mexglx produce_adaptive.mexglx information_gain.mexglx
 
 all: $(mexfiles)
 
