@@ -82,20 +82,22 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 	    P(x, y) = P(x, y) / sum;
     }
 
-    plhs[0] = mxCreateDoubleMatrix((int)1, (int)1, mxREAL); 
-    double& igain = *mxGetPr(plhs[0]);
+    size_t numGains = 3;
+    plhs[0] = mxCreateDoubleMatrix((int)numGains, (int)1, mxREAL); 
+    Mat igain(plhs[0]);
     for (size_t x = 0; x < numObj; ++x){
 //	mexPrintf("%f\n", -log2(numObj) - log2(P(x, x)));
-//	igain += log2(numObj) + log2(P(x, x));
+	igain(0, 0) += log2(numObj) + log2(P(x, x));
 	size_t position = 0;
 	for (size_t y = 0; y < numObj; ++y)
 	    if (P(x, y) >= P(x, x))
 		++position;
-	igain += position;
+	igain(1, 0) += position;
+	igain(2, 0) += log2(1.0 * position);
 	
     }    
-    igain = igain / numObj;
-
+    for (size_t i = 0; i < numGains; ++i)
+	igain(i, 0) = igain(i, 0) / numObj;
 
 //    mexPrintf("%f\n", igain);
 

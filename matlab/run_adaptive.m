@@ -11,11 +11,10 @@ datafile = [dir_name 'all.data.mat'];
 for i = 1:num_rounds
     load(datafile);
     fprintf('found data for %d comparisons\n', length(IX));
-    filename = [dir_name 'adaptive' sprintf('%10.0f',mod(now*1000000, 100000000)) '.trips'];
+    filename = [dir_name 'adaptive' sprintf('%8.0f',mod(now*1000000, 100000000)) '.trips'];
     create_next_round(datafile , filename, dataset, num_per_round, ids);
     run_turk([dir_name config_file(1).name], filename, [filename '.out']);
     parse_directory(dir_name, dataset, x);
 end
-x = fit_mat(IX, IA, IB, N, ids, 10, 1.5, x * x');
-%x = fit(x, IX, IA, IB, N, 10);
+x = fit_mat(IX, IA, IB, N, ids, 100, 7, x * x');
 save_experiement_data([dir_name 'all.data.mat'], IX, IA, IB, N, ids, dataset, x);
