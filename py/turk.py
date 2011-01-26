@@ -501,17 +501,21 @@ def check_results(label=None,outfile=None,init_trips=None):
             s+=str(a)+" "+str(b)+" "+str(c)+" "+str(e)+"\n"
         tools.my_write(outfile,s)
 
-    return amdone
+    return amdone, really_bad_wids
 
 def check_til_done(label=None,out_file=None,init_trips=None):
     s=120
     print "Getting results."
-    while not check_results(label,out_file,init_trips):
+    while True:
+        done, really_bad_wids = check_results(label,out_file,init_trips):
+        if done:
+            break
         print "Not done. Waiting ",int(s/60)," minutes...."
         time.sleep(s)
         s+=60
         print "Getting results."
-
+    if len(really_bad_wids)>0:
+        reject_work(label,really_bad_wids)
 
 
 #g = get_results()
