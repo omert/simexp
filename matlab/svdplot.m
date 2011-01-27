@@ -1,10 +1,10 @@
-function svdplot(x, ids, dataset, IX, IA, IB, N)
+function svdplot(x, ids, dataset)
 
 filename = ['../data/' dataset '/svd.html'];
 img_base_url = ['/home/tamuz/dev/simexp/images/' dataset '/'];
 
-small_image_size = 70;
-page_size = [1500 1000 small_image_size];
+small_image_size = 40;
+page_size = [500 500 small_image_size];
 large_image_size = 200;
 
 f1 = fopen(filename, 'w');
@@ -52,32 +52,6 @@ for i = 1:length(U)
 %    s = '<span><img src = "%s%s" style = "position:absolute; left: %d; top:%d;"/></span>\n';
 %    fprintf(f1, s, img_base_url, img_files{ids(i) + 1}, U(i, 1), U(i, 2));
 %    fprintf(f1, '</a>\n');
-end
-
-%xii = repmat(row_norm(x), 1, length(x)).^2;
-%D = sqrt(xii - 2 * x * x' + xii');
-
-D = confusion_matrix(x * x', IX, IA, IB, N);
-for j = 1:length(x)
-    [~, I] = sort(-D(j, :));
-    I = [j I];
-    ypos = j * (small_image_size + 10) + page_size(2);
-    for i = 1:20
-        xpos = i * (small_image_size + 10);
-        if 1
-            imsize = small_image_size;
-        else
-            imsize = floor(small_image_size * sqrt(D(j, I(i)) / D(j, ...
-                                                             I(2))));
-        end
-        s = ['<img name = "img%d" src = "%s%s" style = "position:absolute; ' ...
-             'left: %d; top:%d; z-index = %d;" height = %d width = ' ...
-        '%d title="%s %f"/>\n'];
-        fprintf(f1, s, i, img_base_url, img_files{ids(I(i)) + 1}, ...
-                floor(xpos), floor(ypos), floor(1000 - 100 * zpos), ...
-                imsize, imsize, img_files{ids(I(i)) + 1}, D(j, I(i)));
-        
-    end
 end
 
 

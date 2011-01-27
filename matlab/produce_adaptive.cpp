@@ -78,16 +78,14 @@ expectedEntropy(const Mat& S, const Mat& P, const size_t numObj,
 
 void
 produce_triplet(const Mat& S, const Mat& P, const size_t numObj,
-		size_t x, size_t& rA, size_t& rB)
+		size_t x, size_t& rA, size_t& rB, size_t coreSize)
 {
     double bestEntropy = numObj;
-    for (size_t a = 0; a < numObj; ++a){
+    for (size_t a = 0; a < coreSize; ++a){
 	if (a == x)
 	    continue;
-	for (size_t b = a + 1; b < numObj; ++b){
+	for (size_t b = a + 1; b < coreSize; ++b){
 	    if (b == x)
-		continue;
-	    if (frand() < 0.9)
 		continue;
 	    double ent = expectedEntropy(S, P, numObj, x, a, b);
 	    if (ent < bestEntropy){
@@ -103,11 +101,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
 { 
     /* Check for proper number of arguments */
     
-    if (nrhs != 5) { 
-        mexErrMsgTxt("Five input arguments required."); 
-    } else if (nlhs > 1) {
+    if (nrhs != 6) 
+        mexErrMsgTxt("Six inputs required: S, IX, IA, IB, N, core_size"); 
+    else if (nlhs > 1)
         mexErrMsgTxt("Too many output arguments."); 
-    } 
+    
 
     size_t numObj = mxGetM(prhs[0]);
     if (mxGetN(prhs[0]) != numObj)
@@ -126,11 +124,12 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
 
     
     Mat S(prhs[0]);    
+    Mat coreSizeMat(prhs[5]);    
     Mat T(plhs[0]);
 
     mxArray* plhs1[1];
 
-    mexCallMATLAB(1, plhs1, nrhs, const_cast<mxArray**>(prhs), 
+    mexCallMATLAB(1, plhs1, 5, const_cast<mxArray**>(prhs), 
 		  "confusion_matrix");
     Mat P(plhs1[0]);
     for (size_t x = 0; x < numObj; ++x){
@@ -145,7 +144,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
     for (size_t x = 0; x < numObj; ++x){
 	size_t a = 0;
 	size_t b = 0;
-	produce_triplet(S, P, numObj, x, a, b);
+	produce_triplet(S, P, numObj, x, a, b, (size_t)coreSizeMat(0, 0));
 	mexPrintf("%d ~ %d / %d: p = %f,  P(x, a) = %f, P(x, b) = %f\n",
 		  x, a, b, prob(S, x, a, b), P(x, a), P(x, b));
 	T(x, 0) = x;

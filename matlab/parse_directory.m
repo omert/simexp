@@ -1,5 +1,5 @@
-function [IX, IA, IB, N, ids] = parse_directory(dir_name, dataset, x)
-
+function [IX, IA, IB, N, ids] = parse_directory(dir_name, dataset, ...
+                                                x, ids_force)
 
 IX = [];
 IA = [];
@@ -20,24 +20,10 @@ for i = 1:length(files)
     ids = unique([ids; ids0]);
 end
 fprintf('found a total of %d triplets\n', length(IX));
+if nargin > 3
+    ids = ids_force(:);
+end
 if length(x) == 1
     x = rand(length(ids), x);
 end
-
 save_experiement_data([dir_name 'all.data.mat'], IX, IA, IB, N, ids, dataset, x);
-IXho = [];
-IAho = [];
-IBho = [];
-Nho = [];
-files = dir([dir_name '/*.out.heldout']);
-for i = 1:length(files)
-    [IX0, IA0, IB0, N0, ids0] = parse_output([dir_name files(i).name], dataset);
-    IXho = [IXho; IX0];
-    IAho = [IAho; IA0];
-    IBho = [IBho; IB0];
-    Nho = [Nho; N0];
-end
-fprintf('found a total of %d heldout triplets\n', length(IXho));
-
-save_experiement_data([dir_name 'heldout.data.mat'], IXho, IAho, IBho, Nho, ids, dataset, x);
-

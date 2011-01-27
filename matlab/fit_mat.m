@@ -23,6 +23,8 @@ T = S;
 
 max_mu = 10;
 
+num_no_improve = 0;
+last_L = mat_model_likelihood(S, IX, IA, IB, N);
 for i = 1:iter
     %dS = update_matrix(S, IX, IA, IB, N);
     dS = logistic_deriv(S, IX, IA, IB, N);
@@ -42,8 +44,18 @@ for i = 1:iter
     
     S = projectPSD_norm(T, freedom_bound);
     [L percent_right eL] = mat_model_likelihood(S, IX, IA, IB, N);
+    if L > last_L - 0.001
+        num_no_improve = num_no_improve + 1;
+        fprintf('small improvement\n');
+    else
+        num_no_improve = 0;
+    end
+    last_L = min(L, last_L);
     fprintf(1, '%d: mu: %f    L: %f   percent right: %f\n', i, mu, ...
             L, percent_right);
+    if num_no_improve > 3
+        break;
+    end
     %    fprintf(1, 'expected L: %f \n', eL);
     %    if mu < 0.001 | deriv_norm < 0.1
     %        break;

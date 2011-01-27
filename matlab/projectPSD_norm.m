@@ -17,8 +17,9 @@ end
 
 for iter = 1:500
     M1 = projectPSD(M + diag(d));
-    d = d + max_norm - diag(M1);
-    er = max(abs(diag(M1) - max_norm));
+    dm1 = diag(M1);
+    d = d + max_norm - dm1;
+    er = max(abs(dm1 - max_norm));
     if er < max_err * max_norm
         break;
     end
