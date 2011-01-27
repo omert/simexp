@@ -11,7 +11,7 @@ c:\vision\most_popular_100_ids_balanced.txt
 @author: adum
 """
 
-import os
+import os, sys
 
 ce_root = "c:/vision"
 if os.name == 'nt':
@@ -65,9 +65,9 @@ def create_rand_trips(num_data,num_trips):
 def my_log(st):
     f = open(turk_log,"a")
     f.write("\n--------------------- "+str(datetime.datetime.now())+" ---------------------\n")
-    print "--------------------- "+str(datetime.datetime.now())+" ---------------------"
+    sys.stderr.write("--------------------- "+str(datetime.datetime.now())+" ---------------------")
     f.write(st)
-    print st
+    sys.stderr.write(st)
     f.close()
 
 def get_balance():
@@ -511,7 +511,7 @@ def check_til_done(label=None,out_file=None,init_trips=None):
     s=120
     print "Getting results."
     while True:
-        done, really_bad_wids = check_results(label,out_file,init_trips):
+        done, really_bad_wids = check_results(label,out_file,init_trips)
         if done:
             break
         print "Not done. Waiting ",int(s/60)," minutes...."
@@ -519,7 +519,7 @@ def check_til_done(label=None,out_file=None,init_trips=None):
         s+=60
         print "Getting results."
     if len(really_bad_wids)>0:
-        reject_work(label,really_bad_wids)
+        reject_work(really_bad_wids,label)
 
 
 #g = get_results()

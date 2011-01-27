@@ -6,7 +6,7 @@ Created on Fri Sep 17 14:38:53 2010
 """
 
 import turk, time
-import sys, glob
+import sys, glob, os
 import tools, random, string, csv
 
 commentfile = "comments.html"
@@ -20,7 +20,10 @@ commentfile = "comments.html"
 s = "<html><body>"
 
 for filename in glob.glob(turk.log_root+"/*.results"):
-    s+="<h2>"+filename[filename.rindex("\\")+1:-8]+"</h2>"
+    if os.name == 'nt':
+        s+="<h2>"+filename[filename.rindex("\\")+1:-8]+"</h2>"
+    else:
+        s+="<h2>"+filename[filename.rindex("/")+1:-8]+"</h2>"
     print filename
     file = open(filename,"r")
     blah = csv.DictReader(file,delimiter='\t')
