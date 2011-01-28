@@ -80,12 +80,15 @@ void
 produce_triplet(const Mat& S, const Mat& P, const size_t numObj,
 		size_t x, size_t& rA, size_t& rB, size_t coreSize)
 {
+    size_t maxObj = coreSize > 0 ? coreSize : numObj;
     double bestEntropy = numObj;
-    for (size_t a = 0; a < coreSize; ++a){
+    for (size_t a = 0; a < maxObj; ++a){
 	if (a == x)
 	    continue;
-	for (size_t b = a + 1; b < coreSize; ++b){
+	for (size_t b = a + 1; b < maxObj; ++b){
 	    if (b == x)
+		continue;
+	    if (maxObj == numObj && frand() < 0.8)
 		continue;
 	    double ent = expectedEntropy(S, P, numObj, x, a, b);
 	    if (ent < bestEntropy){

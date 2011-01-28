@@ -83,6 +83,7 @@ for j=1:length(idsX)
         end
         fprintf(f, '</tr>\n');
 
+        
         [~, I] = sort(-P(idsX(j) + 1, :));
         fprintf(f, '<tr border = "1">\n');
         for i = 1:10

@@ -1,6 +1,7 @@
 function plot_model_comparison(dataset)
 
 load(['model_comparison_' dataset]);
+sample_sizes = sample_sizes(1:length(ll1));
 figure(1)
 title(dataset);
 plot(sample_sizes, ll1, 'r', sample_sizes, ll2, 'b');

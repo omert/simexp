@@ -1,3 +1,18 @@
+clear position
+num_queries = 80;
+fprintf('adaptive:\n');
+position_adapt = predict_using_bank(xadapt*xadapt', IX, IA, IB, N, num_queries);
+fprintf('random:\n');
+position_rand = predict_using_bank(xrand*xrand', IX, IA, IB, N, ...
+                                   num_queries);
+for j=1:3
+    subplot(1,3,j)
+    plot(1:length(position_adapt), position_adapt(j, :)','r', 1: ...
+         length(position_rand), position_rand(j, :)','b');
+    legend('adaptive','random');
+end
+return
+
 
 run_adaptive('/home/tamuz/dev/simexp/turkexps/newtiles/testrun/','newtiles',2,1);
 return

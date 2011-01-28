@@ -1,4 +1,4 @@
-function M1 = projectPSD_norm(M, max_trace, recalc_d)
+function [M1 iter] = projectPSD_norm(M, max_trace, recalc_d)
 
 % Project to positive semidefinites. M assumed to be symmetric
 

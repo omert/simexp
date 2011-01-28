@@ -25,10 +25,14 @@ N2 = N;
 maxn = min(length(IX1), length(IX2));
 num_points = 10;
 sample_sizes = round((1:num_points) * maxn / num_points);
+x1 = zeros(length(ids), 1);
+x2 = zeros(length(ids), 1);
 for i = 1:num_points
     m = sample_sizes(i);
-    x1 = fit_mat(IX1(1:m), IA1(1:m), IB1(1:m), N1(1:m), ids, 100, 4);
-    x2 = fit_mat(IX2(1:m), IA2(1:m), IB2(1:m), N2(1:m), ids, 100, 4);
+    x1 = fit_mat(IX1(1:m), IA1(1:m), IB1(1:m), N1(1:m), ids, 100, ...
+                 10 * i / num_points, x1*x1');
+    x2 = fit_mat(IX2(1:m), IA2(1:m), IB2(1:m), N2(1:m), ids, 100, ...
+                 10 * i / num_points, x2*x2');
     ll1(i) = mat_model_likelihood(x1 * x1', IXcontrol, IAcontrol, ...
                                   IBcontrol, Ncontrol);
     ll2(i) = mat_model_likelihood(x2 * x2', IXcontrol, IAcontrol, ...
