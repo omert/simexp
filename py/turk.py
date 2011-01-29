@@ -11,12 +11,16 @@ c:\vision\most_popular_100_ids_balanced.txt
 @author: adum
 """
 
-import os
+import os, sys
 
 ce_root = "c:/vision"
 if os.name == 'nt':
-    turk_root = "c:/mturk/bin"
-    the_root = "c:/users/adum/simexp"
+    if os.path.exists("c:/mech-turk-tools-1.3.0/bin"):
+        turk_root = "c:/mech-turk-tools-1.3.0/bin"
+        the_root = "d:/sim/newgit/simexp"
+    else:
+        turk_root = "c:/mturk/bin"
+        the_root = "c:/users/adum/simexp"
 else:
     turk_root = "/home/tamuz/mturk/bin"
     the_root = "/home/tamuz/dev/simexp"
@@ -38,7 +42,7 @@ import xml.etree.ElementTree as etree
 import os, shutil, string, csv
 import re
 import monitor_workers
-from numpy import *
+#from numpy import *
 import random
 import datetime
 
@@ -61,9 +65,9 @@ def create_rand_trips(num_data,num_trips):
 def my_log(st):
     f = open(turk_log,"a")
     f.write("\n--------------------- "+str(datetime.datetime.now())+" ---------------------\n")
-    print "--------------------- "+str(datetime.datetime.now())+" ---------------------"
+    sys.stderr.write("--------------------- "+str(datetime.datetime.now())+" ---------------------")
     f.write(st)
-    print st
+    sys.stderr.write(st)
     f.close()
 
 def get_balance():
@@ -501,17 +505,21 @@ def check_results(label=None,outfile=None,init_trips=None):
             s+=str(a)+" "+str(b)+" "+str(c)+" "+str(e)+"\n"
         tools.my_write(outfile,s)
 
-    return amdone
+    return amdone, really_bad_wids
 
 def check_til_done(label=None,out_file=None,init_trips=None):
     s=120
     print "Getting results."
-    while not check_results(label,out_file,init_trips):
+    while True:
+        done, really_bad_wids = check_results(label,out_file,init_trips)
+        if done:
+            break
         print "Not done. Waiting ",int(s/60)," minutes...."
         time.sleep(s)
         s+=60
         print "Getting results."
-
+    if len(really_bad_wids)>0:
+        reject_work(really_bad_wids,label)
 
 
 #g = get_results()

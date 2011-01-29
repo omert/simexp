@@ -23,12 +23,6 @@ prob(const Mat& S, const size_t x, const size_t a, const size_t b)
 
 }
 
-double 
-log2(double x)
-{
-    return log(x) / log(2.0);
-}
-
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[])
 { 

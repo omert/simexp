@@ -1,4 +1,4 @@
-function M1 = projectPSD_norm(M, max_trace, recalc_d)
+function [M1 iter] = projectPSD_norm(M, max_trace, recalc_d)
 
 % Project to positive semidefinites. M assumed to be symmetric
 
@@ -17,8 +17,9 @@ end
 
 for iter = 1:500
     M1 = projectPSD(M + diag(d));
-    d = d + max_norm - diag(M1);
-    er = max(abs(diag(M1) - max_norm));
+    dm1 = diag(M1);
+    d = d + max_norm - dm1;
+    er = max(abs(dm1 - max_norm));
     if er < max_err * max_norm
         break;
     end

@@ -9,7 +9,7 @@ import os, csv
 random.seed(10)
 
 mode = 2
-alpha = 0.2
+alpha = 0.213456789
 
 if mode==0:
     print "Mode: 1/(1+exp(Sac-Sab))"
@@ -418,14 +418,14 @@ def test_small_ties(readem=True):
     print "Testing neckties"
     adaptive_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/*.out"))
     print len(adaptive_trips),"adaptive trips"
-    random_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/random/*.out"))
+    random_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/random/*.out"))[0:6000]
     print len(random_trips),"random trips"
     control_trips = read_out_files(glob.glob("c:/sim/turkexps/neckties/small/control/*.out"))
     print len(control_trips),"control trips"
     if readem and os.path.exists(Sfilename):
         S = np.load(Sfilename)        
     else:
-        S=grad_proj2(random_trips,control_trips,step_size=50)
+        S=grad_proj2(random_trips,control_trips,step_size=20)
         np.save(Sfilename,S)
     n=S.shape[0]
     print "n=",n

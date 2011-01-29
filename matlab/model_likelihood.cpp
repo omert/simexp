@@ -55,7 +55,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[] )
         double llhr = log(1 + da) - log(1 + db);
         double p = 1 / (1  + exp(llhr));
         f -= n[iComp] * log(p);
-	nTotal += n[iComp];
+	nTotal += (size_t)(n[iComp]);
         if (nlhs > 1){
 //            g[x] += 2 * n[iComp] * (1 - p) * V[x] / (1 + da);
 //            g[x] -= 2 * n[iComp] * (1 - p) * V[x] / (1 + db);
@@ -71,11 +71,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[] )
         }
     }
 
-    f = f / log(2) / nTotal;
+    f = f / log(2.0) / nTotal;
     if (nlhs > 1){
 	for (size_t iObj = 0; iObj < numObj; ++iObj)
 	    for (size_t iDim = 0; iDim < numDim; ++iDim)
-		g[iObj + numObj * iDim] = g[iObj + numObj * iDim] / log(2) / nTotal;
+		g[iObj + numObj * iDim] = g[iObj + numObj * iDim] / log(2.0) / nTotal;
     }
 	    
     return;

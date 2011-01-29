@@ -8,9 +8,9 @@ Created on Sat May 22 12:14:30 2010
 import os
 import time, glob
 import Tkinter
-from PIL import Image, ImageTk
+#from PIL import Image, ImageTk
 import urllib2, StringIO, shutil
-from scipy.linalg import decomp
+#from scipy.linalg import decomp
 
 
 
