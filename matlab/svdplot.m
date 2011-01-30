@@ -1,10 +1,11 @@
-function svdplot(x, ids, dataset)
+function svdplot(x, ids, dataSetName)
 
-filename = ['../data/' dataset '/svd.html'];
-img_base_url = ['/home/tamuz/dev/simexp/images/' dataset '/'];
+filename = ['../data/' dataSetName '/svd.html'];
+img_base_url = ['/home/tamuz/dev/simexp/images/' dataSetName '/'];
+img_files = get_image_files(dataSetName);
 
-small_image_size = 40;
-page_size = [500 500 small_image_size];
+small_image_size = 50;
+page_size = [1200 600 small_image_size];
 large_image_size = 200;
 
 f1 = fopen(filename, 'w');
@@ -21,7 +22,6 @@ for i=1:min(size(x))
 end
 [U S ~] = svds(x0, 3);
 
-img_files = get_image_files(dataset);
 
 for i = 1:2
     U(:, i) = U(:, i) - min(U(:, i));

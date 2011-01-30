@@ -1,4 +1,27 @@
-clear position
+clear all
+
+dataSetName = 'neckties';
+dir_base = ['../turkexps/' dataSetName '/small/'];
+dir_rand = [dir_base '/random/'];
+dir_adapt = [dir_base '/summer/'];
+dir_bank = [dir_base '/bank/'];
+parse_directory(dir_rand, dataSetName, 1);
+parse_directory(dir_adapt, dataSetName, 1);
+parse_directory(dir_bank,dataSetName,1);
+
+load([dir_rand 'all.data.mat']);
+nr = length(IX);
+load([dir_adapt 'all.data.mat']);
+na = length(IX);
+n = min(na, nr);
+n = 18000;
+
+load([dir_rand 'all.data.mat']);
+xrand=fit_mat(IX(1:n),IA(1:n),IB(1:n),N(1:n),ids,100,10);
+load([dir_adapt 'all.data.mat']);
+xadapt=fit_mat(IX(1:n),IA(1:n),IB(1:n),N(1:n),ids,100,10);
+load([dir_bank 'all.data.mat']);
+
 num_queries = 80;
 fprintf('adaptive:\n');
 position_adapt = predict_using_bank(xadapt*xadapt', IX, IA, IB, N, num_queries);
@@ -11,6 +34,8 @@ for j=1:3
          length(position_rand), position_rand(j, :)','b');
     legend('adaptive','random');
 end
+
+
 return
 
 

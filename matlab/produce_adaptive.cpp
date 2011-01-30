@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <map>
 #include <math.h>
 #include "mex.h"
 #include "model.h"
@@ -76,28 +77,39 @@ expectedEntropy(const Mat& S, const Mat& P, const size_t numObj,
     return p * entropy(pa) + (1 - p) * entropy(pb);
 }
 
+template<class M, class V>
 void
-produce_triplet(const Mat& S, const Mat& P, const size_t numObj,
-		size_t x, size_t& rA, size_t& rB, size_t coreSize)
+getFirstNValues(const M& C, V& r, size_t N)
 {
-    size_t maxObj = coreSize > 0 ? coreSize : numObj;
-    double bestEntropy = numObj;
-    for (size_t a = 0; a < maxObj; ++a){
-	if (a == x)
-	    continue;
-	for (size_t b = a + 1; b < maxObj; ++b){
-	    if (b == x)
-		continue;
-	    if (maxObj == numObj && frand() < 0.8)
-		continue;
-	    double ent = expectedEntropy(S, P, numObj, x, a, b);
-	    if (ent < bestEntropy){
-		bestEntropy = ent;
-		rA = a;
-		rB = b;
-	    }
+    for (typename M::const_iterator it = C.begin(); it != C.end(); ++it){
+	if (r.size() >= N)
+	    break;
+	r.push_back(it->second);
+    }
+}
+
+typedef pair<size_t, size_t> Trip;
+typedef vector<Trip> Triplets;
+void
+produce_triplets(const Mat& S, const Mat& P, const size_t numObj, size_t x, 
+		 Triplets& rTrips, size_t numTrips)
+{
+    multimap<double, Trip> entropyToTriplet;
+    for (size_t i = 0; i < 1000; ++i){
+	size_t a = 0;
+	size_t b = 0;
+	while (a == b || x == a || x == b){
+	    a = rand() % numObj;
+	    b = rand() % numObj;
+	}
+	double ent = expectedEntropy(S, P, numObj, x, a, b);
+	if (entropyToTriplet.size() < numTrips ||
+	    ent < entropyToTriplet.rbegin()->first)
+	{
+	    entropyToTriplet.insert(make_pair(ent, make_pair(a, b)));
 	}
     }
+    getFirstNValues(entropyToTriplet, rTrips, numTrips);
 }
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
@@ -105,7 +117,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
     /* Check for proper number of arguments */
     
     if (nrhs != 6) 
-        mexErrMsgTxt("Six inputs required: S, IX, IA, IB, N, core_size"); 
+        mexErrMsgTxt("Six inputs required: S, IX, IA, IB, N, num_per_obj"); 
     else if (nlhs > 1)
         mexErrMsgTxt("Too many output arguments."); 
     
@@ -123,11 +135,14 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
     }
     
 
-    plhs[0] = mxCreateDoubleMatrix((int)numObj, (int)3, mxREAL); 
 
     
     Mat S(prhs[0]);    
-    Mat coreSizeMat(prhs[5]);    
+    Mat numPerObjectMat(prhs[5]);    
+    size_t numPerObj = (size_t)numPerObjectMat(0, 0);
+
+
+    plhs[0] = mxCreateDoubleMatrix((int)numObj * numPerObj, (int)3, mxREAL); 
     Mat T(plhs[0]);
 
     mxArray* plhs1[1];
@@ -143,18 +158,24 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
 	for (size_t y = 0; y < numObj; ++y)
 	    P(x, y) = P(x, y) / sum;
     }
+
     
     for (size_t x = 0; x < numObj; ++x){
-	size_t a = 0;
-	size_t b = 0;
-	produce_triplet(S, P, numObj, x, a, b, (size_t)coreSizeMat(0, 0));
-	mexPrintf("%d ~ %d / %d: p = %f,  P(x, a) = %f, P(x, b) = %f\n",
-		  x, a, b, prob(S, x, a, b), P(x, a), P(x, b));
-	T(x, 0) = x;
-	T(x, 1) = a;
-	T(x, 2) = b;
+	Triplets trips;
+	produce_triplets(S, P, numObj, x, trips, numPerObj);
+	if (trips.size() < numPerObj)
+	    mexPrintf("Warning: have only %d trips for %d\n", trips.size(), x);
+	for (size_t i = 0; i < trips.size(); ++i){
+	    size_t a = trips[i].first;
+	    size_t b = trips[i].second;
+	    mexPrintf("%d ~ %d / %d: p = %f,  P(x, a) = %f, P(x, b) = %f\n",
+		      x, a, b, prob(S, x, a, b), P(x, a), P(x, b));
+	    T(numPerObj * x + i, 0) = x;
+	    T(numPerObj * x + i, 1) = a;
+	    T(numPerObj * x + i, 2) = b;
+	}
     }
-    for (size_t x = 0; x < numObj; ++x){
+    for (size_t x = 0; x < numObj * numPerObj; ++x){
 	T(x, 0) += 1;
 	T(x, 1) += 1;
 	T(x, 2) += 1;

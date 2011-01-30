@@ -1,4 +1,4 @@
-function [IX, IA, IB, N, ids] = parse_output(filename, dataset)
+function [IX, IA, IB, N, ids] = parse_output(filename, dataSetName)
 
 [I J K T] = textread(filename, '%d %d %d %f');
 fprintf('found %d comparisons\n', length(I));
@@ -28,7 +28,7 @@ IB = K(Inew);
 N = diff([0; N(Inew)]);
 
 x = randn(length(ids), 3);
-save_experiement_data([filename '.data.mat'], IX, IA, IB, N, ids, dataset, x);
+save_experiement_data([filename '.data.mat'], IX, IA, IB, N, ids, dataSetName, x);
 
 
   

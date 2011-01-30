@@ -141,11 +141,15 @@ guessObject(const Mat& S, const size_t numObj,
 	    p[queries] = p[queries - 1];
 
 	Triplets::iterator t = mostInformativeQuery(S, p[queries], tripsLeft);
+	size_t a = t->first;
+	size_t b = t->second;
 	tripsLeft.erase(t);
+	
 	for (size_t y = 0; y < numObj; ++y){
-	    double pab = prob(S, y, t->first, t->second);
+	    double pab = prob(S, y, a, b);
 	    p[queries](y) *= pab;
 	}
+//	mexPrintf("    %d / %d\n", a, b);
 	p[queries].normalize();
     }
 }
@@ -219,6 +223,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
 	}
 
 	vector<Distribution> p;
+	mexPrintf("Learning %d\n", x);
 	guessObject(S, numObj, it->second, numQueries, p);
 
 	for (size_t i = 0; i < numQueries; ++i){
