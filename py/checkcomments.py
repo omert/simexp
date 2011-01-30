@@ -19,12 +19,12 @@ commentfile = "comments.html"
 
 s = "<html><body>"
 
-for filename in glob.glob(turk.log_root+"/*.results"):
-    if os.name == 'nt':
-        s+="<h2>"+filename[filename.rindex("\\")+1:-8]+"</h2>"
-    else:
-        s+="<h2>"+filename[filename.rindex("/")+1:-8]+"</h2>"
-    print filename
+fnames = glob.glob(turk.log_root+"/*.results")
+fnames = [f.replace("\\","/") for f in fnames]
+idfnames = [ (int(filename[filename.rindex("/")+1:-8]),filename) for filename in fnames]
+idfnames.sort()
+for (id,filename) in idfnames:
+    s+="<h2>"+str(id)+"</h2>"
     file = open(filename,"r")
     blah = csv.DictReader(file,delimiter='\t')
     c = []
