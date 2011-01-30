@@ -1,0 +1,1258 @@
+#LyX file created by tex2lyx 1.6.8
+\lyxformat 264
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% ICML 2011 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Use the following line _only_ if you're still using LaTeX 2.09.
+%\documentstyle[icml2011,epsf,natbib]{article}
+% If you rely on Latex2e packages, like most moden people use this:
+
+
+% For figures
+% more modern
+%\usepackage{epsfig} % less modern
+\usepackage{subfigure}
+
+% For citations
+
+
+% For algorithms
+\usepackage{algorithm}\usepackage{algorithmic}
+
+% As of 2010, we use the hyperref package to produce hyperlinks in the
+% resulting PDF.  If this breaks your system, please commend out the
+% following usepackage line and replace \usepackage{icml2011} with
+% \usepackage[nohyperref]{icml2011} above.
+\usepackage{hyperref}
+
+% Packages hyperref and algorithmic misbehave sometimes.  We can fix
+% this with the following command.
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Employ the following version of the ``usepackage'' statement for
+% submitting the draft version of the paper for review.  This will set
+% the note in the first column to ``Under review.  Do not distribute.''
+\usepackage{icml2011}% Employ this version of the ``usepackage'' statement after the paper has
+% been accepted, when creating the final version.  This will set the
+% note in the first column to ``Appearing in''
+% \usepackage[accepted]{icml2011}
+
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Actively Learning the Crowd Kernel}
+
+
+\end_preamble
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine natbib_authoryear
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+twocolumn[
+\end_layout
+
+\begin_layout Standard
+
+
+\backslash
+icmltitle{Actively Learning the Crowd Kernel}
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\backslash
+icmlauthor{Your Name}{email@yourdomain.edu}
+\end_layout
+
+\begin_layout Standard
+
+
+\backslash
+icmladdress{Your Fantastic Institute,
+\end_layout
+
+\begin_layout Standard
+
+            314159 Pi St., Palo Alto, CA 94306 USA}
+\end_layout
+
+\begin_layout Standard
+
+
+\backslash
+icmlauthor{Your CoAuthor's Name}{email@coauthordomain.edu}
+\end_layout
+
+\begin_layout Standard
+
+
+\backslash
+icmladdress{Their Fantastic Institute,
+\end_layout
+
+\begin_layout Standard
+
+            27182 Exp St., Toronto, ON M6H 2T1 CANADA}
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\backslash
+icmlkeywords{active learning, crowdsourcing, kernels}
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\backslash
+vskip 0.3in
+\end_layout
+
+\begin_layout Standard
+
+]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+
+The human notion of perceptual similarity is hard to capture and even more difficult to predict. Insights into it are invaluable in applications including visual search and GUI design. In this work we introduce an active Multidimensional Scaling (MDS) algorithm that, given 
+\begin_inset Formula $n$
+\end_inset
+
+ objects, learns a similarity matrix over all 
+\begin_inset Formula $n^2$
+\end_inset
+
+ pairs by adaptively sampling crowdsourced user responses to triplet-based relative similarity queries. Each query has the form 
+\begin_inset Quotes eld
+\end_inset
+
+is object 
+\begin_inset Formula $a$
+\end_inset
+
+ more similar to 
+\begin_inset Formula $b$
+\end_inset
+
+ or to 
+\begin_inset Formula $c$
+\end_inset
+
+?
+\begin_inset Quotes erd
+\end_inset
+
+ and is chosen to be maximally informative given the preceding responses. The output is an embedding of the objects into Euclidean space; we refer to this as the 
+\begin_inset Quotes eld
+\end_inset
+
+crowd kernel.
+\begin_inset Quotes erd
+\end_inset
+
+ The runtime (empirically observed to be linear) and cost (about $0.15 per object) of the algorithm are small enough to permit its application to databases of thousands of objects. The distance matrix provided by the algorithm allows for the development of an intuitive and powerful sequential, interactive search algorithm which we demonstrate for a variety of visual stimuli. We present quantitative results that demonstrate the benefit in cost and time of our approach relative to competing approaches, both in the learning stage (quality of estimated distances) and for the end-user at run time (time required to reach goal). We also show the ability of our approach to capture different aspects of perceptual similarity by demonstrating a variety of binary attribute classifiers (
+\begin_inset Quotes eld
+\end_inset
+
+is striped,
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+vowel vs.\InsetSpace \space{}
+consonant,
+\begin_inset Quotes erd
+\end_inset
+
+) trained using the learned kernel. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% comment from Omer: emphasize the end-to-end system in one sentence
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+
+Introduction
+\end_layout
+
+\begin_layout Standard
+
+The problem of capturing and extrapolating a human notion of perceptual similarity has received increasing attention in recent years in domains including vision 
+\begin_inset LatexCommand cite
+after ""
+before ""
+key "Agarwal07"
+
+\end_inset
+
+, audition 
+\begin_inset LatexCommand cite
+after ""
+before ""
+key "McFee09"
+
+\end_inset
+
+, information retrieval 
+\begin_inset LatexCommand cite
+after ""
+before ""
+key "Schultz03"
+
+\end_inset
+
+ and a variety of others represented in the UCI Datasets 
+\begin_inset LatexCommand cite
+after ""
+before ""
+key "Xing02,Huang10"
+
+\end_inset
+
+. Concretely, the goal of these approaches is to estimate a similarity matrix 
+\begin_inset Formula $K$
+\end_inset
+
+ over all pairs of 
+\begin_inset Formula $n$
+\end_inset
+
+ objects given a (potentially exhaustive) subset of human perceptual measurements on tuples of objects. In some cases the set of human measurements represents `side information' to computed descriptors (MFCC, SIFT, etc.), while in other cases -- the present work included -- one proceeds exclusively with human reported data, generally obtained via crowdsourcing. When 
+\begin_inset Formula $K$
+\end_inset
+
+ is a positive semidefinite matrix induced purely from distributed human measurements, we refer to it as the `crowd kernel' for the set of objects.
+\end_layout
+
+\begin_layout Standard
+
+Given such a Kernel, one can exploit it for a variety of purposes including exploratory data analysis or embedding visualization (as in Multidimensional Scaling) and relevance-feedback based interactive search. As discussed in the above works and 
+\begin_inset LatexCommand cite
+after ""
+before ""
+key "Kendall90"
+
+\end_inset
+
+, using a 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+em
+\end_layout
+
+\end_inset
+
+ triplet based
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+ representation of relative similarity, in which a subject is asked 
+\begin_inset Quotes eld
+\end_inset
+
+is object 
+\begin_inset Formula $a$
+\end_inset
+
+ more similar to 
+\begin_inset Formula $b$
+\end_inset
+
+ or to 
+\begin_inset Formula $c$
+\end_inset
+
+,
+\begin_inset Quotes erd
+\end_inset
+
+ has a number of desirable properties over the classical approach employed in MDS, i.e., asking 
+\begin_inset Quotes eld
+\end_inset
+
+how similar is object 
+\begin_inset Formula $a$
+\end_inset
+
+ to 
+\begin_inset Formula $b$
+\end_inset
+
+.
+\begin_inset Quotes erd
+\end_inset
+
+ These advantages include reducing fatigue on human subjects and alleviating the need to reconcile individuals' scales of (dis)similarity. The obvious drawback with the triplet based method, however, is the potential 
+\begin_inset Formula $O(n^3)$
+\end_inset
+
+ complexity. It is therefore expedient to seek methods of obtaining high quality approximations of 
+\begin_inset Formula $K$
+\end_inset
+
+ from as small a subset of human measurements as possible. Accordingly, the primary contribution of this paper is an efficient method for estimating 
+\begin_inset Formula $K$
+\end_inset
+
+ via an information theoretic adaptive sampling approach. In addition, we contribute an end-to-end system for interactive visual search and demonstrate its benefits -- both quantitative and qualitative -- over competing approaches.
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% relation to sparse metric learning
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% model probability over any triplet rather than just classification (like logistic regression vs. svm)
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+%% did previous MDS methods output probabilities on these triplets?
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+%  main contribution: new algorithm for adaptive sampling
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+%% two flavors: one for small (n<500) datasets, one for large datasets (not as high quality, but better scaling)
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% one alg.: takes triples and produces eucl. embedding (this can be compared to Lanckriet et al.), but is well suited to adaptive sampling
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% another alg.: takes (some) triples and embedding and adaptively samples to improve/refine embedding; this could use our proposed method ("relative" MDS model, with P[a>b:c]=d^2(a,c)/[d^2(a,c)+d^2(a,b)]) or the logistic-style one
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% focus on which triples are suggested depending on algorithm, at different stages, where at first it's the same as random, and compare it also with logistic
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% clarify contribution is in the form of an overall system pipeline, which contains a novel algorithmic contribution (maybe have block diagram/cartoon)
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+The remainder of this paper is organized as follows. In Section ... blah blah ... (executive summary of remaining sections so reader knows what to expect in each part).
+\end_layout
+
+\begin_layout Section
+
+Related Work
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% say more about works cited in intro
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset LatexCommand cite
+after ""
+before ""
+key "ahn06"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+
+Learning the Crowd Kernel
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% input: set of n objects; output: embedding
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% adaptive sampling method for refining/improving the embedding via adaptive sampling
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+
+Probabilistic model - modeling human behavior
+\end_layout
+
+\begin_layout Subsection
+
+Fitting triplets: 
+\begin_inset Formula $\Re^d$
+\end_inset
+
+ vectors
+\end_layout
+
+\begin_layout Standard
+
+- gradient descent on maximum likelihood - the other one Adam is developing (Adam's updates) - proofs and performance guarantee (possibly subject to data following a known model) - complexity/runtime discussion (theoretical here, but point to experimental section for empirical observations) 3c. adaptive sampling - strawman - random - greedy information gain 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% segue into next section by asking how one can leverage these embedding points to solve real world problems
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+
+Experiments and Applications
+\end_layout
+
+\begin_layout Standard
+
+4a. floor tiles and/or flags first part: learning the human kernel for this - example triplets: what mturkers saw, also show how triplets change with adaptivity (vs. random) - embedding: projected into 2D (possibly snapped to grid) - nearest neighbor examples (when it's done training) - attribute discovery: user takes set of embedded "feature vectors," sets up supervised learning problem by labeling subset of training examples that have a certain attribute (e.g., zig zag pattern), trains SVM to extrapolate to remaining examples; this shows the descriptive power of the embedded representation - quantitative plots: triplet preference prediction accuracy vs. time/money invested into crowdsourcing for different adaptive sampling methods and different fitting methods - observed training/run time second part: using the human kernel to build a visual search interface - describe interactive/sequential search interface with blocks of 9 choices user can click - question is: how long/how many clicks does it take to get to desired object -- user may expect clustery feel; we need to emphasize that what we're shooting for is smallest number of clicks to get to desired target - performance evaluation: number of clicks averaged over many object instances, prediction accuracy for which of the 9 images they click on 4b-d. more example domains - letters a-z?
+\end_layout
+
+\begin_layout Section
+
+Conclusion and Discussion
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% future work: incremental learning, attribute discovery
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% ideas for supplementary material:
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% - more details on datasets
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% - all the plots that don't fit
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% - screen caps of web interface
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+
+\begin_inset FormulaMacro
+\providecommand{\natexlab}[1]{#1}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\providecommand{\url}[1]{\texttt{#1}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+expandafter
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+ifx
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+csname
+\end_layout
+
+\end_inset
+
+ urlstyle
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+endcsname
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+relax
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\providecommand{\doi}[1]{doi: #1}
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+else
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+fi
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Bibliography
+
+
+\begin_inset LatexCommand bibitem
+label "Author(2010)"
+key "anonymous"
+
+\end_inset
+
+ Author, N.\InsetSpace ~
+N. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ Suppressed for anonymity, 2010.
+\end_layout
+
+\begin_layout Bibliography
+
+
+\begin_inset LatexCommand bibitem
+label "Duda et~al.(2000)Duda, Hart, and Stork"
+key "DudaHart2nd"
+
+\end_inset
+
+ Duda, R.\InsetSpace ~
+O., Hart, P.\InsetSpace ~
+E., and Stork, D.\InsetSpace ~
+G. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ 
+\emph on
+Pattern Classification
+\emph default
+. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ John Wiley and Sons, 2nd edition, 2000.
+\end_layout
+
+\begin_layout Bibliography
+
+
+\begin_inset LatexCommand bibitem
+label "Kearns(1989)"
+key "kearns89"
+
+\end_inset
+
+ Kearns, M.\InsetSpace ~
+J. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ 
+\emph on
+Computational Complexity of Machine Learning
+\emph default
+. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ PhD thesis, Department of Computer Science, Harvard University, 1989.
+\end_layout
+
+\begin_layout Bibliography
+
+
+\begin_inset LatexCommand bibitem
+label "Langley(2000)"
+key "langley00"
+
+\end_inset
+
+ Langley, P. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ Crafting papers on machine learning. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ In Langley, Pat (ed.), 
+\emph on
+Proceedings of the 17th International Conference on Machine Learning (ICML 2000)
+\emph default
+, pp.\InsetSpace \space{}
+1207--1216, Stanford, CA, 2000. Morgan Kaufmann.
+\end_layout
+
+\begin_layout Bibliography
+
+
+\begin_inset LatexCommand bibitem
+label "Michalski et~al.(1983)Michalski, Carbonell, and
+  Mitchell"
+key "MachineLearningI"
+
+\end_inset
+
+ Michalski, R.\InsetSpace ~
+S., Carbonell, J.\InsetSpace ~
+G., and Mitchell, T.\InsetSpace ~
+M. (eds.). 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ 
+\emph on
+Machine Learning: An Artificial Intelligence Approach, Vol. I
+\emph default
+. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ Tioga, Palo Alto, CA, 1983.
+\end_layout
+
+\begin_layout Bibliography
+
+
+\begin_inset LatexCommand bibitem
+label "Mitchell(1980)"
+key "mitchell80"
+
+\end_inset
+
+ Mitchell, T.\InsetSpace ~
+M. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ The need for biases in learning generalizations. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ Technical report, Computer Science Department, Rutgers University, New Brunswick, MA, 1980.
+\end_layout
+
+\begin_layout Bibliography
+
+
+\begin_inset LatexCommand bibitem
+label "Newell \& Rosenbloom(1981)Newell and Rosenbloom"
+key "Newell81"
+
+\end_inset
+
+ Newell, A. and Rosenbloom, P.\InsetSpace ~
+S. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ Mechanisms of skill acquisition and the law of practice. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ In Anderson, J.\InsetSpace ~
+R. (ed.), 
+\emph on
+Cognitive Skills and Their Acquisition
+\emph default
+, chapter\InsetSpace ~
+1, pp.\InsetSpace \space{}
+1--51. Lawrence Erlbaum Associates, Inc., Hillsdale, NJ, 1981.
+\end_layout
+
+\begin_layout Bibliography
+
+
+\begin_inset LatexCommand bibitem
+label "Samuel(1959)"
+key "Samuel59"
+
+\end_inset
+
+ Samuel, A.\InsetSpace ~
+L. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ Some studies in machine learning using the game of checkers. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ 
+\emph on
+IBM Journal of Research and Development
+\emph default
+, 3
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+penalty
+\end_layout
+
+\end_inset
+
+0 (3):
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+penalty
+\end_layout
+
+\end_inset
+
+0 211--229, 1959.
+\end_layout
+
+\end_body
+\end_document

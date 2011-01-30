@@ -9,10 +9,15 @@ tools.my_write("c:/users/adum/simexp/turkexps/newtiles/random_multi_times/2.trip
 c:\users\adum\simexp\py\runtrips_multiple_times.py  C:\Users\adum\simexp\turkexps\newtiles\random_multi_times\newtiles_multi_times.config C:\Users\adum\simexp\turkexps\newtiles\random_multi_times\2.trips C:\Users\adum\simexp\turkexps\newtiles\random_multi_times\2.trips.out
 get_agreement("c:/users/adum/simexp/turkexps/newtiles/random_multi_times/2.trips.out")
 
+a=create_rand_trips(26,1000)
+c:\users\adum\simexp\py\runtrips_multiple_times.py  C:\Users\adum\simexp\turkexps\calibrialpha\random_multi_times\calibrialpha_multi_times.config C:\Users\adum\simexp\turkexps\calibrialpha\random_multi_times\1.trips C:\Users\adum\simexp\turkexps\calibrialpha\random_multi_times\1.trips.out
+get_agreement("c:/users/adum/simexp/turkexps/calibrialpha/random_multi_times/1.trips.out")
+
+
 """
 
 
-import tools
+import tools, numpy as np
 import scipy.stats.morestats
 
 def get_agreement(filename):
@@ -39,5 +44,5 @@ def get_agreement(filename):
             data.append( (a*(a-1.)+b*(b-1.))/((a+b)*(a+b-1.))) # double count agreement and disagreement pairs
     r =scipy.stats.morestats.bayes_mvs(data, 0.95)[0]
     print "Mean",r[0], "  95% confidence interval",r[1]
-    print "This corresponds to a signal of ", 0.5+sqrt(r[0]/2.-1/4.)
+    print "This corresponds to a signal of ", 0.5+np.sqrt(r[0]/2.-1/4.)
     return r[0]

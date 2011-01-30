@@ -1,0 +1,263 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% ICML 2011 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\S{K}
+\def\reals{\mathbb{R}}
+\def\tr{\mathrm{tr}}
+\def\cS{\mathcal{S}}
+\def\cL{\mathcal{L}}
+\def\U{\mathcal{U}}
+\def\hp{\hat{p}}
+
+% Use the following line _only_ if you're still using LaTeX 2.09.
+%\documentstyle[icml2011,epsf,natbib]{article}
+% If you rely on Latex2e packages, like most moden people use this:
+\documentclass{article}
+
+% For figures
+\usepackage{graphicx} % more modern
+%\usepackage{epsfig} % less modern
+\usepackage{subfigure}
+
+% For citations
+\usepackage{natbib}
+
+% For algorithms
+\usepackage{algorithm}
+\usepackage{amsfonts}
+\usepackage{algorithmic}
+
+% As of 2010, we use the hyperref package to produce hyperlinks in the
+% resulting PDF.  If this breaks your system, please commend out the
+% following usepackage line and replace \usepackage{icml2011} with
+% \usepackage[nohyperref]{icml2011} above.
+\usepackage{hyperref}
+
+% Packages hyperref and algorithmic misbehave sometimes.  We can fix
+% this with the following command.
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Employ the following version of the ``usepackage'' statement for
+% submitting the draft version of the paper for review.  This will set
+% the note in the first column to ``Under review.  Do not distribute.''
+\usepackage{icml2011}
+% Employ this version of the ``usepackage'' statement after the paper has
+% been accepted, when creating the final version.  This will set the
+% note in the first column to ``Appearing in''
+% \usepackage[accepted]{icml2011}
+
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Actively Learning the Crowd Kernel}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{Actively Learning the Crowd Kernel}
+%or Capturing the Crowd Kernel, Actively?
+
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2011
+% package.
+\icmlauthor{Your Name}{email@yourdomain.edu}
+\icmladdress{Your Fantastic Institute,
+            314159 Pi St., Palo Alto, CA 94306 USA}
+\icmlauthor{Your CoAuthor's Name}{email@coauthordomain.edu}
+\icmladdress{Their Fantastic Institute,
+            27182 Exp St., Toronto, ON M6H 2T1 CANADA}
+
+% You may provide any keywords that you
+% find helpful for describing your paper; these are used to populate
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{active learning, crowdsourcing, kernels}
+
+\vskip 0.3in
+]
+
+\begin{abstract}
+The human notion of perceptual similarity is hard to capture and even more difficult to predict.  Insights into it are invaluable in applications including visual search and GUI design.  In this work we introduce an active Multidimensional Scaling (MDS) algorithm that, given $n$ objects, learns a similarity matrix over all $n^2$ pairs by {\em adaptively} sampling crowdsourced user responses to triplet-based relative similarity queries.  Each query has the form ``is object $a$ more similar to $b$ or to $c$?'' and is chosen to be maximally informative given the preceding responses.  The output is an embedding of the objects into Euclidean space; we refer to this as the ``crowd kernel.''  The runtime (empirically observed to be linear) and cost (about \$0.15 per object) of the algorithm are small enough to permit its application to databases of thousands of objects.  The distance matrix provided by the algorithm allows for the development of an intuitive and powerful sequential, interactive search algorithm which we demonstrate for a variety of visual stimuli.  We present quantitative results that demonstrate the benefit in cost and time of our approach relative to competing approaches, both in the learning stage (quality of estimated distances) and for the end-user at run time (time required to reach goal).  We also show the ability of our approach to capture different aspects of perceptual similarity by demonstrating a variety of binary attribute classifiers (``is striped,'' ``vowel vs.\ consonant,'') trained using the learned kernel.
+% comment from Omer: emphasize the end-to-end system in one sentence
+\end{abstract}
+
+\section{Introduction}
+The problem of capturing and extrapolating a human notion of perceptual similarity has received increasing attention in recent years in domains including vision \cite{Agarwal07}, audition \cite{McFee09}, information retrieval \cite{Schultz03} and a variety of others represented in the UCI Datasets \cite{Xing02,Huang10}.  Concretely, the goal of these approaches is to estimate a similarity matrix $K$ over all pairs of $n$ objects given a (potentially exhaustive) subset of human perceptual measurements on tuples of objects.  In some cases the set of human measurements represents `side information' to computed descriptors (MFCC, SIFT, etc.), while in other cases -- the present work included -- one proceeds exclusively with human reported data, generally obtained via crowdsourcing.  When $K$ is a positive semidefinite matrix induced purely from distributed human measurements, we refer to it as the `crowd kernel' for the set of objects.
+
+Given such a Kernel, one can exploit it for a variety of purposes including exploratory data analysis or embedding visualization (as in Multidimensional Scaling) and relevance-feedback based interactive search.  As discussed in the above works and \cite{Kendall90}, using a {\em triplet based} representation of relative similarity, in which a subject is asked ``is object $a$ more similar to $b$ or to $c$,'' has a number of desirable properties over the classical approach employed in MDS, i.e., asking ``how similar is object $a$ to $b$.''  These advantages include reducing fatigue on human subjects and alleviating the need to reconcile individuals' scales of (dis)similarity.  The obvious drawback with the triplet based method, however, is the potential $O(n^3)$ complexity.  It is therefore expedient to seek methods of obtaining high quality approximations of $K$ from as small a subset of human measurements as possible.  Accordingly, the primary contribution of this paper is an efficient method for estimating $K$ via an information theoretic adaptive sampling approach.  In addition, we contribute an end-to-end system for interactive visual search and demonstrate its benefits -- both quantitative and qualitative -- over competing approaches.
+
+\subsection{Findings}
+We find that, for a modest price per object, one can capture a Crowd Kernel (CK) on general image datasets, across a number of domains.   Active learning helps reduce the costs, or, equivalently, improve performance for a given budget. The CK can be used, among other things, to search for a database of images based on similarity.  Using our system, for example, an online vendor need only input the collection of product images, and the output is a similarity-based browser.  We now describe some general findings about triplet-based similarity measurements using our system on a few different domains, which are somewhat different but in line with previous triplet-based approaches in specific domains.  Then, we describe how our active learning algorithm improves performance.
+
+First, triplet-based questions may seem ill-posed in many domains.  Consider even English letters.  Can people meaningfully answer the question: is the letter `a' more similar to `b' or `c'?  Our experiments show statistically significant consistency with agreement 58\% ($pm$2\%, with 95\% confidence) agreement between users on a random triple.  Greater agreement is observed for random image triplets from an online tie store (68\%) and floor tile images (65\%).  From such triplets, we approximate the CK by a PSD matrix.  Our CK predicts future results on such triplets with accuracy ?? on English letters, ?? on tie store images, and ?? on floor tile images.  Second, by learning an SVM with a CK, the CK matrix is shown to contain useful information about human notions of similarity.  For example, for images of the 26 English letters, it perfectly represents the distinction between vowels and consonants and between ``short'' letters, acemnorsuvwxz, and tall ones, bfhkl.  The former is an example of a feature that would be difficult to learn directly from existing computer vision algorithms based upon pixel-level or higher-level (e.g., SIFT) features.  On many domains, it seems feasible for existing computer vision algorithms to represent many important high-level features, e.g., detecting gender from a face image or detecting whether or not a tie is striped, but doing so involves a certain amount of expertise and domain specific tuning.  Hence, approximating the CK alone (without even examining the images) is shown to be useful because, (a) it is not prohibitively expensive for certain domains, such as products (b) it has the potential to learn high-level context-aware features that go beyond the limits of most computer vision/AI systems, and (c) it is practical in that it can be acquired in a uniform fashion across domains without requiring domain-specific expertise.
+
+Finally, the main finding is that active learning does indeed reduce the label complexity in capturing the Crowd Kernel.  Our algorithm has two components: a fitting algorithm which fits a probabilistic model to a sequence of triples, and a selection algorithm that uses the fit to determine which triples to label.  We consider two similar fitting algorithms, with different probabilistic models.  The first is a logistic model that is easy to minimize since it is convex.  This model fits data well and also reproduces human features.  However, in combination with our adaptive selection method, it suggests poor triples to label.  This is an interesting aspect of model quality -- while probabilistic models are most naturally evaluated based on their fit on data, another criterion is how well they suggest questions to ask to gain information.  As a remedy, we introduce a novel ``relative'' model, which fits the data similarly to the logistic model, but produces better triples in combination with the adaptive selection procedure.  While the relative model is non-convex, we give a learning algorithm with provable performance guarantees.
+
+\section{Preliminaries}\label{sec:prelim}
+
+Say we have a set of $n$ objects, $[n]=\{1,2,\ldots,n\}$.  For $a,b,c \in [n]$, a comparison or {\em triple} of the form, ``is $a$ more similar to $b$ or to $c$,'' is denoted by $^a_{bc}$. We write $p^a_{bc}$ for the probability that a {\em random} crowd member rates $a$ as more similar to $b$, so $p^a_{bc}+p^a_{cb}=1$.
+The $n$ objects are assumed to have $d$-dimensional Euclidean representation, and hence the data can be viewed as a matrix $M \in \reals^{n \times d}$, and the {\em similarity matrix} $\S \in \reals^{n \times n}$ is defined by $\S_{ab}=M_a\cdot M_b$, or equivalently $\S = MM'$.  Note that $\S$ is necessarily positive semidefinite (PSD), and for any PSD matrix $\S$, one can efficiently find an embedding in $\reals^d$ (unique up to change of basis), for some $d \leq n$.  Also equivalent is the representation in terms of distances, $d^2(a,b)=\S_{aa}-2\S_{ab}+\S_{bb}$.
+
+In our setting, an {\em MDS algorithm} takes as input $m$ comparisons $(^{a_1}_{b_1c_1},y_1) \ldots (^{a_m}_{b_mc_m},y_m)$ on $n$ items, where $y_i\in \{0,1\}$ indicates whether $a_i$ is more like $b_i$ than $c_i$.  Unless explicitly stated, we will often omit $y_i$ and assume that the $b_i$ and $c_i$ have been permuted, if necessary, so that $a_i$ was rated as more similar to $b_i$ than $c_i$.  The MDS algorithm outputs an embedding $M \in \reals^{n \times d}$ for some $d \geq 1.$  A probabilistic MDS model outputs predicts $\hat{p}^{a}_{bc}$ based on $M_a$, $M_b$, and $M_c$.  Our probabilistic MDS models minimize empirical log loss, $\min \sum_i \log 1/\hat{p}^{a_i}_{b_ic_i}$, subject to some regularization constraint.
+
+An {\em active} MDS algorithm chooses each triple, $^{a_i}_{b_ic_i}$, adaptively based on $(^{a_1}_{b_1c_1},y_1) \ldots (^{a_{i-1}}_{b_{i-1}c_{i-1}},y_{i-1})$.  
+In terms of notation, $M'$ denotes the transpose of matrix $M$, $\|M\|_F=\sqrt{\sum_{ij} M_{ij}^2}$ denotes the Frobenius norm.
+
+\subsection{Why adaptation may help}
+We first give high-level intuition for why adaptation may help.  For simplicity, consider data representing an underlying rooted tree with $L \ll n$ leaves, inspired by, say, phylogenic trees involving animal species.\footnote{This example is based upon a tree metric rather than a Euclidean one.  However, note that any tree with $L$ leaves can be embedded in $L$-dimensional Euclidean space so that the squared distance between any pair of embedded points is equal to the number of edges in their shortest path on the tree.  Moreover, the rich study of Embeddings (see, e.g., \citealp{IM04}) has shown that many types of metrics can be embedded (to varying degrees of approximation) within Euclidean space.}  Say the similarity between objects is decreasing in their distance in the tree graph and, furthermore, that objects are drawn uniformly at random from the classes represented by the leaves of the tree.  Ignoring the details of how one would identify that two objects are in the same leaf or subtree, it is clear that a nonadaptive method would have to ask $\Omega(n L)$ questions to determine the leaves to which $n$ objects belong (or at least to determine which objects are in the same tree).  To see this, note that if an object is compared to $L/2$ random objects, then with probability at least $1/2$ we won't have compared the object to any other in its same class.
+
+On the other hand, in an ideal setting, an adaptive approach might determine such matters using $O(n \log L)$ queries in a balanced binary tree, assuming a constant number of comparisons can determine to which subtree of a node an object belongs, hence an exponential savings.  
+
+\section{Probabilistic models}
+
+[Add related work about probabilistic MDS models if there is any, mention max-margin models]
+
+The first model is based upon logistic regression, and hence we refer to it as the `logistic model.'  This model aims to find a matrix $\S$ so that,
+\begin{equation}\label{eq:logistic}
+\hat{p}^a_{bc} = \frac{e^{\S_{ab}}}{e^{\S_{ab}}+e^{\S_{ac}}} = \frac{1}{1+e^{\S_{ac}-\S_{ab}}}.
+\end{equation}
+Note that $\log 1+e^{\S_{ac}-\S_{ab}}$ is a convex function of $\S\in \reals^{n\times n}$.  Hence, for any convex set $W \subseteq \reals^{n \times n}$, the problem of minimizing empirical log loss, $\cL(\S)=\min_{\S \in W} \sum_i \log 1/\hp^{a_i}_{b_ic_i}$, is a convex optimization problem.  Now, requiring $\S \succeq 0$ is not very restrictive since any $\S+kI \succeq 0$ for large enough $k>0$, i.e., by a sufficiently large increase in the diagonal, any symmetric matrix becomes PSD. Hence, in addition to requiring $\S \succeq 0$, three natural regularization constraints include bounding the rank of $\S$, the trace $\tr(\S)=\sum_i \S_{ii}$ or simply fixing the diagonal $\S_{ii}$ to a specified value.  In the first case, one can explicitly view the problem in terms of the embedding $M$ directly, and perform gradient descent directly on $\cL$, though this may get stuck in local minima since the loss function $\cL(MM')$ is not convex when viewed as as function of $M$.  For the latter two cases, we may solve either of these optimization problems with the {\em gradient projection method}, in which one computes a sequence of approximations, $\S^0=\lambda I$ and $\S^{t+1}= \Pi_W(S^t - \eta \nabla \cL(S))$ where, for set $W \subseteq \reals^{n \times n}$, $\Pi_W(S)=\arg\min_{T \in W} \|\S-T\|_F^2$ is the closest matrix in $W$ to $S$.  Note that both $\{\S \succeq 0~|~\tr(S)\leq nr\}$ and $\{\S \succeq 0~|~\S_{ii}=r\}$ are both convex sets for any $r\geq 0$.  Projection to the closest trace-bounded PSD matrix involves a single SVD along with soft thresholding.  Projection to the closest PSD matrix with a fixed diagonal is discussed in Section \ref{sec:proj}.  
+
+As discussed in Section \ref{sec:logisticexp}, fitting the logistic model fits data well and reproduces interesting features, such as vowel/consonant or stripedness.  However, empirically it performs poorly in terms of deciding which triples to ask.  Figure \ref{fig:exp} gives some justification for why.  In particular, if one was unsure whether an object $a$ is equal to $b$ or $c$, one would be better-off comparing $a$ to points $u$ and $v$ which are both far and very different from $b$ and $c$.  To see why, note that $p^{b}_{bc}=\frac{1}{1+exp(b\cdot(c-b))}$ and $p^{c}_{bc}$ are both very close to $1/2$ because $b\cdot (c-b) \approx c \cdot (b-c) \approx 0$, whereas $p^{b}_{uv}=1-p^{c}_{uv}$ are different and far from $1/2$ since $b\cdot (x-y)=-c \cdot (x-y)$ is large.  However, it seems peculiar to ask such a query to determine whether $a=b$ or $a=c$.  
+
+\begin{figure}
+%\center{\includegraphics[width=3in]{expfig.pdf}} \caption{\label{fig:exp} Suppose one was unsure whether a point $a$ is at location $b$ or $c$.  One gains significantly more information by comparing $a$ to $u$ and $v$ than by comparing $a$ to $b$ and $c$, according to the logistic model.}
+\end{figure}
+
+This criterion for evaluating a model, namely what quality triples it suggests asking, is an interesting one.  The second model addresses this problem, and is motivated by the scale-invariance observed in many perceptual systems (see, e.g., \citealp{CB99}).  The simplest scale-invariant model is,
+$$
+\hat{p}^a_{bc} = \frac{e^{\S_{ab}}}{e^{\S_{ab}}+e^{\S_{ac}}} = \frac{1}{1+e^{\S_{ac}-\S_{ab}}}.
+$$
+
+
+
+
+
+
+
+If one imposes no restrictions on $\S$ other than symmetry, then there are $\Theta(n^2)$ degrees of freedom in the model, even for PSD matrices.  Requiring $S$ to be PSD is not sufficient alone because Hence, regularizing by bounding the max norm or trace of the matrix are natural.
+
+
+
+While acquiring, evaluating, and using data on human similarity measurements involves a number of interesting issues, our primary focus is the {\em active} component of the system.  To that end, we aim to find the simplest system which is both effective and highlights issues related to active learning.  For this reason, we do not focus on other important issues, such as optimal quality control in crowdsourcing (our approach is summarized briefly in Section ????) and the number of objects compared at any one time (comparing $k$-tuples of items, for larger $k$, may further reduce costs).  Another interesting issue that we do not study is the difference between individual crowd user's models of similarity.  While in principle the data could be gathered from a single person, thereby estimating a single `Human Kernel,' the massive parallelism in crowdsourcing enables us to gather data quickly.
+
+Honest people may have differing opinions about similarity between objects, and one person may not even give you the same answer when asked at different times.  Hence, we employ probabilistic model of triplet responses.  Triples are chosen adaptively according to an information gain criterion.  We tried two probabilistic models -- the first a simple convex logistic model, and the second a nonconvex model, which we call the relative MAX-norm (RMN) model.  Both models fit the data similarly well but, for reasons described below, the exponential model generated poor adaptive triples.  The RMN model both fit the data well and generated effective adaptive comparisons.  We now describe the model.
+
+
+
+
+\subsection{Probabilistic models}
+
+
+
+\subsection{Max-norm: regularizing similarity matrices}
+
+In a beautiful paper on regularizing matrices, \citet{SS05} show that bounding the length of vectors, i.e., bounding $\max_i \sqrt{\S_{ii}} = \max_i \|M_i\|^2$, is a principled way to regularize matrices.\footnote{That paper considers the more general case of asymmetric non-PSD matrices, $M \in \reals^{m \times n}$.   In the special case of PSD matrices, however, the max-norm reduces to simply the largest vector length.}  In particular, they show the following elegant result, which doesn't hold for other common matrix regularization techniques such as the trace norm.
+
+
+
+
+
+
+\section{Algorithmic efficiency}\label{sec:efficient}
+
+
+\subsection{Metrics: evaluating model performance}
+
+
+\subsection{Pricing and quality control}\label{sec:params}
+Experiments were performed using the Mechanical Turk web service, where we define `Human Intelligence Tasks' to be performed by one or more users.  Each task consists of 50 comparisons and the interface is optimized to be performed with 50 mouse clicks (and no scrolling).  The mean completion time was approximately 2 minutes, for which workers were paid 15 cents.  This price was determined based upon worker feedback.  At 10 cents per task, though workers actively performed the tasks, some complained about low wages and several suggested that they be paid 15 cents per task.  At 15 cents per task, feedback was extremely positive -- the users reported that the tasks were enjoyable and requested more.  Initial experiments revealed a high percentage of seemingly random responses, but after closer inspection the vast majority of these poor results came from a small number of individuals.  To improve quality control, we imposed a limit on the maximum number of tasks a single user could perform on any one day, we selected users who had completed at least 48 tasks with a 95\% approval rate, and each task included 20\% triples for which there was tremendous agreement between users.  These ``gold standard'' triples were also automatically generated and proved to be an effective manner to recognize and significantly reduce cheating.
+
+\subsubsection{Question phrasing and crowd alignment}
+One interesting issue is how to frame similarity questions.  On the one hand, it seems purest in form to give the users carte blanche and ask only, ``is $a$ more similar to $b$ than $c$.''  On the other hand, in feedback users complained about these tasks and often asked what we meant by similarity.  Moreover, different users will inevitably weigh different features differently when performing comparisons.  For example, consider a comparisons of face images, where $a$ is a white male, $b$ is a black male, and $c$ is a white female.  Some users will consider gender more important in determining skin color, and others may feel the opposite is true.  Others may feel that the question is impossible to answer.  Consider phrasing the question as follows, ``At a {\em distance}, who would you be more likely to mistake for $a$: $b$ or $c$?''  For any two people, there is presumably some distance at which one might be mistaken for the other, so the question may seem more possible to answer for some people.  Second, users may more often agree that skin color is more important than gender, because both are easily identified close up by skin color may be identifiable even at a great distance.  While we haven't done experiments to determine the importance of question phrasing, anecdotal evidence suggests that users enjoy the tasks more when more specific definitions of similarity are given.
+
+Two natural goals of question phrasing might be: (1) to align users in their ranking of the importance of different features and (2) to align user similarity  notions with the goals of the task at hand.  For example, if the task is to find a certain person, the question, ``which two people are most likely to be (genealogically) related to one another,'' may be poor because users may overlook features such as gender and age.  In our experiments on neckties, for example, the task was titled ``Which ties are most similar?'' and the complete instructions were:
+
+\begin{quote}
+Someone went shopping at a tie store and wanted to buy the item
+on top, but it was not available. Click on item (a) or (b) below that would be the
+{\bf best substitute}. Please repeat 50 times. We are researchers in Artificial Intelligence that are teaching computers what humans think similarity is on a bunch of things (letters, faces, fonts), so that we can build better programs.  (Please
+don't answer randomly -- we have sophisticated ways of checking for that.) Thank
+you!!
+\end{quote}
+
+
+
+
+% relation to sparse metric learning
+% model probability over any triplet rather than just classification (like logistic regression vs. svm)
+%% did previous MDS methods output probabilities on these triplets?
+%  main contribution: new algorithm for adaptive sampling
+%% two flavors: one for small (n<500) datasets, one for large datasets (not as high quality, but better scaling)
+% one alg.: takes triples and produces eucl. embedding (this can be compared to Lanckriet et al.), but is well suited to adaptive sampling
+% another alg.: takes (some) triples and embedding and adaptively samples to improve/refine embedding; this could use our proposed method ("relative" MDS model, with P[a>b:c]=d^2(a,c)/[d^2(a,c)+d^2(a,b)]) or the logistic-style one
+% focus on which triples are suggested depending on algorithm, at different stages, where at first it's the same as random, and compare it also with logistic
+% clarify contribution is in the form of an overall system pipeline, which contains a novel algorithmic contribution (maybe have block diagram/cartoon)
+
+The remainder of this paper is organized as follows.  In Section ... blah blah ... (executive summary of remaining sections so reader knows what to expect in each part).
+
+\section{Related Work}
+% say more about works cited in intro
+
+\cite{ahn06}
+
+\section{Learning the Crowd Kernel}
+% input: set of n objects; output: embedding
+% adaptive sampling method for refining/improving the embedding via adaptive sampling
+\subsection{Probabilistic model - modeling human behavior}
+\subsection{Fitting triplets: $\reals^d$ vectors}
+- gradient descent on maximum likelihood
+- the other one Adam is developing (Adam's updates)
+- proofs and performance guarantee (possibly subject to data following a known model)
+- complexity/runtime discussion (theoretical here, but point to experimental section for empirical observations)
+3c. adaptive sampling
+- strawman - random
+- greedy information gain
+% segue into next section by asking how one can leverage these embedding points to solve real world problems
+
+\section{Experiments and Applications}
+
+4a. floor tiles and/or flags
+first part: learning the human kernel for this
+- example triplets: what mturkers saw, also show how triplets change with adaptivity (vs. random)
+- embedding: projected into 2D (possibly snapped to grid)
+- nearest neighbor examples (when it's done training)
+- attribute discovery: user takes set of embedded "feature vectors," sets up supervised learning problem by labeling subset of training examples that have a certain attribute (e.g., zig zag pattern), trains SVM to extrapolate to remaining examples; this shows the descriptive power of the embedded representation
+- quantitative plots: triplet preference prediction accuracy vs. time/money invested into crowdsourcing for different adaptive sampling methods and different fitting methods
+- observed training/run time
+second part: using the human kernel to build a visual search interface
+- describe interactive/sequential search interface with blocks of 9 choices user can click
+- question is: how long/how many clicks does it take to get to desired object
+-- user may expect clustery feel; we need to emphasize that what we're shooting for is smallest number of clicks to get to desired target
+- performance evaluation: number of clicks averaged over many object instances, prediction accuracy for which of the 9 images they click on
+4b-d. more example domains
+- letters a-z?
+
+\section{Conclusion and Discussion}
+% future work: incremental learning, attribute discovery
+
+% ideas for supplementary material:
+% - more details on datasets
+% - all the plots that don't fit
+% - screen caps of web interface
+
+\bibliography{sim}
+\bibliographystyle{icml2011}
+
+\end{document}
+
+
+% This document was modified from the file originally made available by
+% Pat Langley and Andrea Danyluk for ICML-2K. This version was
+% created by Lise Getoor and Tobias Scheffer, it was slightly modified
+% from the 2010 version by Thorsten Joachims & Johannes Fuernkranz,
+% slightly modified from the 2009 version by Kiri Wagstaff and
+% Sam Roweis's 2008 version, which is slightly modified from
+% Prasad Tadepalli's 2007 version which is a lightly
+% changed version of the previous year's version by Andrew Moore,
+% which was in turn edited from those of Kristian Kersting and
+% Codrina Lauth. Alex Smola contributed to the algorithmic style files.
+
+
