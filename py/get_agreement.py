@@ -13,6 +13,10 @@ a=create_rand_trips(26,1000)
 c:\users\adum\simexp\py\runtrips_multiple_times.py  C:\Users\adum\simexp\turkexps\calibrialpha\random_multi_times\calibrialpha_multi_times.config C:\Users\adum\simexp\turkexps\calibrialpha\random_multi_times\1.trips C:\Users\adum\simexp\turkexps\calibrialpha\random_multi_times\1.trips.out
 get_agreement("c:/users/adum/simexp/turkexps/calibrialpha/random_multi_times/1.trips.out")
 
+a=create_rand_trips(223,1000)
+tools.my_write("c:/users/adum/simexp/turkexps/flags/random_multi_times/1.trips",a)
+c:\users\adum\simexp\py\runtrips_multiple_times.py  C:\Users\adum\simexp\turkexps\flags\random_multi_times\flags_multi_times.config C:\Users\adum\simexp\turkexps\flags\random_multi_times\1.trips C:\Users\adum\simexp\turkexps\flags\random_multi_times\1.trips.out
+get_agreement("c:/users/adum/simexp/turkexps/calibrialpha/random_multi_times/1.trips.out")
 
 """
 

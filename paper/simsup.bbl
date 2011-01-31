@@ -1,8 +1,16 @@
-\begin{thebibliography}{0}
+\begin{thebibliography}{1}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Zinkevich(2003)]{Zinkevich03}
+Zinkevich, Martin.
+\newblock Online convex programming and generalized infinitesimal gradient
+  ascent.
+\newblock In Fawcett, Tom and Mishra, Nina (eds.), \emph{ICML}, pp.\  928--936.
+  AAAI Press, 2003.
+\newblock ISBN 1-57735-189-4.
 
 \end{thebibliography}

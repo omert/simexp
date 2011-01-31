@@ -82,45 +82,65 @@
 \vskip 0.3in
 
 
+\section{Analysis}
+
+Before we present the proof of Theorem 1, we introduce a natural generalization which will be a convenient abstraction.  We call this relative regression.
+
 \section{Relative regression}
 
-In this section, we consider the following online relative regression model.  There is a sequence of examples $(x_1,x_1',y_1),(x_2,x_2',y_2),\ldots,(x_T,x_T',y_T) \in X \times X \times \{0,1\}$, for some set $X \subseteq \reals^d$.  On the $t$th period, the algorithm observes $x_t,x_t'$ and outputs a prediction $p_t \in [0,1]$ based upon $x_1,x_1',y_1,\ldots,x_{t-1},x_{t-1}',y_{t-1},x_t,x_t'$.  The loss of the algorithm on the $t$th iteration is $\ell_t(p_t)=y_t\log 1/p_t$ if $y_t=1$ and $-\log (1-p_t)$ if $y_t=0$.  The average loss is $\frac{1}{T}\sum \ell_t$.  The relative model requires that there exists $w^* in W$ such that,
-$$p^*_t =\Pr[y_t=1]=\frac{w^*\cdot x_t}{w^*\cdot x_t+w^*\cdot x_t'},$$
-where $W \subseteq \reals^d$ is a fixed convex compact set such that $w \cdot x > 0$ for all $w\in W, x\in X$.  The goal is to predict almost as well as if we knew $w^*$.
+Consider the following online relative regression model.  There is a sequence of examples $(x_1,x_1',y_1),(x_2,x_2',y_2),\ldots,(x_T,x_T',y_T) \in X \times X \times \{0,1\}$, for some set $X \subseteq \reals^d$.  For $w \in \reals^d$, define the relative linear model with $w$ to be,
+$$p_t(w) = \frac{w \cdot x_t}{w \cdot x_t + w \cdot x_t'}.$$
+The sequence $x_1,x_1',\ldots,x_T,x_T'$ is chosen arbitrary (or even adversarially) in advance; afterwards it is assumed that there is some $w^*\in \reals^d$ such that, $\Pr[y_t=1]=p_t(w^*)$ and that the different $y_t$'s are independent.  It is further assumed that $w^*$ belongs to some convex compact set $W \subset \reals^d$ and that $w \cdot x$ is positive and bounded over $w \in W,x\in X$.  Without loss of generality, by scaling we can require $w\cdot x \in [1,\beta]$ for some $\beta>0$ and every $w \in W,x\in X$.
 
+On the $t$th period, the algorithm outputs $w_t \in W$, then observes $x_t,x_t',y_t$, and finally incurs loss $\ell_t(w_t)$ where $\ell_t(w)=\log 1/p_t(w)$ if $y_t=1$ and $\ell_t(w)=\log 1/(1-p_t(w))$ if $y_t=0$.  The goal of the algorithm is to incur total loss not much larger than $\sum_t \ell_t(w^*)$, the best choice had we known $w^*$ in advance.  
+
+We note that an analogous (and slightly simpler version of) the following lemma can be proven for squared loss.
+\begin{lemma}
+Let $X,W \subseteq \reals^d$ and suppose that $W$ is compact and convex and $\exists \alpha >0$ such that for all $x \in X$, $w \in W$:
+$\|x\|,\|w\|\leq 1$, and $w \cdot x \geq \alpha$.
+The for any $\eta>0$ and any $w^0\in W$ and $w^{t+1}=\Pi_W(w^t-\eta \nabla \ell_t(w_t))$,
+$$\frac{1}{T}\E\left[\sum_{t=1}^T \ell_t(w_t) -\ell_t(w^*)\right] \leq \frac{\eta}{\alpha^2}+\frac{2}{T\eta \alpha}.$$
+\end{lemma}
+In particular, for $\eta=\sqrt{2\alpha/T}$, this gives a bound on the right-hand side of $\sqrt{\frac{8}{T\alpha^3}}$.
 \begin{proof}
-Following the analysis of Zinkevich, \cite{??}, we consider the potential squared distance $(w_t-w^*)^2$ and argue that it decreases whenever we have substantial error.  Note that,
-$$(w_{t+1}-w^*)^2 - (w_t-w^*)^2 = 2(w_{t+1}-w_t)(w_t-w^*)+(w_{t+1}-w_t)^2.$$
-Let $$\nabla_t = y_t \frac{x_t}{w_t\cdot x_t} + (1-y_t)\frac{x_t'}{w_t\cdot x_t'}  - \frac{x_t+x_t'}{w_t\cdot x_t+w_t\cdot x_t'}.$$
-By assumption $\|\nabla_t\| \leq G$.
-
-Now, as Zinkevich points out, due to convexity of $W$, $(\Pi_W(w)-w^*)^2\leq (w-w^*)$ for any $w \in \reals^d$ and $w^* \in W$.  Hence,
-$$(w_{t+1}-w_t)^2 \leq (w_t-\eta \nabla_t-w_t)^2=\eta^2.$$
-
-Now, by Lemma \ref{lem:appx1},
-$$\bar{\ell}_t - \bar{\ell^*}_t \leq \frac{(p_t-p^*_t)^2}{p_t(1-p_t)}.$$
-
+Following the analysis of Zinkevich \cite{Zinkevich03} we consider the potential equal to the squared distance $(w_t-w^*)^2$ and argue that it decreases whenever we have substantial error.
+Let $\nabla_t = \nabla \ell_t(w_t)\in \reals^d$, which is,
+$$\nabla_t = \frac{x_t+x_t'}{w_t\cdot x_t+w_t\cdot x_t'} - y_t \frac{x_t}{w_t\cdot x_t} - (1-y_t)\frac{x_t'}{w_t\cdot x_t'}.$$
+By the triangle inequality $\|\nabla_t\| \leq G$ for $G=\frac{2}{\alpha}$.  Now, as Zinkevich points out, due to convexity of $W$, $(w-\Pi_W(v))^2\leq (w-v)^2$ for any $v \in \reals^d$ and $w \in W$.  Hence,
+$$(w^*-w_{t+1})^2 \leq (w^*-w_t+\eta \nabla_t)^2.$$
+Thus the {\em decrease} in potential, call it $\Delta_t = (w^*-w_t)^2-(w^*-w_{t+1})^2$, is at least:
 \begin{align*}
+\Delta_t &\geq (w^*-w_t)^2-(w^*-w_t+\eta \nabla_t)^2 \\
+&=2\eta \nabla_t \cdot (w_t-w^*)-\eta^2 \nabla_t^2.
 \end{align*}
 
+Next, we consider the quantity,
+$\E[ \Delta_t \cdot w^* ]$, where the expectation is taken over the random $y_t$ (fixing $y_1,y_2,\ldots,y_{t-1}$).  By expansion, the expectations is:
+$$\frac{w^* \cdot x_t + w^* \cdot x_t'}{w \cdot x_t + w\cdot x_t'} - p_t(w^*) \frac{w^* \cdot x_t}{w_t\cdot x_t} - (1-p_t(w^*))\frac{w^* \cdot x_t'}{w_t\cdot x_t'}.$$
+After simple algebraic manipulation, which is difficult to show in two-column format, we have,
+\begin{align*}
+\E[\Delta_t \cdot w^*]&=-Z_t(p_t(w^*)-p_t(w_t))^2 \text{ where }\\
+Z_t &=\frac{(w_t\cdot x_t+w_t\cdot x_t')(w^*\cdot x_t+w^*\cdot x_t')}{(w_t \cdot x_t)(w_t \cdot x_t')}.
+\end{align*}
 
+Also note that $\Delta_t \cdot w_t =0$ regardless of $y_t$.  Hence,
+$\E[ \Delta_t \cdot w_t] =0$.  Combining these with the fact that we have shown that $\Delta_t \geq 2\eta \nabla_t \cdot(w_t-w^*)-\eta^2 G^2$, gives,
+
+\begin{align*}
+\E[\Delta_t] &\geq 2\eta Z_t (p_t(w^*)-p_t(w_t))^2-\eta^2G^2\\
+&\geq 2 \eta \frac{w^*\cdot x_t + w^* \cdot x_t'}{w_t\cdot x_t + w_t \cdot x_t'}\frac{(p_t(w_t)-p_t(w^*))^2}{p_t(w_t)(1-p_t(w_t))}-\eta^2G\\
+&\geq 2\eta\alpha \frac{(p_t(w_t)-p_t(w^*))^2}{p_t(w_t)(1-p_t(w_t))}-\eta^2G.
+\end{align*}
+In the last line we have used the fact that $w\cdot x \in [\alpha,1]$ for $w\in W,x\in X$.
+Now, by Lemma \ref{lem:appx1} which follows this proof,
+$$\ell_t(w_t)-\ell_t(w^*) \leq \frac{(p_t(w_t)-p_t(w^*))^2}{p_t(w_t)(1-p_t(w_t))}.$$
+Combining the previous two displayed equations gives,
+$$\E[\Delta_t]  \geq 2 \eta\alpha (\ell_t(w_t)-\ell_t(w^*))-\eta^2G.$$
+Finally, since the potential $(w_t -w^*)^2>0$, we have $\sum \Delta_t \leq (w_0-w^*)^2 \leq 4.$  Hence,
+$$\sum_t \ell_t(w_t)-\ell_t(w^*) \leq \frac{T \eta^2 G+4}{2\eta \alpha}.$$
+Substituting $G=2/\alpha$ gives the lemma.
 \end{proof}
 
-
-
-and some unknown $w^* \in W$, where $X,W \subset \reals^d$ are known compact convex sets such that $x \cdot w \in [\alpha,\beta]$ for some $\alpha>0$, for all $x\in X, w \in W$.  It is assumed that,
-$$
-\Pr[y=1|x,z] = \frac{w^* \cdot x}{w^* \cdot x + w^* \cdot z}=p(w^*,x,z),$$
-where $p(w,x,z)$ is defined to be $w\cdot x/(w \cdot x+w\cdot z)$.  Note that $p(w,x,z)+p(w,z,x)=1$.  The goal is, given i.i.d. samples, $(x_1,y_1,z_1),\ldots,(x_m,y_m,z_m)$ from $\rho$, to learn $w^*$, or more formally to make predictions almost as accurate as if we knew $w^*$ (since in some cases there may be several such $w^*$).  Here we analyze log-loss but we mention that similar theorems can be proven for a regression setting with squared loss, where  $y \in [0,1]$.
-The log-loss of a solution $w$ is,
-\begin{align*}
-\cL(w) &= \E\left[ y \log 1/p(w,x,z) + (1-y)  \log 1/p(w,z,x)\right] \\
-&=
-\E\left[ p(w^*,x,z) \log 1/p(w^*,x,z) + p(w^*,z,x) \log 1/p(w,z,x)\right].
-\end{align*}
-
-By Lemma \ref{lem:appx1} (stated later), we have,
-$$\cL(w) -\cL(w^*) \leq \E\left[\frac{(p(w,x,z)-p(w^*,x,z))^2}{p(w,x,z)p(w,z,x)}\right].$$
 
 
 \begin{lemma}\label{lem:appx1}
@@ -135,6 +155,19 @@ $$\frac{(p^*)^2}{p} + \frac{(q^*)^2}{q} = 1 + \frac{(p-p^*)^2}{pq}.$$
 Finally, the fact that $\log 1+x \leq x$ completes the lemma.
 \end{proof}
 
+
+\subsection{Proof of Theorem 1}
+
+To prove theorem 1, map matrix $S\in \reals^{n \times n}$ to a vector $w(S)\in\reals^{1+n^2}$ consisting of the constant $\mu+2$ in the first coordinate followed by the $n^2$ entries of $S$.  Taken over the set of symmetric $S \succeq 0$ such that $S_{ii}=1$, the vectors $w(S)$ for a compact convex set of radius $\sqrt{n^2+(2+\mu)^2}$.  Also,
+$$p^{a_t}{b_tc_t}=\frac{\mu + 2-\S_{ac}-\S_{ca}}{2\mu + 4-\S_{ab}-\S_{ba}-\S_{ac}-\S_{ca}},$$
+is our relative regression model for $w=w(S)$, $x\in\reals^{1+n^2}$ being the vector with a $1$ is the first position and -1's in the positions corresponding to the $ac$ and $ca$ entries of $S$ (and zero elsewhere), and $x'$ having a 1 in the first position and -1's in the positions corresponding to $ab$ and $ba$ (and zero elsewhere).  The inner product of $w(S)$ and $x$ is $\mu+\delta_{ab}$ and hence is bounded.  
+To apply Lemma \ref{lem:rel}, one must scale $w(S)$ and $x,x'$ down.  However, it is clear that for any $\eps$ and any $\eta$ sufficiently small, there is a $T_0$ such that for $T\geq T_0$, the expected average regret is at most $\eps$.
+
+
+We now give some justification for why gradient descent should not get trapped in local minima.  As is sometimes the case in learning, it is easier to analyze an online version of the algorithm, i.e., a stochastic gradient descent.  Here, we suppose that the sequence of triplets is presented in order: the learner predicts $S^{t+1}$ based on $(a_1,b_1,c_1,y_1),\ldots,(a_t,b_t,c_t,y_t)$.  The loss on iteration $t$ is $\ell_t(S^t)=\log 1/p$ where $p$ is the probability that the relative model with $S^t$ assigned to the correct outcome.  One can show that
+\begin{theorem}
+
+\end{theorem}
 
 
 \bibliography{sim}
