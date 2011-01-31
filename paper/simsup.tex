@@ -84,7 +84,28 @@
 
 \section{Relative regression}
 
-In this section, we consider the following online relative regression model.  A sequence of examples $(x_1,y_1,z_1),(x_2,y_2,z_2),\ldots,(x_T,y_T,z_T) \in X \times \{0,1\} \times X$
+In this section, we consider the following online relative regression model.  There is a sequence of examples $(x_1,x_1',y_1),(x_2,x_2',y_2),\ldots,(x_T,x_T',y_T) \in X \times X \times \{0,1\}$, for some set $X \subseteq \reals^d$.  On the $t$th period, the algorithm observes $x_t,x_t'$ and outputs a prediction $p_t \in [0,1]$ based upon $x_1,x_1',y_1,\ldots,x_{t-1},x_{t-1}',y_{t-1},x_t,x_t'$.  The loss of the algorithm on the $t$th iteration is $\ell_t(p_t)=y_t\log 1/p_t$ if $y_t=1$ and $-\log (1-p_t)$ if $y_t=0$.  The average loss is $\frac{1}{T}\sum \ell_t$.  The relative model requires that there exists $w^* in W$ such that,
+$$p^*_t =\Pr[y_t=1]=\frac{w^*\cdot x_t}{w^*\cdot x_t+w^*\cdot x_t'},$$
+where $W \subseteq \reals^d$ is a fixed convex compact set such that $w \cdot x > 0$ for all $w\in W, x\in X$.  The goal is to predict almost as well as if we knew $w^*$.
+
+\begin{proof}
+Following the analysis of Zinkevich, \cite{??}, we consider the potential squared distance $(w_t-w^*)^2$ and argue that it decreases whenever we have substantial error.  Note that,
+$$(w_{t+1}-w^*)^2 - (w_t-w^*)^2 = 2(w_{t+1}-w_t)(w_t-w^*)+(w_{t+1}-w_t)^2.$$
+Let $$\nabla_t = y_t \frac{x_t}{w_t\cdot x_t} + (1-y_t)\frac{x_t'}{w_t\cdot x_t'}  - \frac{x_t+x_t'}{w_t\cdot x_t+w_t\cdot x_t'}.$$
+By assumption $\|\nabla_t\| \leq G$.
+
+Now, as Zinkevich points out, due to convexity of $W$, $(\Pi_W(w)-w^*)^2\leq (w-w^*)$ for any $w \in \reals^d$ and $w^* \in W$.  Hence,
+$$(w_{t+1}-w_t)^2 \leq (w_t-\eta \nabla_t-w_t)^2=\eta^2.$$
+
+Now, by Lemma \ref{lem:appx1},
+$$\bar{\ell}_t - \bar{\ell^*}_t \leq \frac{(p_t-p^*_t)^2}{p_t(1-p_t)}.$$
+
+\begin{align*}
+\end{align*}
+
+
+\end{proof}
+
 
 
 and some unknown $w^* \in W$, where $X,W \subset \reals^d$ are known compact convex sets such that $x \cdot w \in [\alpha,\beta]$ for some $\alpha>0$, for all $x\in X, w \in W$.  It is assumed that,

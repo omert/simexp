@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.8-alpha-20080323 (MiKTeX 2.7) (preloaded format=latex 2009.12.3)  30 JAN 2011 12:52
+This is pdfTeX, Version 3.1415926-1.40.8-alpha-20080323 (MiKTeX 2.7) (preloaded format=latex 2009.12.3)  31 JAN 2011 06:51
 entering extended mode
 **C:/Users/adum/simexp/paper/simsup.tex
 (C:/Users/adum/simexp/paper/simsup.tex
@@ -375,7 +375,21 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 87.
 ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
 )
-Overfull \hbox (58.02171pt too wide) in paragraph at lines 96--96
+
+Package natbib Warning: Citation `??' on page 1 undefined on input line 92.
+
+
+Overfull \hbox (34.23717pt too wide) detected at line 93
+\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 w[] \OMS/cmsy/m/n/10   \OML/cmm/m/it/10 w[]\O
+T1/cmr/m/n/10 )[] \OMS/cmsy/m/n/10   \OT1/cmr/m/n/10 (\OML/cmm/m/it/10 w[] \OMS
+/cmsy/m/n/10   \OML/cmm/m/it/10 w[]\OT1/cmr/m/n/10 )[] = 2(\OML/cmm/m/it/10 w[]
+ \OMS/cmsy/m/n/10   \OML/cmm/m/it/10 w[]\OT1/cmr/m/n/10 )(\OML/cmm/m/it/10 w[] 
+\OMS/cmsy/m/n/10   \OML/cmm/m/it/10 w[]\OT1/cmr/m/n/10 ) + (\OML/cmm/m/it/10 w[
+] \OMS/cmsy/m/n/10   \OML/cmm/m/it/10 w[]\OT1/cmr/m/n/10 )[]\OML/cmm/m/it/10 :
+ []
+
+
+Overfull \hbox (58.02171pt too wide) in paragraph at lines 118--118
 [] 
  []
 
@@ -383,17 +397,21 @@ Overfull \hbox (58.02171pt too wide) in paragraph at lines 96--96
 
 Package natbib Warning: Empty `thebibliography' environment on input line 8.
 
-) [1
+)
+
+Package natbib Warning: There were undefined citations.
+
+[1
 
 
 ] (simsup.aux) ) 
 Here is how much of TeX's memory you used:
- 5563 strings out of 95338
- 74858 string characters out of 1183935
- 160348 words of memory out of 1500000
- 8668 multiletter control sequences out of 110000
+ 5564 strings out of 95338
+ 74862 string characters out of 1183935
+ 166348 words of memory out of 1500000
+ 8669 multiletter control sequences out of 110000
  8429 words of font info for 32 fonts, out of 1200000 for 2000
  14 hyphenation exceptions out of 8191
- 36i,9n,45p,517b,273s stack positions out of 5000i,500n,10000p,200000b,5000s
+ 36i,9n,45p,754b,273s stack positions out of 5000i,500n,10000p,200000b,5000s
 
-Output written on simsup.dvi (1 page, 9064 bytes).
+Output written on simsup.dvi (1 page, 12952 bytes).

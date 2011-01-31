@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.8-alpha-20080323 (MiKTeX 2.7) (preloaded format=pdflatex 2009.12.8)  30 JAN 2011 04:43
+This is pdfTeX, Version 3.1415926-1.40.8-alpha-20080323 (MiKTeX 2.7) (preloaded format=latex 2009.12.3)  31 JAN 2011 07:46
 entering extended mode
 **C:/Users/adum/simexp/paper/sim.tex
 (C:/Users/adum/simexp/paper/sim.tex
@@ -39,11 +39,10 @@ Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\00miktex\graphics.cfg"
 File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
-Package graphics Info: Driver file: pdftex.def on input line 90.
+Package graphics Info: Driver file: dvips.def on input line 90.
 
-("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\graphics\pdftex.def"
-File: pdftex.def 2007/06/12 v0.04h Graphics/color for pdfTeX
-\Gread@gobject=\count88
+("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\graphics\dvips.def"
+File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
 ))
 \Gin@req@height=\dimen103
 \Gin@req@width=\dimen104
@@ -56,10 +55,10 @@ Package: subfigure 2002/07/30 v2.1.4 subfigure package
 \subfigbottomskip=\skip45
 \subfigcapmargin=\dimen106
 \subfiglabelskip=\skip46
-\c@subfigure=\count89
-\c@lofdepth=\count90
-\c@subtable=\count91
-\c@lotdepth=\count92
+\c@subfigure=\count88
+\c@lofdepth=\count89
+\c@subtable=\count90
+\c@lotdepth=\count91
 
 ****************************************
 * Local config file subfigure.cfg used *
@@ -73,14 +72,14 @@ Package: natbib 2009/07/16 8.31 (PWD, AO)
 \bibhang=\skip49
 \bibsep=\skip50
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count93
+\c@NAT@ctr=\count92
 ) (algorithm.sty
 Package: algorithm 
 
 Document Style `algorithm' - floating environment
 ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\float\float.sty"
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count94
+\c@float@type=\count93
 \float@exts=\toks15
 \float@box=\box26
 \@float@everytoks=\toks16
@@ -90,7 +89,7 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
 )
 \@float@every@algorithm=\toks17
-\c@algorithm=\count95
+\c@algorithm=\count94
 )
 ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\amsfonts\amsfonts.sty"
 Package: amsfonts 2001/10/25 v2.2f
@@ -106,19 +105,19 @@ Package: algorithmic
 Document Style `algorithmic' - environment
 ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\tools\calc.sty"
 Package: calc 2005/08/06 v4.2 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count96
-\calc@Bcount=\count97
+\calc@Acount=\count95
+\calc@Bcount=\count96
 \calc@Adimen=\dimen107
 \calc@Bdimen=\dimen108
 \calc@Askip=\skip51
 \calc@Bskip=\skip52
 LaTeX Info: Redefining \setlength on input line 75.
 LaTeX Info: Redefining \addtolength on input line 76.
-\calc@Ccount=\count98
+\calc@Ccount=\count97
 \calc@Cskip=\skip53
 )
-\c@ALC@line=\count99
-\c@ALC@rem=\count100
+\c@ALC@line=\count98
+\c@ALC@rem=\count99
 \ALC@tlm=\skip54
 )
 ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\hyperref\hyperref.sty"
@@ -129,8 +128,8 @@ Package: hycolor 2007/04/11 v1.1 Code for color options of hyperref/bookmark (H
 O)
 )
 \@linkdim=\dimen109
-\Hy@linkcounter=\count101
-\Hy@pagecounter=\count102
+\Hy@linkcounter=\count100
+\Hy@pagecounter=\count101
 
 ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\hyperref\pd1enc.def"
 File: pd1enc.def 2008/04/24 v6.77u Hyperref: PDFDocEncoding definition (HO)
@@ -184,7 +183,7 @@ Package pdftexcmds Info: LuaTeX not detected on input line 139.
 Package: kvsetkeys 2007/09/29 v1.3 Key value parser with default handler suppor
 t (HO)
 )
-\Fld@menulength=\count103
+\Fld@menulength=\count102
 \Field@Width=\dimen110
 \Fld@charsize=\dimen111
 \Field@toks=\toks19
@@ -201,17 +200,24 @@ Package: atbegshi 2007/09/09 v1.6 At begin shipout hook (HO)
 
 ("C:\Program Files (x86)\MiKTeX 2.7\tex\generic\oberdiek\ifpdf.sty"
 Package: ifpdf 2007/12/12 v1.6 Provides the ifpdf switch (HO)
-Package ifpdf Info: pdfTeX in pdf mode detected.
+Package ifpdf Info: pdfTeX in pdf mode not detected.
 ))
-\Hy@abspage=\count104
-\c@Item=\count105
-\c@Hfootnote=\count106
+\Hy@abspage=\count103
+\c@Item=\count104
+\c@Hfootnote=\count105
 )
-*hyperref using default driver hpdftex*
-("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\hyperref\hpdftex.def"
-File: hpdftex.def 2008/04/24 v6.77u Hyperref driver for pdfTeX
-\Fld@listcount=\count107
-)
+*hyperref using default driver hdvips*
+("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\hyperref\hdvips.def"
+File: hdvips.def 2008/04/24 v6.77u Hyperref driver for dvips
+
+("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\hyperref\pdfmark.def"
+File: pdfmark.def 2008/04/24 v6.77u Hyperref definitions for pdfmark specials
+\pdf@docset=\toks20
+\pdf@box=\box28
+\pdf@toks=\toks21
+\pdf@defaulttoks=\toks22
+\Fld@listcount=\count106
+))
 (icml2011.sty
 Package: icml2011 2011/01/01 v2.0 ICML Conference Style File
  (fancyhdr.sty
@@ -231,8 +237,11 @@ Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
 ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\00miktex\color.cfg"
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
-Package color Info: Driver file: pdftex.def on input line 130.
-)
+Package color Info: Driver file: dvips.def on input line 130.
+
+("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\graphics\dvipsnam.def"
+File: dvipsnam.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+))
 ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\eso-pic\eso-pic.sty"
 Package: eso-pic 2006/07/14 v1.1d eso-pic (RN)
 
@@ -240,19 +249,19 @@ Package: eso-pic 2006/07/14 v1.1d eso-pic (RN)
 Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
 ))
 Package hyperref Info: Option `colorlinks' set `true' on input line 88.
-\titrun=\box28
-\captionbox=\box29
+\titrun=\box29
+\captionbox=\box30
 \captionboxwid=\dimen112
-\icmlrulerbox=\box30
-\icmlrulercount=\count108
+\icmlrulerbox=\box31
+\icmlrulercount=\count107
 \icmlruleroffset=\dimen113
 \cv@lineheight=\dimen114
 \cv@boxheight=\dimen115
-\cv@tmpbox=\box31
-\cv@refno=\count109
-\cv@tot=\count110
-\cv@tmpc@=\count111
-\cv@tmpc=\count112
+\cv@tmpbox=\box32
+\cv@refno=\count108
+\cv@tot=\count109
+\cv@tmpc@=\count110
+\cv@tmpc=\count111
 ) (sim.aux)
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
 LaTeX Font Info:    ... okay on input line 56.
@@ -268,35 +277,26 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 56.
 LaTeX Font Info:    ... okay on input line 56.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 56.
 LaTeX Font Info:    ... okay on input line 56.
-
-("C:\Program Files (x86)\MiKTeX 2.7\tex\context\base\supp-pdf.tex"
-[Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count113
-\scratchdimen=\dimen116
-\scratchbox=\box32
-\nofMPsegments=\count114
-\nofMParguments=\count115
-\everyMPshowfont=\toks20
-\MPscratchCnt=\count116
-\MPscratchDim=\dimen117
-\MPnumerator=\count117
-\everyMPtoPDFconversion=\toks21
-)
 Package hyperref Info: Link coloring ON on input line 56.
- ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\hyperref\nameref.sty"
+
+("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\hyperref\nameref.sty"
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
 ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\oberdiek\refcount.sty"
 Package: refcount 2006/02/20 v3.0 Data extraction from references (HO)
 )
-\c@section@level=\count118
+\c@section@level=\count112
 )
 LaTeX Info: Redefining \ref on input line 56.
 LaTeX Info: Redefining \pageref on input line 56.
  (sim.out) (sim.out)
 \@outlinefile=\write3
 \AtBeginShipoutBox=\box33
- ABD: EveryShipout initializing macros
+
+
+Package hyperref Warning: Rerun to get /PageLabels entry.
+
+ABD: EveryShipout initializing macros
 Overfull \hbox (5.1225pt too wide) in paragraph at lines 82--82
  [] 
  []
@@ -310,114 +310,177 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 83.
 ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
 )
+Underfull \hbox (badness 1028) in paragraph at lines 83--85
+[][]\OT1/cmr/m/n/10 We in-tro-duce an ac-tive Mul-ti-di-men-sional
+ []
+
 
 Package natbib Warning: Citation `Huang10' on page 1 undefined on input line 88
 .
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
 
 
 Package natbib Warning: Citation `Kendall90' on page 1 undefined on input line 
 90.
 
 
+! LaTeX Error: Cannot determine size of graphic in tiles-tree-top.pdf (no Bound
+ingBox).
 
-pdfTeX warning: (null) (file tiles-tree-top.pdf): PDF inclusion: found PDF vers
-ion <1.5>, but at most version <1.4> allowed
-<tiles-tree-top.pdf, id=15, 216.81pt x 216.81pt>
-File: tiles-tree-top.pdf Graphic file (type pdf)
- <use tiles-tree-top.pdf>
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.94 ...udegraphics[width=3in]{tiles-tree-top.pdf}
+                                                  } \caption{\label{fig:tile...
+
+? q
+OK, entering \batchmode...
+File: tiles-tree-top.pdf Graphic file (type eps)
+ <tiles-tree-top.pdf>
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [1{C:/ProgramData/MiKTeX/2.7/pdftex/config/pdftex.map}
+ [1
 
 
 
 ]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 2503) has occurred while \output is active []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [2 <tiles-tree-top.pdf>]
+ [2]
 Underfull \vbox (badness 10000) has occurred while \output is active []
-
 
 
 LaTeX Warning: Reference `sec:parameters' on page 3 undefined on input line 129
 .
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+LaTeX Warning: Reference `sec:proj' on page 3 undefined on input line 141.
+
+
+Package natbib Warning: Citation `??' on page 3 undefined on input line 141.
 
  [3]
-
-LaTeX Warning: Reference `sec:proj' on page 4 undefined on input line 141.
-
-
-Package natbib Warning: Citation `??' on page 4 undefined on input line 141.
+Underfull \hbox (badness 1168) in paragraph at lines 143--144
+\OT1/cmr/m/n/10 well and re-pro-duces in-ter-est-ing fea-tures, such as
+ []
 
 
-LaTeX Warning: Reference `sec:logisticexp' on page 4 undefined on input line 14
-3.
+! LaTeX Error: Cannot determine size of graphic in expfig.pdf (no BoundingBox).
 
 
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.146 ...r{\includegraphics[width=3in]{expfig.pdf}
+                                                  } \caption{\label{fig:exp}...
 
-pdfTeX warning: (null) (file expfig.pdf): PDF inclusion: found PDF version <1.5
->, but at most version <1.4> allowed
-<expfig.pdf, id=72, 216.81pt x 216.81pt>
-File: expfig.pdf Graphic file (type pdf)
- <use expfig.pdf> [4 <expfig.pdf>]
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+File: expfig.pdf Graphic file (type eps)
+ <expfig.pdf>
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [4]
 
 Package natbib Warning: Citation `??' on page 5 undefined on input line 169.
 
-<tiles_adaptive.pdf, id=101, 1280.785pt x 668.4975pt>
-File: tiles_adaptive.pdf Graphic file (type pdf)
- <use tiles_adaptive.pdf>
+
+! LaTeX Error: Cannot determine size of graphic in tiles_adaptive.pdf (no Bound
+ingBox).
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.201 ...[angle=270,width=3in]{tiles_adaptive.pdf}
+                                                  } \caption{\label{fig:adap...
+
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+File: tiles_adaptive.pdf Graphic file (type eps)
+ <tiles_adaptive.pdf>
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [5]
 
 Package natbib Warning: Citation `CC01' on page 6 undefined on input line 210.
 
-<tiles_neighs.pdf, id=111, 1211.52625pt x 646.415pt>
-File: tiles_neighs.pdf Graphic file (type pdf)
- <use tiles_neighs.pdf>
+
+! LaTeX Error: Cannot determine size of graphic in tiles_neighs.pdf (no Boundin
+gBox).
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.215 ...degraphics[width=3.5in]{tiles_neighs.pdf}
+                                                  }
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+File: tiles_neighs.pdf Graphic file (type eps)
+ <tiles_neighs.pdf>
 Overfull \hbox (18.06749pt too wide) in paragraph at lines 215--216
-[][] 
+[][][] 
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [6 <tiles_adaptive.pdf>] <flags_neighs.pdf, id=124, 1133.23375pt x 644.4075pt>
-File: flags_neighs.pdf Graphic file (type pdf)
 
-<use flags_neighs.pdf>
+! LaTeX Error: Cannot determine size of graphic in flags_neighs.pdf (no Boundin
+gBox).
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.219 ...degraphics[width=3.5in]{flags_neighs.pdf}
+                                                  }
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+File: flags_neighs.pdf Graphic file (type eps)
+ <flags_neighs.pdf>
 Overfull \hbox (18.06749pt too wide) in paragraph at lines 219--220
-[][] 
+[][][] 
  []
 
 
+! LaTeX Error: Cannot determine size of graphic in neckties_pca2.pdf (no Boundi
+ngBox).
 
-pdfTeX warning: (null) (file neckties_pca2.pdf): PDF inclusion: found PDF versi
-on <1.5>, but at most version <1.4> allowed
-<neckties_pca2.pdf, id=125, 722.7pt x 542.025pt>
-File: neckties_pca2.pdf Graphic file (type pdf)
- <use neckties_pca2.pdf>
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.222 ...egraphics[width=3.5in]{neckties_pca2.pdf}
+                                                  }
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+File: neckties_pca2.pdf Graphic file (type eps)
+ <neckties_pca2.pdf>
 Overfull \hbox (18.06749pt too wide) in paragraph at lines 222--223
-[][] 
+[][][] 
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [7 <tiles_neighs.pdf> <flags_neighs.pdf> <neckties_pca2.pdf>]
-Underfull \vbox (badness 2119) has occurred while \output is active []
+ [6]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [7]
 
 Package natbib Warning: Citation `??' on page 8 undefined on input line 262.
 
@@ -425,46 +488,27 @@ Package natbib Warning: Citation `??' on page 8 undefined on input line 262.
 Package natbib Warning: Citation `BDL09' on page 8 undefined on input line 262.
 
 
-(sim.bbl [8])
+ (sim.bbl [8])
 
 Package natbib Warning: There were undefined citations.
 
-[9
+ [9
 
 ] (sim.aux)
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 5205 strings out of 95337
- 71137 string characters out of 1183908
- 151046 words of memory out of 1500000
- 8272 multiletter control sequences out of 110000
+ 4994 strings out of 95338
+ 68828 string characters out of 1183935
+ 150686 words of memory out of 1500000
+ 8102 multiletter control sequences out of 110000
  11275 words of font info for 43 fonts, out of 1200000 for 2000
  14 hyphenation exceptions out of 8191
- 36i,12n,45p,2459b,299s stack positions out of 5000i,500n,10000p,200000b,5000s
-<C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmbx10.pfb><C:/Prog
-ram Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmbx12.pfb><C:/Program Files 
-(x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmbx9.pfb><C:/Program Files (x86)/MiKTe
-X 2.7/fonts/type1/bluesky/cm/cmcsc10.pfb><C:/Program Files (x86)/MiKTeX 2.7/fon
-ts/type1/bluesky/cm/cmex10.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/b
-luesky/cm/cmmi10.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/
-cmmi5.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmmi7.pfb><
-C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmmi9.pfb><C:/Program 
-Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmr10.pfb><C:/Program Files (x86)
-/MiKTeX 2.7/fonts/type1/bluesky/cm/cmr5.pfb><C:/Program Files (x86)/MiKTeX 2.7/
-fonts/type1/bluesky/cm/cmr6.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/
-bluesky/cm/cmr7.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/c
-mr9.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmsl9.pfb><C:
-/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmsy10.pfb><C:/Program F
-iles (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmsy5.pfb><C:/Program Files (x86)/
-MiKTeX 2.7/fonts/type1/bluesky/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.7/
-fonts/type1/bluesky/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type
-1/bluesky/ams/msbm10.pfb>
-Output written on sim.pdf (9 pages, 4007380 bytes).
-PDF statistics:
- 233 PDF objects out of 1000 (max. 8388607)
- 43 named destinations out of 1000 (max. 131072)
- 47 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 36i,11n,45p,2462b,385s stack positions out of 5000i,500n,10000p,200000b,5000s
 
+Output written on sim.dvi (9 pages, 84356 bytes).
