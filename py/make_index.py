@@ -17,7 +17,7 @@ for d in sys.argv[1:]:
     if os.path.exists(d+'\\ids.txt'):
         continue
     os.chdir(d)
-    lst = glob.glob('*.jpg')
+    lst = glob.glob('*.jpg')+glob.glob('*.png')
     assert(len(lst)>0); #no jpegs in directory?
     tools.my_write(d+'\\ids.txt',string.join(lst,'\n'))
     print "Created "+d+'\\ids.txt, '+str(len(lst))+" distinct ids"

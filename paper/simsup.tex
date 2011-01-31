@@ -1,0 +1,136 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% ICML 2011 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\E{{\bf E}}
+\def\S{K}
+\def\reals{\mathbb{R}}
+\def\tr{\mathrm{tr}}
+\def\cS{\mathcal{S}}
+\def\cL{\mathcal{L}}
+\def\U{\mathcal{U}}
+\def\hp{\hat{p}}
+
+% Use the following line _only_ if you're still using LaTeX 2.09.
+%\documentstyle[icml2011,epsf,natbib]{article}
+% If you rely on Latex2e packages, like most moden people use this:
+\documentclass{article}
+
+% For figures
+\usepackage{graphicx} % more modern
+%\usepackage{epsfig} % less modern
+\usepackage{subfigure}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+% For citations
+\usepackage{natbib}
+
+% For algorithms
+\usepackage{algorithm}
+\usepackage{amsfonts}
+\usepackage{algorithmic}
+
+% As of 2010, we use the hyperref package to produce hyperlinks in the
+% resulting PDF.  If this breaks your system, please commend out the
+% following usepackage line and replace \usepackage{icml2011} with
+% \usepackage[nohyperref]{icml2011} above.
+\usepackage{hyperref}
+
+% Packages hyperref and algorithmic misbehave sometimes.  We can fix
+% this with the following command.
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Employ the following version of the ``usepackage'' statement for
+% submitting the draft version of the paper for review.  This will set
+% the note in the first column to ``Under review.  Do not distribute.''
+\usepackage{icml2011}
+% Employ this version of the ``usepackage'' statement after the paper has
+% been accepted, when creating the final version.  This will set the
+% note in the first column to ``Appearing in''
+% \usepackage[accepted]{icml2011}
+
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Actively Learning the Crowd Kernel}
+
+\begin{document}
+
+\icmltitle{Supplementary Material: Capturing the Crowd Kernel}
+%or Capturing the Crowd Kernel, Actively?
+
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2011
+% package.
+\icmlauthor{Your Name}{email@yourdomain.edu}
+\icmladdress{Your Fantastic Institute,
+            314159 Pi St., Palo Alto, CA 94306 USA}
+\icmlauthor{Your CoAuthor's Name}{email@coauthordomain.edu}
+\icmladdress{Their Fantastic Institute,
+            27182 Exp St., Toronto, ON M6H 2T1 CANADA}
+
+% You may provide any keywords that you
+% find helpful for describing your paper; these are used to populate
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{active learning, crowdsourcing, kernels}
+
+\vskip 0.3in
+
+
+\section{Relative regression}
+
+In this section, we consider the following online relative regression model.  A sequence of examples $(x_1,y_1,z_1),(x_2,y_2,z_2),\ldots,(x_T,y_T,z_T) \in X \times \{0,1\} \times X$
+
+
+and some unknown $w^* \in W$, where $X,W \subset \reals^d$ are known compact convex sets such that $x \cdot w \in [\alpha,\beta]$ for some $\alpha>0$, for all $x\in X, w \in W$.  It is assumed that,
+$$
+\Pr[y=1|x,z] = \frac{w^* \cdot x}{w^* \cdot x + w^* \cdot z}=p(w^*,x,z),$$
+where $p(w,x,z)$ is defined to be $w\cdot x/(w \cdot x+w\cdot z)$.  Note that $p(w,x,z)+p(w,z,x)=1$.  The goal is, given i.i.d. samples, $(x_1,y_1,z_1),\ldots,(x_m,y_m,z_m)$ from $\rho$, to learn $w^*$, or more formally to make predictions almost as accurate as if we knew $w^*$ (since in some cases there may be several such $w^*$).  Here we analyze log-loss but we mention that similar theorems can be proven for a regression setting with squared loss, where  $y \in [0,1]$.
+The log-loss of a solution $w$ is,
+\begin{align*}
+\cL(w) &= \E\left[ y \log 1/p(w,x,z) + (1-y)  \log 1/p(w,z,x)\right] \\
+&=
+\E\left[ p(w^*,x,z) \log 1/p(w^*,x,z) + p(w^*,z,x) \log 1/p(w,z,x)\right].
+\end{align*}
+
+By Lemma \ref{lem:appx1} (stated later), we have,
+$$\cL(w) -\cL(w^*) \leq \E\left[\frac{(p(w,x,z)-p(w^*,x,z))^2}{p(w,x,z)p(w,z,x)}\right].$$
+
+
+\begin{lemma}\label{lem:appx1}
+Let $p+q=1$ and $p^*+q^*=1$ for $p,p^* \in [0,1]$.  Then,
+$$p^* \log \frac{p^*}{p} + q^* \log \frac{q^*}{q} \leq \frac{(p-p^*)^2}{pq}.$$
+\end{lemma}
+\begin{proof}
+By concavity of $\log$, Jensen's inequality implies,
+$$p^* \log \frac{p^*}{p} + q^* \log \frac{q^*}{q}  \leq \log \frac{(p^*)^2}{p} + \frac{(q^*)^2}{q}.$$
+Simple algebraic manipulation shows that,
+$$\frac{(p^*)^2}{p} + \frac{(q^*)^2}{q} = 1 + \frac{(p-p^*)^2}{pq}.$$
+Finally, the fact that $\log 1+x \leq x$ completes the lemma.
+\end{proof}
+
+
+
+\bibliography{sim}
+\bibliographystyle{icml2011}
+
+\end{document}
+
+
+% This document was modified from the file originally made available by
+% Pat Langley and Andrea Danyluk for ICML-2K. This version was
+% created by Lise Getoor and Tobias Scheffer, it was slightly modified
+% from the 2010 version by Thorsten Joachims & Johannes Fuernkranz,
+% slightly modified from the 2009 version by Kiri Wagstaff and
+% Sam Roweis's 2008 version, which is slightly modified from
+% Prasad Tadepalli's 2007 version which is a lightly
+% changed version of the previous year's version by Andrew Moore,
+% which was in turn edited from those of Kristian Kersting and
+% Codrina Lauth. Alex Smola contributed to the algorithmic style files.
+
+

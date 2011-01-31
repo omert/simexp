@@ -8262,6 +8262,44 @@ ISSN = {0010-0277},
 }
 
 
+@inproceedings{BDL09,
+  author    = {Alina Beygelzimer and
+               Sanjoy Dasgupta and
+               John Langford},
+  title     = {Importance weighted active learning},
+  booktitle = {ICML},
+  year      = {2009},
+  pages     = {7},
+  ee        = {http://doi.acm.org/10.1145/1553374.1553381},
+  crossref  = {DBLP:conf/icml/2009},
+  bibsource = {DBLP, http://dblp.uni-trier.de}
+}
+
+@proceedings{DBLP:conf/icml/2009,
+  editor    = {Andrea Pohoreckyj Danyluk and
+               L{\'e}on Bottou and
+               Michael L. Littman},
+  title     = {Proceedings of the 26th Annual International Conference
+               on Machine Learning, ICML 2009, Montreal, Quebec, Canada,
+               June 14-18, 2009},
+  booktitle = {ICML},
+  publisher = {ACM},
+  series    = {ACM International Conference Proceeding Series},
+  volume    = {382},
+  year      = {2009},
+  isbn      = {978-1-60558-516-1},
+  bibsource = {DBLP, http://dblp.uni-trier.de}
+}
+
+@Manual{CC01,
+  author =	 {Chih-Chung Chang and Chih-Jen Lin},
+  title =	 {{LIBSVM}: a library for support vector machines},
+  year =	 {2001},
+  note =	 {Software available at \url{http://www.csie.ntu.edu.tw/~cjlin/libsvm}}
+}
+
+
+
 %Generalized sparse metric learning with relative comparisons Kaizhu Huang, Yiming Ying, Colin Campbell Knowledge and Information Systems (22 June 2010)
 
 %Maurice Kendall and Jean Dickinson Gibbons. Rank correlation methods. Oxford University Press, 1990.
