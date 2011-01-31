@@ -1,12 +1,12 @@
-function img_files = get_image_files(dataset)
+function img_files = get_image_files(dataSetName)
 
-ids_filename = ['/home/tamuz/dev/simexp/images/' dataset '/ids.txt'];
+ids_filename = ['/home/tamuz/dev/simexp/images/' dataSetName '/ids.txt'];
 img_files = textread(ids_filename, '%s');
 
 
 return
 
-ids_filename = ['http://65.215.1.20/faces/data/' dataset '/ids.txt'];
+ids_filename = ['http://65.215.1.20/faces/data/' dataSetName '/ids.txt'];
 img_list = urlread(ids_filename);
 
 
