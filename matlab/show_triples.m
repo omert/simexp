@@ -24,7 +24,7 @@ end
 
 
 f = fopen(['../data/' dataSetName '/new_adaptive_round.html'], 'w');
-fprintf(f, '<html>\n<body>\n');
+fprintf(f, '<html><title>New Round %s</title>\n', dataSetName);
 fprintf(f, '<table border="2" style="border-collapse: collapse;" ><tbody>\n');
 for j=1:length(iTX)
     fprintf(f, '<tr>\n');

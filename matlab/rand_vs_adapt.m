@@ -36,15 +36,16 @@ IB2 = IB;
 N2 = N;
 
 maxn = min(length(IX1), length(IX2));
-num_points = 20;
-sample_sizes = round((1:num_points) * maxn / num_points);
+num_points = 27;
+sample_sizes = floor(linspace(9.5 * length(ids), maxn, num_points))
+
 x1 = {};
 x2 = {};
 S1 = zeros(length(ids), length(ids));
 S2 = S1;
 num_queries = 20;
 
-for i = 1:num_points
+for i = 1:length(sample_sizes)
     m = sample_sizes(i);
     x1{i} = fit_mat(IX1(1:m), IA1(1:m), IB1(1:m), N1(1:m), ids, 100, ...
                     10, S1);

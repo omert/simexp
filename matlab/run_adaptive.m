@@ -13,5 +13,6 @@ for i = 1:num_rounds
     filename = [dir_name 'adaptive' sprintf('%8.0f',mod(now*1000000, 100000000)) '.trips'];
     create_next_round(datafile, filename, num_per_round);
     run_turk([dir_name config_file(1).name], filename, [filename '.out']);
+    load(datafile);
     parse_directory(dir_name, dataSetName, x);
 end

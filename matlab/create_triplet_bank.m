@@ -1,11 +1,11 @@
-function create_triplet_bank(ids, sample_size, num_per_obj, filename)
+function create_triplet_bank(ids, sample_ids, num_per_obj, filename)
 
+sample_ids = sample_ids(:);
+sample_size = length(sample_ids);
 n = sample_size * num_per_obj;
 num_obj = length(ids);
 ids = ids(:);
 
-I = randperm(length(ids));
-sample_ids = ids(I(1:sample_size));
 
 
 J = repmat(sample_ids, [2 * num_per_obj, 1]);

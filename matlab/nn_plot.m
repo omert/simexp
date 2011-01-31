@@ -9,7 +9,7 @@ page_size = [1500 1000 small_image_size];
 large_image_size = 200;
 
 f1 = fopen(filename, 'w');
-fprintf(f1, '<html>\n');
+fprintf(f1, '<html><title>Neighbors %s</title>\n', dataSetName);
 fprintf(f1, '<body>\n');
 
 xii = repmat(row_norm(x), 1, length(x)).^2;

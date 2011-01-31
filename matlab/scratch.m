@@ -1,9 +1,9 @@
 clear all
 
-dataSetName = 'neckties';
-dir_base = ['../turkexps/' dataSetName '/small/'];
+dataSetName = 'combo';
+dir_base = ['../turkexps/' dataSetName '/'];
 dir_rand = [dir_base '/random/'];
-dir_adapt = [dir_base '/summer/'];
+dir_adapt = [dir_base '/adaptive/'];
 dir_bank = [dir_base '/bank/'];
 parse_directory(dir_rand, dataSetName, 1);
 parse_directory(dir_adapt, dataSetName, 1);
@@ -14,7 +14,7 @@ nr = length(IX);
 load([dir_adapt 'all.data.mat']);
 na = length(IX);
 n = min(na, nr);
-n = 18000;
+%n = 18000;
 
 load([dir_rand 'all.data.mat']);
 xrand=fit_mat(IX(1:n),IA(1:n),IB(1:n),N(1:n),ids,100,10);

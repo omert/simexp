@@ -131,6 +131,7 @@ guessObject(const Mat& S, const size_t numObj,
 	    const Triplets& triplets, const size_t maxQueries,
 	    vector<Distribution>& p)
 {
+    mexPrintf("   questions:");
     p.resize(maxQueries);
     p[0].makeUniform(numObj);
     Triplets tripsLeft = triplets;
@@ -149,9 +150,11 @@ guessObject(const Mat& S, const size_t numObj,
 	    double pab = prob(S, y, a, b);
 	    p[queries](y) *= pab;
 	}
-//	mexPrintf("    %d / %d\n", a, b);
+	mexPrintf("_%d_%d", a, b);
 	p[queries].normalize();
     }
+    mexPrintf(" \n");
+
 }
 
 

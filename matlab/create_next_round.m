@@ -3,10 +3,12 @@ function x = create_next_round(datafile, filename, num_per_obj)
     
 load(datafile);
 
-x = fit_mat(IX, IA, IB, N, ids, 100, 10);
+%x = fit_mat(IX, IA, IB, N, ids, 100, 10);
+x = fit(rand(length(ids), 3), IX, IA, IB, N, 30);
 save_experiement_data(datafile, IX, IA, IB, N, ids, dataSetName, x);
 
-xd2 =  projectPSD_rank(x, 2);
+%xd2 =  projectPSD_rank(x, 2);
+xd2 = x;
 
 T = produce_adaptive(xd2 * xd2', IX, IA, IB, N, num_per_obj);
 IXnew = T(:, 1);
