@@ -8338,8 +8338,6 @@ ISSN = {0010-0277},
    year = {2010}
 }
 
-%Generalized sparse metric learning with relative comparisons Kaizhu Huang, Yiming Ying, Colin Campbell Knowledge and Information Systems (22 June 2010)
-
 @book{Kendall90,
     abstract = {{The new edition of this classic reference includes a wealth of information on the mathematics and practical applications of rank correlation methods. It represents the most extensive revision since the book first appeared in 1948 and provides clear explanations of the methods of rank correlation widely used by statisticians, educators, psychologists, and others involved in analyzing qualitative material. Among the many topics covered are the Goodman-Kruskal coefficient, partial rank correlation, trend tests, and regression techniques. Real numerical examples and problems are taken from interesting research in the social sciences. Expanded tables have also been added that include larger sample sizes and a table of distribution of Kendall's partial law. Reflecting the vast amount of research published in recent years, this edition updates the references and offers over 300 new bibliographic entries. The valuable appendix tables have been revised and expanded.}},
     author = {Kendall, Maurice and Gibbons, Jean D.},
@@ -8366,4 +8364,31 @@ ISSN = {0010-0277},
     title = {{Rank Correlation Methods}},
     url = {http://www.worldcat.org/isbn/0195208374},
     year = {1990}
+}
+
+
+@incollection{LRSST10,
+ title = {Practical Large-Scale Optimization for Max-norm Regularization},
+ author = {Jason Lee and Ben Recht and Ruslan Salakhutdinov and Nathan Srebro and Joel Tropp},
+ booktitle = {Advances in Neural Information Processing Systems 23},
+ editor = {J. Lafferty and C. K. I. Williams and J. Shawe-Taylor and R.S. Zemel and A. Culotta},
+ pages = {1297--1305},
+ year = {2010}
+}
+
+@techreport{Settles09,
+	Author = {B. Settles},
+	Institution = {University of Wisconsin--Madison},
+	Number = {1648},
+	Title = {Active Learning Literature Survey},
+	Type = {Computer Sciences Technical Report},
+	Year = {2009}}
+
+@TechReport{Joachims98,
+  author =	 {Thorsten Joachims},
+  title =	 {Making large-Scale SVM Learning Practical},
+  institution =	 {Universit{\"a}t Dortmund, LS VIII-Report},
+  year =	 1998,
+  number =	 24,
+  type =	 {LS8-Report}
 }

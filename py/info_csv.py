@@ -25,10 +25,13 @@ def create_info(dir):
                     the_att="att_"+att
                 else:
                     the_att = att
-                if os.path.exists(dir+att+"/"+ids[i]):
+                if os.path.exists(dir+att+"/1/"+ids[i]):
                     r[the_att] = 1
                 else:
-                    r[the_att] = 0
+                    if os.path.exists(dir+att+"/0/"+ids[i]):
+                        r[the_att] = 0
+                    else:
+                        r[the_att] = -100
             rs.append(r)
     f=open(dir+"info.csv","wb")
     c = csv.DictWriter(f,sorted(rs[0].keys()))
@@ -39,4 +42,7 @@ def create_info(dir):
     c.writerows(rs)
     f.close()
     
-create_info("c:/data/neckties/neckties_small")
+#create_info("c:/data/flags")
+#create_info("c:/data/calibrialpha")
+#create_info("c:/data/neckties/neckties_small")
+create_info("c:/data/newtiles")

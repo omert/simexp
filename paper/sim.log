@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.8-alpha-20080323 (MiKTeX 2.7) (preloaded format=pdflatex 2009.12.12)  1 FEB 2011 04:22
+This is pdfTeX, Version 3.1415926-1.40.8-alpha-20080323 (MiKTeX 2.7) (preloaded format=pdflatex 2009.12.12)  1 FEB 2011 18:38
 entering extended mode
 **C:/Users/adum/simexp/paper/sim.tex
 (C:/Users/adum/simexp/paper/sim.tex
@@ -342,11 +342,6 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 83.
 ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
 )
-Underfull \hbox (badness 1062) in paragraph at lines 104--107
-\OT1/cmr/m/n/10 the ker-nel to build an in-ter-ac-tive vi-sual
- []
-
-
 
 pdfTeX warning: (null) (file tiles-tree-top.pdf): PDF inclusion: found PDF vers
 ion <1.5>, but at most version <1.4> allowed
@@ -360,7 +355,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 ]
-Underfull \vbox (badness 4805) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -369,60 +364,56 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 234--237
+Underfull \hbox (badness 10000) in paragraph at lines 226--229
 []\OT1/cmr/m/n/10 An \OT1/cmr/m/it/10 ac-tive \OT1/cmr/m/n/10 MDS al-go-rithm c
 hooses each
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 234--237
+Underfull \hbox (badness 10000) in paragraph at lines 226--229
 \OT1/cmr/m/n/10 triple, $\OML/cmm/m/it/10 a[]b[]c[]$\OT1/cmr/m/n/10 , adap-tive
 ly based upon
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 234--237
+Underfull \hbox (badness 10000) in paragraph at lines 226--229
 \OT1/cmr/m/n/10 (\OML/cmm/m/it/10 a[]b[]c[]; y[]\OT1/cmr/m/n/10 )$,$[]$,$(\OML/
 cmm/m/it/10 a[]b[]c[]; y[]\OT1/cmr/m/n/10 )$. We de-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 234--237
+Underfull \hbox (badness 10000) in paragraph at lines 226--229
 \OT1/cmr/m/n/10 note by $\OML/cmm/m/it/10 M[]$ \OT1/cmr/m/n/10 the trans-pose o
 f ma-trix $\OML/cmm/m/it/10 M$
  []
 
 
-Underfull \hbox (badness 4569) in paragraph at lines 234--237
+Underfull \hbox (badness 4569) in paragraph at lines 226--229
 \OT1/cmr/m/n/10 and $\OMS/cmsy/m/n/10 k\OML/cmm/m/it/10 M\OMS/cmsy/m/n/10 k[] \
 OT1/cmr/m/n/10 = []$ de-notes the Frobe-
  []
 
 
-Underfull \hbox (badness 3260) in paragraph at lines 234--237
+Underfull \hbox (badness 3260) in paragraph at lines 226--229
 \OT1/cmr/m/n/10 nius norm. For com-pact con-vex set $\OML/cmm/m/it/10 W$\OT1/cm
 r/m/n/10 , let
  []
 
 
-Underfull \hbox (badness 1194) in paragraph at lines 234--237
+Underfull \hbox (badness 1194) in paragraph at lines 226--229
 \OT1/cmr/m/n/10 [](\OML/cmm/m/it/10 K\OT1/cmr/m/n/10 ) = [] [][] \OMS/cmsy/m/n
 /10 k\OML/cmm/m/it/10 K \OMS/cmsy/m/n/10   \OML/cmm/m/it/10 T\OMS/cmsy/m/n/10 k
 []$ \OT1/cmr/m/n/10 is the clos-est
  []
 
 [3]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 244.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 236.
 
  ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\base\omscmr.fd"
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 244.
-
-
-Package natbib Warning: Citation `??' on page 4 undefined on input line 302.
-
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 236.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -430,7 +421,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
-Underfull \hbox (badness 1168) in paragraph at lines 349--350
+Underfull \hbox (badness 1168) in paragraph at lines 330--331
 \OT1/cmr/m/n/10 well and re-pro-duces in-ter-est-ing fea-tures, such as
  []
 
@@ -438,113 +429,99 @@ Underfull \hbox (badness 1168) in paragraph at lines 349--350
 
 pdfTeX warning: (null) (file expfig.pdf): PDF inclusion: found PDF version <1.5
 >, but at most version <1.4> allowed
-<expfig.pdf, id=109, 216.81pt x 216.81pt>
+<expfig.pdf, id=113, 216.81pt x 216.81pt>
 File: expfig.pdf Graphic file (type pdf)
  <use expfig.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 355--355
+Underfull \hbox (badness 10000) in paragraph at lines 336--336
 [][][]|\OT1/cmr/m/n/9 When un-sure
  []
 
 
-Underfull \hbox (badness 5548) in paragraph at lines 355--355
+Underfull \hbox (badness 5548) in paragraph at lines 336--336
 \OT1/cmr/m/n/9 whether a point is at
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 355--355
+Underfull \hbox (badness 10000) in paragraph at lines 336--336
 \OT1/cmr/m/n/9 The ex-po-nen-tial model
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 355--355
+Underfull \hbox (badness 10000) in paragraph at lines 336--336
 \OT1/cmr/m/n/9 makes this pre-dic-tion
  []
 
-[5 <expfig.pdf>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-<rand_vs_adaptive.pdf, id=132, 542.025pt x 361.35pt>
+[5 <expfig.pdf>] <rand_vs_adaptive.pdf, id=136, 542.025pt x 361.35pt>
 File: rand_vs_adaptive.pdf Graphic file (type pdf)
 
-<use rand_vs_adaptive.pdf> [6 <rand_vs_adaptive.pdf>]
-<adaptive_combo.pdf, id=147, 791.95876pt x 444.66125pt>
+<use rand_vs_adaptive.pdf>
+<adaptive_combo.pdf, id=139, 791.95876pt x 444.66125pt>
 File: adaptive_combo.pdf Graphic file (type pdf)
 
 <use adaptive_combo.pdf>
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Overfull \hbox (10.84004pt too wide) in paragraph at lines 453--453
+ [] 
+ []
 
-
-<neckties_neighs.pdf, id=150, 1253.68375pt x 670.505pt>
+<neckties_neighs.pdf, id=140, 1253.68375pt x 670.505pt>
 File: neckties_neighs.pdf Graphic file (type pdf)
 
 <use neckties_neighs.pdf>
-Overfull \hbox (18.06749pt too wide) in paragraph at lines 500--501
+Overfull \hbox (10.84004pt too wide) in paragraph at lines 456--458
 [][] 
  []
 
-<flags_pca.pdf, id=151, 1271.75125pt x 677.53125pt>
+<tiles_neighs.pdf, id=141, 1211.52625pt x 646.415pt>
+File: tiles_neighs.pdf Graphic file (type pdf)
+ <use tiles_neighs.pdf>
+Overfull \hbox (10.84004pt too wide) in paragraph at lines 461--461
+[][] 
+ []
+
+<flags_pca.pdf, id=142, 1271.75125pt x 677.53125pt>
 File: flags_pca.pdf Graphic file (type pdf)
  <use flags_pca.pdf>
-Overfull \hbox (18.06749pt too wide) in paragraph at lines 507--508
+Overfull \hbox (18.06749pt too wide) in paragraph at lines 464--465
 [][] 
  []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [7 <adaptive_combo.pdf> <neckties_neighs.pdf>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-Package natbib Warning: Citation `??' on page 8 undefined on input line 578.
-
-(sim.bbl
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [8 <flags_pca.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 32--38
+[6 <rand_vs_adaptive.pdf>] [7 <adaptive_combo.pdf> <neckties_neighs.pdf> <tiles
+_neighs.pdf> <flags_pca.pdf>] (sim.bbl
+Underfull \hbox (badness 10000) in paragraph at lines 27--33
 \OT1/cmtt/m/n/10 / / dx . doi . org / 10 . 1007 / s10115-[]010-[]0313-[]0$[][]\
 OT1/cmr/m/n/10 .
  []
 
-)
-
-Package natbib Warning: There were undefined citations.
-
-[9
-
-] (sim.aux) ) 
+) [8] (sim.aux) ) 
 Here is how much of TeX's memory you used:
- 5407 strings out of 95337
- 74175 string characters out of 1183907
- 154139 words of memory out of 1500000
- 8450 multiletter control sequences out of 110000
+ 5416 strings out of 95337
+ 74357 string characters out of 1183907
+ 154494 words of memory out of 1500000
+ 8460 multiletter control sequences out of 110000
  11142 words of font info for 43 fonts, out of 1200000 for 2000
  14 hyphenation exceptions out of 8191
- 36i,12n,45p,1463b,377s stack positions out of 5000i,500n,10000p,200000b,5000s
-<C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmbx10.p
-fb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmbx12.pfb><C:/Pro
-gram Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmbx9.pfb><C:/Program Files 
-(x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmex10.pfb><C:/Program Files (x86)/MiKT
-eX 2.7/fonts/type1/bluesky/cm/cmmi10.pfb><C:/Program Files (x86)/MiKTeX 2.7/fon
-ts/type1/bluesky/cm/cmmi5.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bl
-uesky/cm/cmmi6.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cm
-mi7.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmmi9.pfb><C:
-/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmr10.pfb><C:/Program Fi
-les (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmr6.pfb><C:/Program Files (x86)/Mi
-KTeX 2.7/fonts/type1/bluesky/cm/cmr7.pfb><C:/Program Files (x86)/MiKTeX 2.7/fon
-ts/type1/bluesky/cm/cmr9.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/blu
-esky/cm/cmsl9.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cms
-y10.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmsy7.pfb><C:
-/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmsy9.pfb><C:/Program Fi
-les (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmti10.pfb><C:/Program Files (x86)/
-MiKTeX 2.7/fonts/type1/bluesky/cm/cmtt10.pfb><C:/Program Files (x86)/MiKTeX 2.7
-/fonts/type1/bluesky/ams/msbm10.pfb>
-Output written on sim.pdf (9 pages, 2410823 bytes).
+ 36i,11n,45p,1778b,310s stack positions out of 5000i,500n,10000p,200000b,5000s
+<C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmbx
+10.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmbx12.pfb><C:
+/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmbx9.pfb><C:/Program Fi
+les (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmex10.pfb><C:/Program Files (x86)/
+MiKTeX 2.7/fonts/type1/bluesky/cm/cmmi10.pfb><C:/Program Files (x86)/MiKTeX 2.7
+/fonts/type1/bluesky/cm/cmmi5.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type
+1/bluesky/cm/cmmi6.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/c
+m/cmmi7.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmmi9.pfb
+><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmr10.pfb><C:/Progra
+m Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmr6.pfb><C:/Program Files (x86
+)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmr7.pfb><C:/Program Files (x86)/MiKTeX 2.7
+/fonts/type1/bluesky/cm/cmr9.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1
+/bluesky/cm/cmsl9.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm
+/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmsy7.pfb
+><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmsy9.pfb><C:/Progra
+m Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmti10.pfb><C:/Program Files (x
+86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmtt10.pfb><C:/Program Files (x86)/MiKTeX
+ 2.7/fonts/type1/bluesky/ams/msbm10.pfb>
+Output written on sim.pdf (8 pages, 3892967 bytes).
 PDF statistics:
- 275 PDF objects out of 1000 (max. 8388607)
- 55 named destinations out of 1000 (max. 131072)
- 47 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 278 PDF objects out of 1000 (max. 8388607)
+ 53 named destinations out of 1000 (max. 131072)
+ 52 words of extra memory for PDF output out of 10000 (max. 10000000)
 
