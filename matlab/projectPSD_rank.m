@@ -8,7 +8,9 @@ if sm(1) == sm(2)
     d = diag(D);
     d = max(d, 0);
     if length(d) > r
+        tr = sum(d);
         d(1:(length(d)-r)) = 0;
+        d = d * tr / sum(d);
     end
     M1 = V * diag(d) * V';
 else

@@ -25,7 +25,7 @@ max_mu = 10;
 
 num_no_improve = 0;
 last_L = mat_model_likelihood(S, IX, IA, IB, N);
-mu = 0.000001;
+mu = 1;
 for i = 1:iter
     %dS = update_matrix(S, IX, IA, IB, N);
     dS = logistic_deriv(S, IX, IA, IB, N);

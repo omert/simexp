@@ -68,7 +68,10 @@ prob(const Mat& S, const size_t x, const size_t a, const size_t b)
 #ifdef REL_DIST
     double pa = fabs(1.0 + S(x, x) + S(b, b) - 2 * S(x, b));
     double pb = fabs(1.0 + S(x, x) + S(a, a) - 2 * S(x, a));
-    return pa / (pa + pb);
+
+    double p = pa / (pa + pb);
+    double llh = atanh(2 * p - 1) * 0.7;
+    return 0.5 + 0.5 * tanh(llh);
 #endif
  
 }
@@ -82,13 +85,12 @@ expectedEntropy(const Mat& S, const Distribution& p0,
     
     Distribution pa = p0;
     Distribution pb = p0;
-
     
     double p = 0.0;
     for (size_t y = 0; y < numObj; ++y){
 	double pab = prob(S, y, a, b);
 	pa(y) *= pab;
-	pb(y) *= (1 - pab);
+	pb(y) *= 1 - pab;
 	p += pab * p0(y);
     }
     pa.normalize();
@@ -150,7 +152,7 @@ guessObject(const Mat& S, const size_t numObj,
 	    double pab = prob(S, y, a, b);
 	    p[queries](y) *= pab;
 	}
-	mexPrintf("_%d_%d", a, b);
+//	mexPrintf("_%d_%d", a, b);
 	p[queries].normalize();
     }
     mexPrintf(" \n");
@@ -216,8 +218,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
     Mat igain(plhs[0]);
     for (Bank::const_iterator it = bank.begin(); it != bank.end(); ++it){
 	size_t x = it->first;
-//	mexPrintf("trying to guess object %d. ", x);
-//	mexPrintf("Have %d trips, allowed %d\n", it->second.size(), numQueries);
+	mexPrintf("trying to guess object %d from %d trips ", x, 
+		  it->second.size());
 
 	if (it->second.size() < numQueries){
 	    mexPrintf("ERROR: not enough trips (%d) to make %d queries.\n",
