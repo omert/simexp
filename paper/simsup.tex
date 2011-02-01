@@ -95,7 +95,7 @@ The sequence $x_1,x_1',\ldots,x_T,x_T'$ is chosen arbitrary (or even adversarial
 On the $t$th period, the algorithm outputs $w_t \in W$, then observes $x_t,x_t',y_t$, and finally incurs loss $\ell_t(w_t)$ where $\ell_t(w)=\log 1/p_t(w)$ if $y_t=1$ and $\ell_t(w)=\log 1/(1-p_t(w))$ if $y_t=0$.  The goal of the algorithm is to incur total loss not much larger than $\sum_t \ell_t(w^*)$, the best choice had we known $w^*$ in advance.  
 
 We note that an analogous (and slightly simpler version of) the following lemma can be proven for squared loss.
-\begin{lemma}
+\begin{lemma}\label{lem:rel}
 Let $X,W \subseteq \reals^d$ and suppose that $W$ is compact and convex and $\exists \alpha >0$ such that for all $x \in X$, $w \in W$:
 $\|x\|,\|w\|\leq 1$, and $w \cdot x \geq \alpha$.
 The for any $\eta>0$ and any $w^0\in W$ and $w^{t+1}=\Pi_W(w^t-\eta \nabla \ell_t(w_t))$,
@@ -161,13 +161,9 @@ Finally, the fact that $\log 1+x \leq x$ completes the lemma.
 To prove theorem 1, map matrix $S\in \reals^{n \times n}$ to a vector $w(S)\in\reals^{1+n^2}$ consisting of the constant $\mu+2$ in the first coordinate followed by the $n^2$ entries of $S$.  Taken over the set of symmetric $S \succeq 0$ such that $S_{ii}=1$, the vectors $w(S)$ for a compact convex set of radius $\sqrt{n^2+(2+\mu)^2}$.  Also,
 $$p^{a_t}{b_tc_t}=\frac{\mu + 2-\S_{ac}-\S_{ca}}{2\mu + 4-\S_{ab}-\S_{ba}-\S_{ac}-\S_{ca}},$$
 is our relative regression model for $w=w(S)$, $x\in\reals^{1+n^2}$ being the vector with a $1$ is the first position and -1's in the positions corresponding to the $ac$ and $ca$ entries of $S$ (and zero elsewhere), and $x'$ having a 1 in the first position and -1's in the positions corresponding to $ab$ and $ba$ (and zero elsewhere).  The inner product of $w(S)$ and $x$ is $\mu+\delta_{ab}$ and hence is bounded.  
-To apply Lemma \ref{lem:rel}, one must scale $w(S)$ and $x,x'$ down.  However, it is clear that for any $\eps$ and any $\eta$ sufficiently small, there is a $T_0$ such that for $T\geq T_0$, the expected average regret is at most $\eps$.
+To apply Lemma \ref{lem:rel}, one must scale $w(S)$ and $x,x'$ down.  However, it is clear that for any $\epsilon$ and $T$ sufficiently large, setting $\eta=1/\sqrt{T}$ in Lemma \ref{lem:rel} gives the necessary bound.
 
 
-We now give some justification for why gradient descent should not get trapped in local minima.  As is sometimes the case in learning, it is easier to analyze an online version of the algorithm, i.e., a stochastic gradient descent.  Here, we suppose that the sequence of triplets is presented in order: the learner predicts $S^{t+1}$ based on $(a_1,b_1,c_1,y_1),\ldots,(a_t,b_t,c_t,y_t)$.  The loss on iteration $t$ is $\ell_t(S^t)=\log 1/p$ where $p$ is the probability that the relative model with $S^t$ assigned to the correct outcome.  One can show that
-\begin{theorem}
-
-\end{theorem}
 
 
 \bibliography{sim}

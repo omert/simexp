@@ -101,7 +101,7 @@
   perceptual similarity by demonstrating a variety of binary attribute
   classifiers (``is striped,'' ``vowel vs.\ consonant,'') trained
   using the learned kernel.
-  
+
   We construct an end-to-end system that, given a set of objects,
   automatically crowdsources the kernel acquisition. It then uses the
   kernel to build an interactive visual search tool.
@@ -139,7 +139,7 @@ scales of (dis)similarity.  The obvious drawback with the triplet
 based method, however, is the potential $O(n^3)$ complexity.  It is
 therefore expedient to seek methods of obtaining high quality
 approximations of $K$ from as small a subset of human measurements as
-possible.   Accordingly, the primary contribution of this paper is an efficient method for estimating $K$ via an information theoretic adaptive sampling approach. 
+possible.   Accordingly, the primary contribution of this paper is an efficient method for estimating $K$ via an information theoretic adaptive sampling approach.
 
 \begin{figure}
 \center{\includegraphics[width=3in]{tiles-tree-top.pdf}} \caption{\label{fig:tilestree} A sample top-level of a similarity search system that enables a user to search for objects by similarity.  In this case, since the user clicked on the middle-left tile, she will ``zoom-in'' and be presented with similar tiles.}
@@ -262,11 +262,16 @@ This criterion for evaluating a model, namely what quality triples it suggests a
 \end{equation}
 for some parameter $\mu>0$.  In fact, this is really more of an additional assumption than a modification --  we suppose each object as having a minimal amount of ``uniqueness,'' $\mu>0$, which means $\S = \mu I + T$, where $T \succeq 0$.  Again, the model can be fit in low-dimension by doing gradient descent directly on $M$ or in high dimensions using the gradient projection method on $\S$.  Here $\mu$ serves the same purpose as a margin constraint.
 
-This model is appealing in that it fits the data well, suggests good triples, and also represents interesting features on the data.  Unfortunately, the model itself is not convex.  Interestingly, we are able to prove that error of the algorithm will be optimal, by showing that gradient descent will converge to the ``true'' $\S^*$ if there is one.
-\begin{theorem}
-To add.
-\end{theorem}
+\subsection{Theoretical guarantee}
 
+This model is appealing in that it fits the data well, suggests good triples, and also represents interesting features on the data.  Unfortunately, the model itself is not convex.  We now give some justification for why gradient descent should not get trapped in local minima.  As is sometimes the case in learning, it is easier to analyze an online version of the algorithm, i.e., a stochastic gradient descent.  Here, we suppose that the sequence of triplets is presented in order: the learner predicts $S^{t+1}$ based on $(a_1,b_1,c_1,y_1),\ldots,(a_t,b_t,c_t,y_t)$.  The loss on iteration $t$ is $\ell_t(S^t)=\log 1/p$ where $p$ is the probability that the relative model with $S^t$ assigned to the correct outcome.  
+
+We state the following theorem about stochastic gradient descent.
+\begin{theorem}
+Let $W = \{\S \succeq 0~|~\S_{ii}=1\}$ and let $a_t,b_t,c_t \in [n]$ be arbitrary, for $t=1,2,\ldots$.  Suppose there is a matrix $S^*\in W$ such that $\Pr[y_t=1]=\frac{\mu+2-2\S_{ac}}{2\mu+4-2\S_{ab}-2\S_{ac}}$.  For any $\epsilon>0$, there exists an $T_0$ such that for any $T>T_0$ and $\eta=1/sqrt{T}$, 
+$$\frac{1}{T}\sum_{t=1}^T \ell_t(S^t)-\ell_t(S^*) \leq \epsilon.$$
+\end{theorem}
+Due to space limitations, the proof is omitted.\footnote{We have included the proof in the supplementary materials.}
 
 \section{Adaptive selection algorithm}
 
@@ -367,7 +372,7 @@ on active learning.
 
 Figure \ref{fig:adaptive-trips} show the adaptive triples selected on
 an illustrative dataset composed of a mixture of flags, ties and
-tiles. 
+tiles.
 
 \begin{figure}
 \center{\includegraphics[width=3in]{adaptive_combo.pdf}} \caption{\label{fig:adaptive-trips} Below each of the six objects, we show the adaptive pairs to which that object was compared along with the crowd's selections (in red).  The first pair below each large object was chosen adaptively after observing the results of ten random comparisons.  Then, proceeding down, the pairs were chosen using the ten random comparisons plus the results of the earlier comparisons above.  It appears that early questions are aimed at learning the object's general type, while later questions are aimed at recovering finer details.}
@@ -453,7 +458,7 @@ objects is one that maximizes the information we gain from her click.
 
 Using the same probabilistic model we can now update our distribution
 of the user's object and show another 9 objects, using the same method.
-   
+
 \section{System parameters and quality control}\label{sec:params}
 We've described abstractly how our system is implemented.  This
 section describes parameters and specifics of our optimization

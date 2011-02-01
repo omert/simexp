@@ -1,4 +1,4 @@
-\begin{thebibliography}{7}
+\begin{thebibliography}{9}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -11,6 +11,19 @@ Agarwal, Sameer, Wills, Josh, Cayton, Lawrence, Lanckriet, Gert, Kriegman,
   David, and Belongie, Serge.
 \newblock Generalized non-metric multidimensional scaling.
 \newblock In \emph{AISTATS}, San Juan, Puerto Rico, 2007.
+
+\bibitem[Beygelzimer et~al.(2009)Beygelzimer, Dasgupta, and Langford]{BDL09}
+Beygelzimer, Alina, Dasgupta, Sanjoy, and Langford, John.
+\newblock Importance weighted active learning.
+\newblock In Danyluk, Andrea~Pohoreckyj, Bottou, L{\'e}on, and Littman,
+  Michael~L. (eds.), \emph{ICML}, volume 382 of \emph{ACM International
+  Conference Proceeding Series}, pp.\ ~7. ACM, 2009.
+\newblock ISBN 978-1-60558-516-1.
+
+\bibitem[Chang \& Lin(2001)Chang and Lin]{CC01}
+Chang, Chih-Chung and Lin, Chih-Jen.
+\newblock \emph{{LIBSVM}: a library for support vector machines}, 2001.
+\newblock Software available at \url{http://www.csie.ntu.edu.tw/~cjlin/libsvm}.
 
 \bibitem[Chater \& Brown()Chater and Brown]{CB99}
 Chater, N and Brown, G~D.
