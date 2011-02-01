@@ -1,5 +1,3 @@
-clear all
-
 dataSetName = 'combo';
 dir_base = ['../turkexps/' dataSetName '/'];
 dir_rand = [dir_base '/random/'];
@@ -14,7 +12,7 @@ nr = length(IX);
 load([dir_adapt 'all.data.mat']);
 na = length(IX);
 n = min(na, nr);
-%n = 18000;
+n = 5000;
 
 load([dir_rand 'all.data.mat']);
 %xrand=fit_mat(IX(1:n),IA(1:n),IB(1:n),N(1:n),ids,100,10);
@@ -23,12 +21,13 @@ load([dir_adapt 'all.data.mat']);
 %xadapt=fit_mat(IX(1:n),IA(1:n),IB(1:n),N(1:n),ids,100,10);
 xadapt=fit(rand(length(ids), 3), IX(1:n),IA(1:n),IB(1:n),N(1:n),30);
 load([dir_bank 'all.data.mat']);
+m = 10000;
 
 num_queries = 20;
 fprintf('adaptive:\n');
-position_adapt = predict_using_bank(xadapt*xadapt', IX, IA, IB, N, num_queries);
+position_adapt = predict_using_bank(xadapt*xadapt', IX(1:m), IA(1:m), IB(1:m), N(1:m), num_queries);
 fprintf('random:\n');
-position_rand = predict_using_bank(xrand*xrand', IX, IA, IB, N, ...
+position_rand = predict_using_bank(xrand*xrand', IX(1:m), IA(1:m), IB(1:m), N(1:m), ...
                                    num_queries);
 for j=1:3
     subplot(1,3,j)
