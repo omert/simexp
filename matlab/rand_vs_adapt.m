@@ -36,7 +36,7 @@ IB2 = IB;
 N2 = N;
 
 maxn = min(length(IX1), length(IX2));
-num_points = 27;
+num_points = 10;
 sample_sizes = floor(linspace(9.5 * length(ids), maxn, num_points))
 
 x1 = {};
@@ -47,10 +47,14 @@ num_queries = 20;
 
 for i = 1:length(sample_sizes)
     m = sample_sizes(i);
-    x1{i} = fit_mat(IX1(1:m), IA1(1:m), IB1(1:m), N1(1:m), ids, 100, ...
-                    10, S1);
-    x2{i} = fit_mat(IX2(1:m), IA2(1:m), IB2(1:m), N2(1:m), ids, 100, ...
-                    10, S2);
+    %    x1{i} = fit_mat(IX1(1:m), IA1(1:m), IB1(1:m), N1(1:m), ids, 100, ...
+    %                10, S1);
+    %x2{i} = fit_mat(IX2(1:m), IA2(1:m), IB2(1:m), N2(1:m), ids, 100, ...
+    %                10, S2);
+    x1{i} = fit(rand(length(ids), 3), IX1(1:m), IA1(1:m), IB1(1:m), ...
+                N1(1:m), 30);
+    x2{i} = fit(rand(length(ids), 3), IX2(1:m), IA2(1:m), IB2(1:m), ...
+                N2(1:m), 30);
     S1 = x1{i}*x1{i}';
     S2 = x2{i}*x2{i}';
     [ll1(i) corrects1(i) ] = mat_model_likelihood(S1, IXcontrol, IAcontrol, IBcontrol, ...

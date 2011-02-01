@@ -5,3 +5,9 @@ images
 data
 temp
 *.pyc
+log
+old_paper
+*.pdf
+*.eps
+*.png
+*.blg
