@@ -17,12 +17,14 @@ n = min(na, nr);
 %n = 18000;
 
 load([dir_rand 'all.data.mat']);
-xrand=fit_mat(IX(1:n),IA(1:n),IB(1:n),N(1:n),ids,100,10);
+%xrand=fit_mat(IX(1:n),IA(1:n),IB(1:n),N(1:n),ids,100,10);
+xrand=fit(rand(length(ids), 3), IX(1:n),IA(1:n),IB(1:n),N(1:n),30);
 load([dir_adapt 'all.data.mat']);
-xadapt=fit_mat(IX(1:n),IA(1:n),IB(1:n),N(1:n),ids,100,10);
+%xadapt=fit_mat(IX(1:n),IA(1:n),IB(1:n),N(1:n),ids,100,10);
+xadapt=fit(rand(length(ids), 3), IX(1:n),IA(1:n),IB(1:n),N(1:n),30);
 load([dir_bank 'all.data.mat']);
 
-num_queries = 80;
+num_queries = 20;
 fprintf('adaptive:\n');
 position_adapt = predict_using_bank(xadapt*xadapt', IX, IA, IB, N, num_queries);
 fprintf('random:\n');
