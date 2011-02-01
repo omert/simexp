@@ -1,4 +1,4 @@
-\begin{thebibliography}{9}
+\begin{thebibliography}{12}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -28,10 +28,32 @@ Chang, Chih-Chung and Lin, Chih-Jen.
 \bibitem[Chater \& Brown()Chater and Brown]{CB99}
 Chater, N and Brown, G~D.
 
+\bibitem[Huang et~al.(2010)Huang, Ying, and Campbell]{Huang10}
+Huang, Kaizhu, Ying, Yiming, and Campbell, Colin.
+\newblock Generalized sparse metric learning with relative comparisons.
+\newblock \emph{Knowledge and Information Systems}, pp.\  1--21, 2010.
+\newblock ISSN 0219-1377.
+\newblock URL \url{http://dx.doi.org/10.1007/s10115-010-0313-0}.
+\newblock 10.1007/s10115-010-0313-0.
+
 \bibitem[Indyk \& Matousek(2004)Indyk and Matousek]{IM04}
 Indyk, Piotr and Matousek, Jiri.
 \newblock \emph{Low-Distortion Embeddings of Finite Metric Spaces}.
 \newblock CRC Press, 2004.
+
+\bibitem[Kendall \& Gibbons(1990)Kendall and Gibbons]{Kendall90}
+Kendall, Maurice and Gibbons, Jean~D.
+\newblock \emph{{Rank Correlation Methods}}.
+\newblock A Charles Griffin Title, 5 edition, September 1990.
+\newblock ISBN 0195208374.
+\newblock URL \url{http://www.worldcat.org/isbn/0195208374}.
+
+\bibitem[Lee et~al.(2010)Lee, Recht, Salakhutdinov, Srebro, and Tropp]{LRSST10}
+Lee, Jason, Recht, Ben, Salakhutdinov, Ruslan, Srebro, Nathan, and Tropp, Joel.
+\newblock Practical large-scale optimization for max-norm regularization.
+\newblock In Lafferty, J., Williams, C. K.~I., Shawe-Taylor, J., Zemel, R.S.,
+  and Culotta, A. (eds.), \emph{Advances in Neural Information Processing
+  Systems 23}, pp.\  1297--1305. 2010.
 
 \bibitem[McFee \& Lanckriet(2009)McFee and Lanckriet]{McFee09}
 McFee, B. and Lanckriet, {G. R. G.}
