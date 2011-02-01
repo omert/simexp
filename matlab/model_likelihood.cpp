@@ -55,7 +55,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray*prhs[] )
         double llhr = log(1 + da) - log(1 + db);
         double p = 1 / (1  + exp(llhr));
         f -= n[iComp] * log(p);
-	mexPrintf("%f\n", n[iComp]);
 	nTotal += (size_t)(n[iComp]);
         if (nlhs > 1){
 //            g[x] += 2 * n[iComp] * (1 - p) * V[x] / (1 + da);

@@ -36,7 +36,7 @@ IB2 = IB;
 N2 = N;
 
 maxn = min(length(IX1), length(IX2));
-num_points = 27;
+num_points = 10;
 sample_sizes = floor(linspace(9.5 * length(ids), maxn, num_points))
 
 x1 = {};
