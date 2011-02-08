@@ -1,4 +1,4 @@
-\begin{thebibliography}{12}
+\begin{thebibliography}{13}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -20,11 +20,6 @@ Beygelzimer, Alina, Dasgupta, Sanjoy, and Langford, John.
   Conference Proceeding Series}, pp.\ ~7. ACM, 2009.
 \newblock ISBN 978-1-60558-516-1.
 
-\bibitem[Chang \& Lin(2001)Chang and Lin]{CC01}
-Chang, Chih-Chung and Lin, Chih-Jen.
-\newblock \emph{{LIBSVM}: a library for support vector machines}, 2001.
-\newblock Software available at \url{http://www.csie.ntu.edu.tw/~cjlin/libsvm}.
-
 \bibitem[Chater \& Brown()Chater and Brown]{CB99}
 Chater, N and Brown, G~D.
 
@@ -40,6 +35,11 @@ Huang, Kaizhu, Ying, Yiming, and Campbell, Colin.
 Indyk, Piotr and Matousek, Jiri.
 \newblock \emph{Low-Distortion Embeddings of Finite Metric Spaces}.
 \newblock CRC Press, 2004.
+
+\bibitem[Joachims(1998)]{Joachims98}
+Joachims, Thorsten.
+\newblock Making large-scale svm learning practical.
+\newblock LS8-Report~24, Universit{\"a}t Dortmund, LS VIII-Report, 1998.
 
 \bibitem[Kendall \& Gibbons(1990)Kendall and Gibbons]{Kendall90}
 Kendall, Maurice and Gibbons, Jean~D.
@@ -66,6 +66,12 @@ Schultz, Matthew and Joachims, Thorsten.
 \newblock Learning a distance metric from relative comparisons.
 \newblock In \emph{Advances in Neural Information Processing Systems (NIPS)}.
   MIT Press, 2003.
+
+\bibitem[Settles(2009)]{Settles09}
+Settles, B.
+\newblock Active learning literature survey.
+\newblock Computer Sciences Technical Report 1648, University of
+  Wisconsin--Madison, 2009.
 
 \bibitem[Srebro \& Shraibman(2005)Srebro and Shraibman]{SS05}
 Srebro, Nathan and Shraibman, Adi.

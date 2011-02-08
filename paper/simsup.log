@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.1415926-1.40.8-alpha-20080323 (MiKTeX 2.7) (preloaded format=pdflatex 2009.12.8)  31 JAN 2011 16:54
+This is pdfTeX, Version 3.1415926-1.40.8-alpha-20080323 (MiKTeX 2.7) (preloaded format=pdflatex 2009.12.12)  1 FEB 2011 18:41
 entering extended mode
-**C:/Users/adum/simexp/paper/simsup.tex
-(C:/Users/adum/simexp/paper/simsup.tex
+**simsup.tex
+(simsup.tex
 LaTeX2e <2005/12/01>
 Babel <v3.8j> and hyphenation patterns for english, dumylang, nohyphenation, ge
 rman, ngerman, french, loaded.
@@ -353,4 +353,109 @@ LaTeX Font Info:    ... okay on input line 60.
 \MPnumerator=\count130
 \everyMPtoPDFconversion=\toks31
 )
-Package hyperref Info: Li
+Package hyperref Info: Link coloring ON on input line 60.
+ ("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\hyperref\nameref.sty"
+Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
+
+("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\oberdiek\refcount.sty"
+Package: refcount 2006/02/20 v3.0 Data extraction from references (HO)
+)
+\c@section@level=\count131
+)
+LaTeX Info: Redefining \ref on input line 60.
+LaTeX Info: Redefining \pageref on input line 60.
+
+(simsup.out) (simsup.out)
+\@outlinefile=\write3
+\AtBeginShipoutBox=\box35
+ ABD: EveryShipout initializing macros
+LaTeX Font Info:    Try loading font information for U+msa on input line 91.
+
+("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\amsfonts\umsa.fd"
+File: umsa.fd 2002/01/19 v2.2g AMS font definitions
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 91.
+
+("C:\Program Files (x86)\MiKTeX 2.7\tex\latex\amsfonts\umsb.fd"
+File: umsb.fd 2002/01/19 v2.2g AMS font definitions
+)
+Underfull \hbox (badness 10000) in paragraph at lines 91--92
+[]\OT1/cmr/m/n/10 Consider the fol-low-ing on-line rel-a-tive re-gres-
+ []
+
+
+Underfull \hbox (badness 4686) in paragraph at lines 91--92
+\OT1/cmr/m/n/10 sion model. There is a se-quence of ex-am-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 91--92
+\OT1/cmr/m/n/10 ples $(\OML/cmm/m/it/10 x[]; x[]; y[]\OT1/cmr/m/n/10 )\OML/cmm/
+m/it/10 ; \OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x[]; x[]; y[]\OT1/cmr/m/n/10 )\OML/
+cmm/m/it/10 ; [] ; \OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x[]; x[]; y[]\OT1/cmr/m/n/
+10 ) \OMS/cmsy/m/n/10 2
+ []
+
+
+Package natbib Warning: Citation `Zinkevich03' on page 1 undefined on input lin
+e 106.
+
+
+LaTeX Warning: Reference `lem:appx1' on page 1 undefined on input line 135.
+
+[1{C:/ProgramData/MiKTeX/2.7/pdftex/config/pdftex.map}
+
+
+]
+
+LaTeX Warning: Reference `lem:rel' on page 2 undefined on input line 164.
+
+
+LaTeX Warning: Reference `lem:rel' on page 2 undefined on input line 164.
+
+(simsup.bbl)
+
+Package natbib Warning: There were undefined citations.
+
+[2
+
+] (simsup.aux
+
+Package natbib Warning: Citation(s) may have changed.
+(natbib)                Rerun to get citations correct.
+
+)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 5726 strings out of 95337
+ 76412 string characters out of 1183907
+ 168425 words of memory out of 1500000
+ 8824 multiletter control sequences out of 110000
+ 8429 words of font info for 32 fonts, out of 1200000 for 2000
+ 14 hyphenation exceptions out of 8191
+ 36i,11n,45p,546b,331s stack positions out of 5000i,500n,10000p,200000b,5000s
+<C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmbx10.pfb><C:/Prog
+ram Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmbx12.pfb><C:/Program Files 
+(x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmbx9.pfb><C:/Program Files (x86)/MiKTe
+X 2.7/fonts/type1/bluesky/cm/cmex10.pfb><C:/Program Files (x86)/MiKTeX 2.7/font
+s/type1/bluesky/cm/cmmi10.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bl
+uesky/cm/cmmi5.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cm
+mi7.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmr10.pfb><C:
+/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmr5.pfb><C:/Program Fil
+es (x86)/MiKTeX 2.7/fonts/type1/bluesky/cm/cmr7.pfb><C:/Program Files (x86)/MiK
+TeX 2.7/fonts/type1/bluesky/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.7/fo
+nts/type1/bluesky/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/b
+luesky/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.7/fonts/type1/bluesky/ams
+/msbm10.pfb>
+Output written on simsup.pdf (2 pages, 89735 bytes).
+PDF statistics:
+ 84 PDF objects out of 1000 (max. 8388607)
+ 10 named destinations out of 1000 (max. 131072)
+ 17 words of extra memory for PDF output out of 10000 (max. 10000000)
+

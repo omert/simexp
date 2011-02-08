@@ -9,7 +9,7 @@ import os, csv
 random.seed(10)
 
 mode = 2
-alpha = 0.213456789
+alpha = 0.01
 
 if mode==0:
     print "Mode: 1/(1+exp(Sac-Sab))"
@@ -468,5 +468,20 @@ def test_omers_fit():
     doppel_trips(S,random_trips) #also loads posts from file
     
 
+def fit_letters():
+    print "Fitting twice-exhaustive letters"
+    trips = read_out_files(glob.glob("c:/sim/turkexps/calibrialpha/*.out"))    
+    print len(trips),"trips"
+    S = grad_proj2(trips,trips,step_size=0.2,its=100)
+    st = ""
+    for i in range(len(S)):
+        for j in range(len(S[i])):
+            st+=str(S[i][j])
+            if j!=len(S[i])-1:
+                st+=" "
+        if i!=len(S)-1:
+            st+="\n"
+    tools.my_write("c:/users/adum/simexp/data/calibrialpha/calibrialphas_fit.txt",st)
 
-test_small_ties()
+#test_small_ties()
+fit_letters()

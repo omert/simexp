@@ -98,12 +98,9 @@
   of our approach compared to a nonadaptive approach.  We also show
   the ability of our approach to capture different aspects of
   perceptual similarity by demonstrating a variety of binary attribute
-  classifiers (``is striped,'' ``vowel vs.\ consonant,'') trained
+  classifiers (``is striped,'' ``vowel vs.\ consonant'') trained
   using the learned kernel.  
 
-  We construct an end-to-end system that, given a set of objects,
-  automatically crowdsources the kernel acquisition. It then uses the
-  kernel to build an interactive visual search tool.
 \end{abstract}
 
 \section{Introduction}
@@ -145,7 +142,7 @@ adaptive sampling approach.
 \center{\includegraphics[width=3in]{tiles-tree-top.pdf}} \caption{\label{fig:tilestree} A sample top-level of a similarity search system that enables a user to search for objects by similarity.  In this case, since the user clicked on the middle-left tile, she will ``zoom-in'' and be presented with similar tiles.}
 \end{figure}
 
-At the heart of our approach is a new scale-invariant Kernel approximation model.  The choice of Kernel approximation model is shown to be crucial in terms of the adaptive triples that are produced, and the new model produces effective triples to label.  Although this model is nonconvex, we prove that it can be optimized under certain assumptions.  We compare our model to a convex logistic model.
+At the heart of our approach is a new scale-invariant Kernel approximation model.  The choice of Kernel approximation model is shown to be crucial in terms of the adaptive triples that are produced, and the new model produces effective triples to label.  Although this model is nonconvex, we prove that it can be optimized under certain assumptions.  
 
 We construct an end-to-end system for interactive visual search and
 browsing using our Kernel acquisition algorithm. The input to this
@@ -153,7 +150,7 @@ system is a set of images of objects, such as products available in an
 online store. The system automatically crowdsources the kernel
 acquisition and then uses this kernel to produce a visual interface
 for searching or browsing the set of products. Figure
-\ref{fig:tilestree} shows this interface for a database of 433 floor
+\ref{fig:tilestree} shows this interface for a dataset of 433 floor
 tiles available at amazon.com.
 
 \subsection{Human kernels versus machine kernels}
@@ -163,35 +160,25 @@ themselves.  Additional work employs human experiments to try to learn
 kernels based upon machine features, i.e., to approximate the human
 similarity assessments based upon features that can be derived by
 machine.  In contrast, when a kernel is learned from human subjects
-alone (whether it be data from an individual or a crowd)\footnote{It
-  would be possible run our system using a single user, but that would
-  be slower due to the massive parallelism enabled by the crowd.} one
-may call it a {\em human kernel}.  When learning human kernels, we
-consider no machine features whatsoever. To the computer, the objects
+alone (whether it be data from an individual or a crowd) one requires
+no machine features whatsoever. To the computer, the objects
 are recognized by ID's only -- the images themselves are hidden from
 our system and are only presented to humans.
 
-The primary advantage of machine kernels is that they can generalize immediately to new data, whereas each additional object needs to be added to our system, for a cost of approximately \$0.15.  On the other hand, working with a human kernel has two primary advantages.  First, it does not require any domain expertise.  While for any particular domain, such as music or images of faces, cars, or sofas, decades of research may have provided high-quality features, one does not have to find, implement, and tune these sophisticated feature detectors.  This is of value to consumers of such a system, such as store vendors who may not have the necessary expertise.
+The primary advantage of machine kernels is that they can generalize immediately to new data, whereas each additional object needs to be added to our system, for a cost of approximately \$0.15.  On the other hand, working with a human kernel has two primary advantages.  First, it does not require any domain expertise.  While for any particular domain, such as music or images of faces, cars, or sofas, decades of research may have provided high-quality features, one does not have to find, implement, and tune these sophisticated feature detectors.  
 
 Second, human kernels may contain features that are simply not available with state-of-the-art feature detectors, because of knowledge and experience that humans possess.  For example, from images of celebrities, human similarity may be partly based on whether the two celebrities are both from the same profession, such as politicians, actors, and so forth.  Until the longstanding goal of bridging the semantic gap is achieved, humans will be far better than machines at interpreting a number of features, such as ``does a couch look comfortable,'' ``can a shoe be worn to an informal occasion,'' or ``is a joke funny.''
 
 We give a simple demonstration of external knowledge through
 experiments on 26 images of the lower-case Roman alphabet.  Here, the
 learned Kernel is shown to capture features such as ``is a letter
-short or tall'' (acemnorsuvwxz vs.\ bfhkl), which could be determined
-from pixels alone. This is shown by using the Kernel in an SVM and
-achieving 0\% error rate in leave-one-out cross validation.  However,
-it also exhibits the feature ``vowel versus consonant,'' which uses
+a vowel versus consonant,'' which uses
 external knowledge beyond the pixels.  Note that this experiment is
 interesting in itself because it is not at first clear if people can
 meaningfully answer the question: ``is the letter {\em e} more similar
-to {\em i} or {\em p}.'' One person may feel that the question is
-ill-posed, another may feel that {\em e} is more similar to {\em i}
-because the are both vowels, while a third person may feel that {\em
-  e} is more similar to {\em p} because the letter names rhyme.  Our
-experiments show statistically significant consistency with 58\%
+to {\em i} or {\em p}.'' Our experiments show statistically significant consistency with 58\%
 ($\pm$2\%, with 95\% confidence) agreement between users on a random
-triple of letters.  (For random image triplets from an online tie
+triple of letters.  (For random image triples from an online tie
 store, 68\% agreement is observed, and 65\% is observed for floor tile images).
 
 
@@ -222,14 +209,19 @@ Next, consider data representing an underlying rooted tree with $k \ll n$ leaves
 
 \section{Related work}
 
+As discussed above, much of the work in machine learning on learning kernels employs `side information' in the form of features about objects.  \citet{Schultz03} highlight the fact that triple-based information may also be gathered by web search click data.
+\citet{Agarwal07} is probably the most similar work, in which they learn a kernel matrix from triples of similarity comparisons, as we do.  However, the triples they consider are randomly (nonadaptively) chosen.  Their particular fitting algorithm differs in that it is based on a max-margin approach, which is more common in the kernel learning literature.
+
+There is a wealth of work in {\em active learning} (see, e.g., the survey by \citealp{Settles09}) for classification, where a learner selects examples from a pool of unlabeled examples to label.  A number of approaches have been employed, and our work is in the same spirit as those that employ probabilistic models and information-theoretic measures to maximize information.  Other work often labels examples based on those that are closest to the margin or closest to 50\% probability of being positive or negative.  To see why this latter approach may be problematic in our setting, one could imagine a set of triples where we have accurately learned that the answer is $50/50$, e.g., as may be the case if $a$, $b$, and $c$ bear no relation to each other or if they are identical.  One may not want to focus on such triples.
 
 \section{Preliminaries}\label{sec:prelim}
 
 The set of $n$ objects is denoted by $[n]=\{1,2,\ldots,n\}$.  For $a,b,c \in [n]$, a comparison or {\em triple} of the form, ``is $a$ more similar to $b$ or to $c$.'' We refer to $a$ as the {\em head} of the triple.  We write $p^a_{bc}$ for the probability that a {\em random} crowd member rates $a$ as more similar to $b$, so $p^a_{bc}+p^a_{cb}=1$.
 The $n$ objects are assumed to have $d$-dimensional Euclidean representation, and hence the data can be viewed as a matrix $M \in \reals^{n \times d}$, and the {\em similarity matrix} $\S \in \reals^{n \times n}$ is defined by $\S_{ab}=M_a\cdot M_b$, or equivalently $\S = MM^T$.  Note that $\S$ is necessarily positive semidefinite (PSD), and for any PSD matrix $\S$, one can efficiently find an embedding in $\reals^d$ (unique up to change of basis), for some $d \leq n$.  Also equivalent is the representation in terms of distances, $d^2(a,b)=\S_{aa}-2\S_{ab}+\S_{bb}$.
 
-In our setting, an {\em MDS algorithm} takes as input $m$ comparisons $(a_1b_1c_1,y_1) \ldots (a_mb_mc_m,y_m)$ on $n$ items, where $y_i\in \{0,1\}$ indicates whether $a_i$ is more like $b_i$ than $c_i$.  Unless explicitly stated, we will often omit $y_i$ and assume that the $b_i$ and $c_i$ have been permuted, if necessary, so that $a_i$ was rated as more similar to $b_i$ than $c_i$.  The MDS algorithm outputs an embedding $M \in \reals^{n \times d}$ for some $d \geq 1.$  A probabilistic MDS model outputs predicts $\hat{p}^{a}_{bc}$ based on $M_a$, $M_b$, and $M_c$.  The {\em empirical log-loss} of a model that predicts $\hp^{a_i}_{b_ic_i}$ is $\sum_i \log 1/\hp^{a_i}_{b_ic_i}$.
-Our probabilistic MDS model attempts to minimize empirical log loss subject to some regularization constraint.  We choose a probabilistic model due to its suitability for use in combination with our information-gain criteria for selecting adaptive triples, described later.
+In our setting, an {\em MDS algorithm} takes as input $m$ comparisons $(a_1b_1c_1,y_1) \ldots (a_mb_mc_m,y_m)$ on $n$ items, where $y_i\in \{0,1\}$ indicates whether $a_i$ is more like $b_i$ than $c_i$.  Unless explicitly stated, we will often omit $y_i$ and assume that the $b_i$ and $c_i$ have been permuted, if necessary, so that $a_i$ was rated as more similar to $b_i$ than $c_i$.  The MDS algorithm outputs an embedding $M \in \reals^{n \times d}$ for some $d \geq 1.$  A probabilistic MDS model predicts $\hat{p}^{a}_{bc}$ based on $M_a$, $M_b$, and $M_c$.  The {\em empirical log-loss} of a model that predicts $\hp^{a_i}_{b_ic_i}$ is $\sum_i \log 1/\hp^{a_i}_{b_ic_i}$.
+Our probabilistic MDS model attempts to minimize empirical log loss subject to some regularization constraint.  We choose a probabilistic model due to its suitability for use in combination with our information-gain criteria for selecting adaptive triples and also due to the different answers by different people (or the same person on different occasions).
+
 
 An {\em active} MDS algorithm chooses each triple, $a_ib_ic_i$, adaptively based upon $(a_1b_1c_1,y_1)$,$\ldots$,$(a_{i-1}b_{i-1}c_{i-1},y_{i-1})$.
 We denote by $M^T$ the transpose of matrix $M$ and $\|M\|_F=\sqrt{\sum_{ij} M_{ij}^2}$ denotes the Frobenius norm.
@@ -239,7 +231,7 @@ Projection to the closest element of $B$ is a quadratic program which can be sol
 
 \section{Our algorithm}
 
-Our algorithm proceeds in phases.  In the first phase, it queries a certain number of random triples comparing each object $a \in [n]$ to random pairs of distinct $b,c$.  (Note that we never present a triple where $a=b$ or $a=c$ except for quality control purposes.) Subsequently, it fits the results to a matrix $M \in \reals^{n \times d}$ using the {\em relative} probabilistic similarity model described below.  Then it uses our adaptive selection algorithm to select further random triples.  This iterates: in each phase all previous data is refit to the relative model, and then the adaptive selection algorithm generates more triples.  
+Our algorithm proceeds in phases.  In the first phase, it queries a certain number of random triples comparing each object $a \in [n]$ to random pairs of distinct $b,c$.  (Note that we never present a triple where $a=b$ or $a=c$ except for quality control purposes.) Subsequently, it fits the results to a matrix $M \in \reals^{n \times d}$ using the probabilistic {\em relative} similarity model described below.  Then it uses our adaptive selection algorithm to select further random triples.  This iterates: in each phase all previous data is refit to the relative model, and then the adaptive selection algorithm generates more triples.
 \begin{itemize}
 \item For each item $a\in [n]$, crowdsource labels for $R$ random triples with head $a$.
 \item For $t=1,2,\ldots,T:$
@@ -252,12 +244,12 @@ Typical parameter values which worked quickly and well across a number of medium
 
 \subsection{Relative similarity model}\label{sec:rel}
 
-The {\em relative} probabilistic model is motivated by the scale-invariance observed in many perceptual systems (see, e.g., \citealp{CB99}).  Let $\delta_{ab} = \|M_a-M_b\|^2=\S_{aa}+\S_{bb}-\S_{ab}$.  A simple scale-invariant proposal takes $\hat{p}^a_{bc} = \frac{\delta_{ac}}{\delta_{ab}+\delta_{ac}}$.  Such a model must also be regularized or else it would have $\Theta(n^2)$ degrees of freedom.  One may regularize by the rank of $\S$ or by setting $\S_{ii}=1$.  Due to the scale-invariance of the model, however, this latter constraint does not have reduce complexity.  In particular, note that halving or doubling the matrix $M$ doesn't change any probabilities.  Hence, descent algorithms may lead to very small, large, or numerically unstable solutions.  To address this, we modify the model as follows, for distinct $a,b,c$:
+The {\em relative} similarity model is motivated by the scale-invariance observed in many perceptual systems (see, e.g., \citealp{CB99}).  Let $\delta_{ab} = \|M_a-M_b\|^2=\S_{aa}+\S_{bb}-\S_{ab}$.  A simple scale-invariant proposal takes $\hat{p}^a_{bc} = \frac{\delta_{ac}}{\delta_{ab}+\delta_{ac}}$.  Such a model must also be regularized or else it would have $\Theta(n^2)$ degrees of freedom.  One may regularize by the rank of $\S$ or by setting $\S_{ii}=1$.  Due to the scale-invariance of the model, however, this latter constraint does not have reduce complexity.  In particular, note that halving or doubling the matrix $M$ doesn't change any probabilities.  Hence, descent algorithms may lead to very small, large, or numerically unstable solutions.  To address this, we modify the model as follows, for distinct $a,b,c$:
 \begin{equation}
 \label{eq:rel}
 \hat{p}^a_{bc} =  \frac{\mu+\delta_{ac}}{2\mu+\delta_{ab}+\delta_{ac}} \ \textrm{ and }\  \S_{ii}=1,
 \end{equation}
-for some parameter $\mu>0$.  Alternatively, this change may be viewed as an additional assumption imposed on the previous model --  we suppose each object possesses a minimal amount of ``uniqueness,'' $\mu>0$, such that $\S = \mu I + T$, where $T \succeq 0$.  We fit the model by local optimization performed directly on $M$ (with random initialization), and produces high-quality adaptive triples even for low dimensions, such as 3.\footnote{For high-dimensional problems, we perform a gradient projection descent on $\S$.  In particular, 
+for some parameter $\mu>0$.  Alternatively, this change may be viewed as an additional assumption imposed on the previous model --  we suppose each object possesses a minimal amount of ``uniqueness,'' $\mu>0$, such that $\S = \mu I + T$, where $T \succeq 0$.  We fit the model by local optimization performed directly on $M$ (with random initialization), and high-quality adaptive triples are produced even for low dimensions.\footnote{For high-dimensional problems, we perform a gradient projection descent on $\S$.  In particular,
 starting with $\S^0=\lambda I$, we compute $\S^{t+1}= \Pi_B(S^t - \eta \nabla \cL(\S))$ for step-size $\eta$ (see Preliminaries for the definition of $\Pi_B$).}  Here $\mu$ serves a purpose similar to a margin constraint.  
 
 There are two interesting points to make about our choice of model.  First, the loss is not convex in $\S$, so there is a concern that local optimization may be susceptible to local minima.  In Section \ref{sec:theory}, we state a theorem which explains why this does not seem to be a significant problem.  Second, in Section \ref{sec:logistic}, we discuss a simple convex alternative based on logistic regression, and we explain why this model, in combination with our adaptive selection criterion, gives rise to poor adaptively-selected triples.
@@ -265,14 +257,10 @@ There are two interesting points to make about our choice of model.  First, the 
 
 \section{Adaptive selection algorithm}\label{sec:ada}
 
-We describe the adaptive selection algorithm with respect to the
-relative model above, but it can equally well be applied to the
-exponential model.  The idea is to capture the uncertainty about the
+The idea is to capture the uncertainty about the
 location of an object through a probability distribution over points
 in $\reals^d$, and then to ask the question that maximizes information
-gain.
-
-Given a set of previous comparisons of $n$ objects, we generate, for
+gain. Given a set of previous comparisons of $n$ objects, we generate, for
 each object $a=1,2,\ldots,n$, a new triple to compare $a$ to, as
 follows.  First, we embed the objects into $\reals^d$ as described
 above, using the available comparisons. Initially, we use a seed of
@@ -292,14 +280,7 @@ be described shortly.
 Given any candidate query for objects in the database $b$ and $c$, the
 model predicts that the crowd will rate $a$ as more similar to $b$
 than $c$ with probability $p \propto \int_x
-\frac{\delta(x,c)}{\delta(x,b)+\delta(x,c)}\rho(x)dx$.\footnote{Like
-  other active learning models, e.g. \cite{??}, it is tempting to
-  choose $b$ and $c$ so as to make this probability close to $1/2$.
-  In our case, this is not sufficient because $b$ and $c$ could be
-  known to give $p$ close to half without being a useful query, e.g.,
-  $b$ and $c$ are very close to one another but far from $a$.
-  However, we wouldn't want to compare $a$ to $b$ and $c$ repeatedly
-  in this case.}  If it rates $a$ more similar to $b$ than $c$ then
+\frac{\delta(x,c)}{\delta(x,b)+\delta(x,c)}\rho(x)dx$.  If it rates $a$ more similar to $b$ than $c$ then
 $x$ has a posterior distribution of $\rho_b(x) \propto
 \rho(x)\frac{\delta(x,c)}{\delta(x,b)+\delta(x,c)}$, and $\rho_c(x)$
 (of similar form) otherwise.  The {\em information gain} of this query
@@ -329,18 +310,18 @@ in $M$.
 
 \subsection{Optimization guarantee}\label{sec:theory}
 
-This model is appealing in that it fits the data well, suggests good triples, and also represents interesting features on the data.  Unfortunately, the model itself is not convex.  We now give some justification for why gradient descent should not get trapped in local minima.  As is sometimes the case in learning, it is easier to analyze an online version of the algorithm, i.e., a stochastic gradient descent.  Here, we suppose that the sequence of triplets is presented in order: the learner predicts $S^{t+1}$ based on $(a_1,b_1,c_1,y_1),\ldots,(a_t,b_t,c_t,y_t)$.  The loss on iteration $t$ is $\ell_t(S^t)=\log 1/p$ where $p$ is the probability that the relative model with $S^t$ assigned to the correct outcome.
+The relative similarity model is appealing in that it fits the data well, suggests good triples, and also represents interesting features on the data.  Unfortunately, the model itself is not convex.  We now give some justification for why gradient descent should not get trapped in local minima.  As is sometimes the case in learning, it is easier to analyze an online version of the algorithm, i.e., a stochastic gradient descent.  Here, we suppose that the sequence of triples is presented in order: the learner predicts $S^{t+1}$ based on $(a_1,b_1,c_1,y_1),\ldots,(a_t,b_t,c_t,y_t)$.  The loss on iteration $t$ is $\ell_t(S^t)=\log 1/p$ where $p$ is the probability that the relative model with $S^t$ assigned to the correct outcome.
 
-We state the following theorem about stochastic gradient descent.
+We state the following theorem about stochastic gradient descent, where $S^0 \in B$ is arbitrary and $S^{t+1}=\Pi_B(S^t-\eta \nabla\ell_t(S^t))$.
 \begin{theorem}
-Let $W = \{\S \succeq 0~|~\S_{ii}=1\}$ and let $a_t,b_t,c_t \in [n]$ be arbitrary, for $t=1,2,\ldots$.  Suppose there is a matrix $S^*\in W$ such that $\Pr[y_t=1]=\frac{\mu+2-2\S_{ac}}{2\mu+4-2\S_{ab}-2\S_{ac}}$.  For any $\epsilon>0$, there exists an $T_0$ such that for any $T>T_0$ and $\eta=1/sqrt{T}$,
+Let $W = \{\S \succeq 0~|~\S_{ii}=1\}$ and let $a_t,b_t,c_t \in [n]$ be arbitrary, for $t=1,2,\ldots$.  Suppose there is a matrix $S^*\in W$ such that $\Pr[y_t=1]=\frac{\mu+2-2\S_{ac}}{2\mu+4-2\S_{ab}-2\S_{ac}}$.  For any $\epsilon>0$, there exists an $T_0$ such that for any $T>T_0$ and $\eta=1/\sqrt{T}$,
 $$\frac{1}{T}\sum_{t=1}^T \ell_t(S^t)-\ell_t(S^*) \leq \epsilon.$$
 \end{theorem}
-Due to space limitations, the proof is omitted.\footnote{We have included the proof in the supplementary materials.}
+Due to space limitations, the proof is omitted.\footnote{The proof is included in the supplementary materials.}
 
 
 \subsection{The logistic model: A convex alternative}\label{sec:logistic}
-As a small digression, we explain why the choice of probabilistic model is especially important for adaptive learning.  To this end, consider the following {\em logistic} model.
+As a small digression, we explain why the choice of probabilistic model is especially important for adaptive learning.  To this end, consider the following {\em logistic} model.  This model is a natural hybrid of logistic regression and MDS. 
 \begin{equation}\label{eq:logistic}
 \hat{p}^a_{bc} = \frac{e^{\S_{ab}}}{e^{\S_{ab}}+e^{\S_{ac}}} = \frac{1}{1+e^{\S_{ac}-\S_{ab}}}.
 \end{equation}
@@ -361,7 +342,6 @@ We've described abstractly how our system is implemented.  This
 section describes parameters and specifics of our optimization
 algorithms and experiments.
 
-\subsection{Mechanical Turk}
 Experiments were performed using Amazon's Mechanical Turk web service,
 where we defined `Human Intelligence Tasks' to be performed by one or
 more users.  Each task consists of 50 comparisons and the interface is
@@ -391,22 +371,25 @@ one hand, it seems purest in form to give the users carte blanche and
 ask only, ``is $a$ more similar to $b$ than $c$.''  On the other hand,
 in feedback users complained about these tasks and often asked what we
 meant by similarity.  Moreover, different users will inevitably weigh
-different features differently when performing comparisons.  For
-example, consider a comparisons of face images, where $a$ is a white
-male, $b$ is a black male, and $c$ is a white female.  Some users will
-consider gender more important in determining skin color, and others
-may feel the opposite is true.  Others may feel that the question is
-impossible to answer.  Consider phrasing the question as follows, ``At
-a {\em distance}, who would you be more likely to mistake for $a$: $b$
-or $c$?''  For any two people, there is presumably some distance at
-which one might be mistaken for the other, so the question may seem
-more possible to answer for some people.  Second, users may more often
-agree that skin color is more important than gender, because both are
-easily identified close up by skin color may be identifiable even at a
-great distance.  While we haven't done experiments to determine the
-importance of question phrasing, anecdotal evidence suggests that
-users enjoy the tasks more when more specific definitions of
-similarity are given.
+different features differently when performing comparisons. 
+
+
+%For
+%example, consider a comparisons of face images, where $a$ is a white
+%male, $b$ is a black male, and $c$ is a white female.  Some users will
+%consider gender more important in determining skin color, and others
+%may feel the opposite is true.  Others may feel that the question is
+%impossible to answer.  Consider phrasing the question as follows, ``At
+%a {\em distance}, who would you be more likely to mistake for $a$: $b$
+%or $c$?''  For any two people, there is presumably some distance at
+%which one might be mistaken for the other, so the question may seem
+%more possible to answer for some people.  Second, users may more often
+%agree that skin color is more important than gender, because both are
+%easily identified close up by skin color may be identifiable even at a
+%great distance.  While we haven't done experiments to determine the
+%importance of question phrasing, anecdotal evidence suggests that
+%users enjoy the tasks more when more specific definitions of
+%similarity are given.
 
 Two natural goals of question phrasing might be: (1) to align users in
 their ranking of the importance of different features and (2) to align
@@ -446,143 +429,85 @@ instructions were:
 %- letters a-z?
 
 \begin{figure}
-\center{\includegraphics[width=3.2in]{rand_vs_adaptive.pdf}} \caption{\label{fig:YAY} The 20Q plots comparing training based on adaptively selected triples to randomly selected training triples.  The left plot shows their mean predicted log-ranks of randomly chosen objects after 20 randomly chosen questions. The right plot shows their mean predicted log-ranks of randomly chosen objects after 20 adaptive queries.
+\center{\includegraphics[width=3.2in]{rand_vs_adaptive.pdf}} \caption{\label{fig:YAY} The 20Q plots comparing training based on adaptively selected triples to randomly selected training triples.  The left plot shows the mean predicted log-ranks of randomly chosen objects after 20 randomly chosen questions. The right plot shows the mean predicted log-ranks of randomly chosen objects after 20 adaptive queries.
 Plots were generated using the mixed dataset consisting of $n=225$ objects, with 10 initial random triples per object.  In both plots, the performance using $22 = (10 $ random$) + (12$ adaptively chosen$)$ triples was matched using all 35 random triples.  Hence, approximately 60\% more random triples were required to match this particular performance level of the adaptive algorithm.
 }
 \end{figure}
 
 
-We experiment on four datasets: (1) images of twenty-six lowercase
-letters, (2) 223 flag images, (3) 433 tile images from Amazon, and (4)
-300 product images from an online tie store. Surprisingly, it seems
-that for these datasets about 30 random triples per object suffice to
-learn the Crowd Kernel well. Roughly, we find that adaptive queries
-can achieve the same performance as uniformly random queries using a
-seed of 10 triples per object and an additional 10 adaptive
-queries. We expect the saving to increase for larger and more diverse
-datasets.
+We experiment on four datasets: (1) twenty-six images of the lowercase roman alphabet (Calibri font) (2) 223 country flag images from flagpedia.net, (3) 433 floor tile images from Amazon.com, and (4)
+300 product images from an online tie store also hosted at Amazon.com. We also consider a hand-selected ``mixed'' dataset consisting of 225 images: 75 ties, 75 tiles, and 75 flags.  Surprisingly, it seems
+that for these datasets about 30-40 triples per object suffice to
+learn the Crowd Kernel well. Figure \ref{fig:YAY} shows the results on the mixed dataset, comparing the 20Q metric (described below) trained on random vs.~adaptive triples.  For both adaptive and random questions, for certain performance levels, one requires about 60\% more random queries than adaptive queries.  Given very little data or a lot of data, one does not expect the adaptive algorithm to perform significantly better.
+
+Figure \ref{fig:adaptive-trips} shows the adaptive triples selected on
+an illustrative dataset composed of a mixture of flags, ties and
+tiles.
 
 For ease of implementation, we assume all users are identical.  This
 is a natural starting point, especially given that our main focus is
 on active learning.
 
-Figure \ref{fig:adaptive-trips} show the adaptive triples selected on
-an illustrative dataset composed of a mixture of flags, ties and
-tiles.
 
 \begin{figure}
-\center{\includegraphics[width=3in]{adaptive_combo.pdf}} \caption{\label{fig:adaptive-trips} Below each of the six objects, we show the adaptive pairs to which that object was compared along with the crowd's selections (in red).  The first pair below each large object was chosen adaptively after observing the results of ten random comparisons.  Then, proceeding down, the pairs were chosen using the ten random comparisons plus the results of the earlier comparisons above.  It appears that early questions are aimed at learning the object's general type, while later questions are aimed at recovering finer details.}
+\center{\includegraphics[width=3.4in]{adaptive_combo.pdf}} \caption{\label{fig:adaptive-trips} Six objects in the mixed dataset along with the adaptive pairs to which that object was compared, below, and user selections in red.  The first pair below each large object was chosen adaptively based upon the results of ten random comparisons.  Then, proceeding down, the pairs were chosen using the ten random comparisons plus the results of the earlier comparisons above.}
+\end{figure}
+\begin{figure}
+{\center \includegraphics[width=3.4in]{neckties_neighs.pdf}} 
+\caption{\label{fig:nn} Nearest-neighbors for some neckties from the tie-store dataset.  Nearest neighbors are displayed from left to right.  Note that neck ties were never confused for bow ties, tie clips or scarves.
+}
+\end{figure}
+\begin{figure}
+{\center \includegraphics[width=3.4in]{tiles_neighs.pdf}} \caption{\label{fig:nn-tiles} Examples of nearest neighbors for floor tiles.}
+\end{figure}
+\begin{figure}
+{\center \includegraphics[width=3.5in]{flags_pca.pdf}} \caption{\label{fig:flagspca} The flag images displayed according to their projection on the top two principal components of a PCA.  (The principal component
+is the horizontal axis.)}
 \end{figure}
 
+\subsection{20 Questions Metric}
+Since one application of such systems is search, i.e., searching for an item that a user knows what it looks like (we assume that the user can answer queries as if she even knows what the store image looks like), it is natural to ask how well we have ``honed in'' on the desired object after a certain number of questions.  For the 20 Questions (20Q) metric, imagine that the user has selected a secret object in the database, uniformly at random, and the system is allowed to query 20 triples (as in the game ``20 Questions''), after which it produces a ranking of items in the database, from most to least likely.  The metric is the average $\log$ of the position of the random target item in this list.  The $\log$, common in ranking, reflects the idea that the position of lower-ranked objects is less import -- it weights moving an object from position 2 to 4 as important as moving an object from position 20 to 40.  (We note that we observed similar behavior for the expected position metric.)  This metric is meant to roughly capture performance, but of course in a real system users may not have the patience to click on twenty pairs of images and may prefer to choose from larger sets. (Our GUI has the user select one of 8 or 9 images, which could potentially convey the same information as 3 binary choices.)  Now, the questions that the system asks could be random questions, which we refer to as the 20 Random Questions metric, or adaptively chosen, for the 20 Adaptive Questions metric.  In the later case, the same maximum information-gain criterion is used here as in the adaptive triple generation algorithm, relative to whichever model was learned (based on random or adaptively selected training triples).
 
-\subsection{20Q Metric}
-It is not clear how to judge the predictions that a particular embedding implies.  One application of such systems is search, i.e., searching for an item that a user knows what it looks like (we assume that the user can answer queries as if she even knows what the store image looks like).  Therefore, it is natural to ask how well we have ``honed in'' on the desired object after a certain number of questions.  For our metric, we suppose that the user has selected a secret random object in the database and the system is allowed to make query 20 triples, adaptively (as in the game ``20 questions''), after which it produces a ranking of items in the database.  The metric is the average position of the random target item in this list.  This metric is meant to roughly capture performance, but of course in a real system users may not have the patience to click on twenty pairs of images and may prefer to choose from larger sets. (Our system has the user select one of 8 or 9 images, which could potentially convey the same information as 3 binary choices.)
 
-\subsection{Using the Kernel for classification}
+\subsection{Using the Kernel for Classification}
 
 The learned Kernels may be used in a linear classifier such as a
-support vector machine.  This helps elucidate which features were used
-by humans in labeling the data.  In the experiments below, images were
-labeled with binary $\pm$ classes and ? indicating don't care.  For
-example, if the classification task is identifying whether a tie is
-striped or not, labeling the tie clips seems irrelevant and we ignore
-them.  The LIBSVM \cite{CC01} package was used with default
-parameters.  For all learning tasks but letters, results are shown on
-30? held-out examples while the rest were used for training.  For the
-letters, we show results based on leave-one-out classification.  The
-results are shown by sorting the held-out images from left to right in
-order of their inner product with the learned direction.  In addition,
-the following table summarizes accuracy on a variety of tasks.
-
-\subsection{Nearest neighbors and PCA}
-Below we show the nearest neighbors for some objects in the ties dataset.
-
-{\center \includegraphics[width=3.5in]{neckties_neighs.pdf}}
-
-The reference image is on the left and the 14 nearest neighbors are displayed from left to right.
-
-Below, the flag images are displayed according to their projection on
-the top two principal components of a PCA.  (The principal component
-is the horizontal axis.)
-{\center \includegraphics[width=3.5in]{flags_pca.pdf}}
-
-More nearest neighbor and PCA charts are available in the
-supplementary material.
+support vector machine.  This helps elucidate which features have been used
+by humans in labeling the data.  In the experiments below, an unambiguous subset of the images were
+labeled with binary $\pm$ classes. For example, we omitted the letter {\em y} in labeling vowels and consonants ({\em y} was in fact classified as a consonant, and {\em c} was misclassified as a vowel), and we selected only completely striped or unstriped flags for flag stripe classification.  The SVM-Light \cite{Joachims98} package was used with default
+parameters and its leave-one-out (LOO) classification results are reported.
 
 
-\subsection{Optimization}
+Note that the low error rates are heavily influenced by the fact that we hand-selected ``easy'' subsets of objects to label.  The selection was based on how unambiguous the objects were, with respect to the desired label, and not related to the target kernel.
 
-
-What we find here is that a low-rank constraint, which can be
-interpreted as fixing the dimensionality $d$ of $M \in \reals^{n
-  \times d}$, provides better regularization when the size of the
-learning set is small, but does not capture features of interest as
-well as a high dimensional representation, for large sample sizes.
-Fixing the diagonal to $\S_{ii}=1$ gives a high-quality fit but does
-not generate quite as meaningful questions when we have little data.
-
-Hence, when we have little data, we use the low-dimensional model in
-conjunction with our selection algorithm, for generating triples.
-When we analyze the data which we have, we generally use the
-fixed-diagonal constraint without a rank bound.  Interestingly, the
-trace bound performed poorly in this setting.  In fact, a
-fixed-diagonal setting of $\S_{ii}=r$ outperformed a trace bound of
-$nr$, even on training data.  This is counterintuitive because a
-fixed-diagonal setting of $\S_{ii}=r$ directly implies a trace equal
-to $nr$.  The reason the optimization with the trace bound was failing
-is because the optimization problem is not convex, and hence gradient
-descent may reach local minima.  It seems that the trace bound and
-fixed-diagonal settings have different optimization landscapes, and
-the fixed-diagonal optimization performs better.
+\begin{tabular}{|l|l|l|}
+ \hline
+ Dataset & Feature & LOO error rate \\
+ \hline
+ \hline
+Tiles & Ornate & 4.1\% \\
+Ties & Bow tie vs.~neck tie & 0.0\%\\
+Ties & Multicolor vs. plain & 0.5\%\\
+Flags & Striped & 0.0\%\\
+Letters & Vowel & 4.0\%\\
+Letters & Short/tall & 5.3\%\\
+\hline
+\end{tabular}
 
 
 \subsection{Visual Search}
-Our primary application is a visual search tool, depicted in Figure
+We provide a GUI visual search tool, exemplified in Figure
 \ref{fig:tilestree}. Given $n$ images, their embedding into $\reals^d$
 and the related probabilistic model for triples, we would like to help
 a user find either a particular object she has in mind, or a similar
-one.
+one. We do this by playing ``20 Questions'' with 8 or 9-tuple queries, generated by an information-gain 
+adaptive selection algorithm very similar to the one described in Section \ref{sec:ada}.
 
-We do this by playing a ``20 questions game'' of sorts with the
-user. We assume the user has one of the objects in mind, and choose an
-initial prior to quantify our uncertainty regarding this object. We
-choose a uniform prior, but this can be replaced by empirical priors
-when available. We then pick 9 objects $\{b_1,\ldots,b_9\}$ to show the
-user, and expect her to click on object $b_i$ with probability
-$\propto \delta(a, b_i)$ is her object is $a$. Our choice of these
-objects is one that maximizes the information we gain from her click.
-
-Using the same probabilistic model we can now update our distribution
-of the user's object and show another 9 objects, using the same method.
-
-\section{Conclusion and Discussion}
-In this work, we capture the crowd kernel using no machine attributes
-whatsoever.  Machine attributes are of course desirable when it is
-possible to approximate the crowd kernel automatically. In this case
-our work could be used as a component of such a hybrid
-system. However, approximating the crowd kernel automatically
-requires, in general, extremely good domain-specific features.  One of
-the biggest challenges in machine learning is selecting good features
-for a data sets.  Learning the crowd kernel without machine features
-sidesteps this issue, to some extent.  This may be feasible at least
-for applications such as online stores where a small price per object
-is reasonable and the number of objects is not prohibitively large.
-Learning the crowd kernel is a natural first step in bridging the
-semantic gap between computer and humans, and active learning should
-be a key part of this process.
-
-There is room to improve the adaptive component of our system.  First,
-one may make it online in the sense that it could add objects to the
-database one at a time or in batches, rather than having all the
-objects present up-front.  Second, it may be desirable to have
-personalized user-specific models as in \cite{??}, or group specific
-models.  For example, it may be interesting to contrast the crowd
-kernels of men and women on various domains.  Third, in the case where
-our model is not perfectly accurate, our algorithm suffers from the
-fact that the training distribution on queries is different from the
-test distribution.  Techniques such as importance weighting have been
-shown to be one practical solution to this problem for active learning
-\cite{BDL09}, and one might try to apply them to the problem at hand.
+\section{Conclusions}
+In this work, we provide an algorithm and an end-to-end system for constructing an embedding of
+objects in to Euclidean space (and hence also an $n \times n$ similarity matrix) from {\em adaptively chosen} crowdsourced
+similarity comparisons alone.  Our algorithm requires no image features to be extracted and hence can be used across a number of domains.
+The learned kernel can be used in a kernel-based learning algorithm, such as SVM, to demonstrate that the kernel has indeed captured features of interest to people.  An application is given for similarity-based search.  
 
 \bibliography{sim}
 \bibliographystyle{icml2011}
