@@ -69,9 +69,10 @@ prob(const Mat& S, const size_t x, const size_t a, const size_t b)
     double pa = fabs(1.0 + S(x, x) + S(b, b) - 2 * S(x, b));
     double pb = fabs(1.0 + S(x, x) + S(a, a) - 2 * S(x, a));
 
-    double p = pa / (pa + pb);
-    double llh = atanh(2 * p - 1) * 0.7;
-    return 0.5 + 0.5 * tanh(llh);
+    return pa / (pa + pb);
+//    double p = pa / (pa + pb);
+//    double llh = atanh(2 * p - 1) * 0.7;
+//    return 0.5 + 0.5 * tanh(llh);
 #endif
  
 }
@@ -133,7 +134,6 @@ guessObject(const Mat& S, const size_t numObj,
 	    const Triplets& triplets, const size_t maxQueries,
 	    vector<Distribution>& p)
 {
-    mexPrintf("   questions:");
     p.resize(maxQueries);
     p[0].makeUniform(numObj);
     Triplets tripsLeft = triplets;
@@ -155,7 +155,6 @@ guessObject(const Mat& S, const size_t numObj,
 //	mexPrintf("_%d_%d", a, b);
 	p[queries].normalize();
     }
-    mexPrintf(" \n");
 
 }
 
@@ -218,7 +217,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
     Mat igain(plhs[0]);
     for (Bank::const_iterator it = bank.begin(); it != bank.end(); ++it){
 	size_t x = it->first;
-	mexPrintf("trying to guess object %d from %d trips ", x, 
+	mexPrintf("trying to guess object %d from %d trips", x, 
 		  it->second.size());
 
 	if (it->second.size() < numQueries){
@@ -228,7 +227,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray* prhs[])
 	}
 
 	vector<Distribution> p;
-	mexPrintf("Learning %d\n", x);
 	guessObject(S, numObj, it->second, numQueries, p);
 
 	for (size_t i = 0; i < numQueries; ++i){

@@ -1,6 +1,8 @@
 function plot_model_comparison(dataSetName)
 
 load(['model_comparison_' dataSetName]);
+name1 = [name1 ' triples'];
+name2 = [name2 ' triples'];
 
 for i = 1:length(ll1)
     S1 = x1{i}*x1{i}';
@@ -13,57 +15,82 @@ for i = 1:length(ll1)
                                                  Ncontrol);
 end
 
-sample_sizes = sample_sizes(1:length(ll1));
+sample_sizes = sample_sizes(1:length(ll1)) / length(x1{1}) + 1;
+
+figure(4)
+ax(1) = 9.9;
+ax(2) = 36;
+ax(3) = 3.1;
+ax(4) = 5.4;
+subplot(1,2,1);
+title(dataSetName);
+plot(sample_sizes, igain1(:, 3), 'r', sample_sizes, igain2(:, 3), 'k--');
+legend(name1, name2, 'location', 'northeast');
+title('20 Random Questions');
+ylabel('log of rank in posterior');
+xlabel('triples per object (training)');
+%set(gca,'XDir','reverse')
+axis(ax);
+
+subplot(1,2,2);
+title(dataSetName);
+plot(sample_sizes, metrics1(:, 3), 'r', sample_sizes, metrics2(:, 3), 'k--');
+legend(name1, name2, 'location', 'northeast');
+title('20 Adaptive Questions');
+xlabel('triples per object (training)');
+%set(gca,'XDir','reverse')
+axis(ax);
+return
 
 figure(1)
 title(dataSetName);
-plot(ll1, sample_sizes, 'r', ll2, sample_sizes, 'b');
-legend(name1, name2, 'location', 'northwest');
-title('Log likelihood of fit to control');
-set(gca,'XDir','reverse')
+plot(sample_sizes, ll1, 'r+-', sample_sizes, ll2, 'b.-');
+legend(name1, name2, 'location', 'northeast');
+title('Log Likelihood of Fit to Random Triples');
+xlabel('Triples per Object');
+%set(gca,'XDir','reverse')
 
 figure(2)
 title(dataSetName);
-plot(igain1(:, 1), sample_sizes, 'r', igain2(:, 1), sample_sizes, 'b');
-legend(name1, name2, 'location', 'northwest');
-title('bits of information learned');
+plot(sample_sizes, igain1(:, 1), 'r', sample_sizes, igain2(:, 1), 'b');
+legend(name1, name2, 'location', 'northeast');
+title('Bits of Information Learned from Random Triples');
+xlabel('Triples per Object');
 
 figure(3)
 title(dataSetName);
-plot(igain1(:, 2), sample_sizes, 'r', igain2(:, 2), sample_sizes, 'b');
-legend(name1, name2, 'location', 'northwest');
-title('position in posterior nearest neighbors');
-set(gca,'XDir','reverse')
-
-figure(4)
-title(dataSetName);
-plot(igain1(:, 3), sample_sizes, 'r', igain2(:, 3), sample_sizes, 'b');
-legend(name1, name2, 'location', 'northwest');
-title('log of position in posterior nearest neighbors');
-set(gca,'XDir','reverse')
+plot(sample_sizes, igain1(:, 2), 'r', sample_sizes, igain2(:, 2), 'b');
+legend(name1, name2, 'location', 'northeast');
+title('Rank in Posterior, as Learned from Random Triples');
+xlabel('Triples per Object');
+%set(gca,'XDir','reverse')
 
 figure(5)
 title(dataSetName);
-plot(metrics1(:, 2), sample_sizes, 'r', metrics2(:, 2), sample_sizes, 'b');
-legend(name1, name2, 'location', 'northwest');
-title('position in posterior nearest neighbors, using bank');
-set(gca,'XDir','reverse')
+plot(sample_sizes, metrics1(:, 2), 'r', sample_sizes, metrics2(:, 2), 'b');
+legend(name1, name2, 'location', 'northeast');
+title('Rank in Posterior, as Learned from Adaptive Triples');
+xlabel('Triples per Object');
+%set(gca,'XDir','reverse')
 
-figure(6)
-title(dataSetName);
-plot(metrics1(:, 3), sample_sizes, 'r', metrics2(:, 3), sample_sizes, 'b');
-legend(name1, name2, 'location', 'northwest');
-title('log position in posterior nearest neighbors, using bank');
-set(gca,'XDir','reverse')
+% 1 866 899 5134 amex international travel
 
 figure(7)
 title(dataSetName);
-plot(metrics1(:, 1), sample_sizes, 'r', metrics2(:, 1), sample_sizes, 'b');
-legend(name1, name2, 'location', 'northwest');
-title('bit of information learned, using bank');
+plot(sample_sizes, metrics1(:, 1), 'r', sample_sizes, metrics2(:, 1), 'b');
+legend(name1, name2, 'location', 'northeast');
+title('Bits of Information Learned from Adaptive Triples');
+xlabel('Triples per Object');
 
 figure(8)
 title(dataSetName);
-plot(corrects1, sample_sizes, 'r', corrects2, sample_sizes, 'b');
-legend(name1, name2, 'location', 'northwest');
-title('Random triplets prediction accuracy');
+plot(sample_sizes, 1-corrects1, 'r', sample_sizes, 1-corrects2, 'b');
+legend(name1, name2, 'location', 'northeast');
+title('Prediction Error Rate of Random Triples');
+xlabel('Triples per Object');
+
+
+
+
+
+length(sample_sizes)

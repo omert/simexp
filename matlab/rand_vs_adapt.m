@@ -36,7 +36,7 @@ IB2 = IB;
 N2 = N;
 
 maxn = min(length(IX1), length(IX2));
-num_points = 10;
+num_points = 20;
 sample_sizes = floor(linspace(9.5 * length(ids), maxn, num_points))
 
 x1 = {};
@@ -57,17 +57,19 @@ for i = 1:length(sample_sizes)
     %            N2(1:m), 30);
     S1 = x1{i}*x1{i}';
     S2 = x2{i}*x2{i}';
-    [ll1(i) corrects1(i) ] = mat_model_likelihood(S1, IXcontrol, IAcontrol, IBcontrol, ...
-                                  Ncontrol);
-    [ll2(i) corrects2(i) ] = mat_model_likelihood(S2, IXcontrol, IAcontrol, IBcontrol, ...
-                                  Ncontrol);
+    [ll1(i) corrects1(i) ] = mat_model_likelihood(S1, IXcontrol, ...
+                                                  IAcontrol, IBcontrol, ...
+                                                  Ncontrol);
+    [ll2(i) corrects2(i) ] = mat_model_likelihood(S2, IXcontrol, ...
+                                                  IAcontrol, IBcontrol, ...
+                                                  Ncontrol);
     igain1(i, :) = information_gain(S1, IXcontrol, IAcontrol, ...
                                     IBcontrol, Ncontrol)';
     igain2(i, :) = information_gain(S2, IXcontrol, IAcontrol, ...
                                     IBcontrol, Ncontrol)';
-    temp1 = predict_using_bank(projectPSD_rank(S1, 3), IXbank, IAbank, IBbank, Nbank, num_queries);
+    temp1 = predict_using_bank(S1, IXbank, IAbank, IBbank, Nbank, num_queries);
     metrics1(i, :) = temp1(:, end)';
-    temp2 = predict_using_bank(projectPSD_rank(S2, 3), IXbank, IAbank, IBbank, Nbank, num_queries);
+    temp2 = predict_using_bank(S2, IXbank, IAbank, IBbank, Nbank, num_queries);
     metrics2(i, :) = temp2(:, end)';
     save(['model_comparison_' dataSetName]);
 end
