@@ -1,0 +1,37 @@
+Summary of Your Solution:  In 3 sentences or less, summarize your invention. 
+
+
+  Given a database of objects (e.g., products of a shop), we gather data using an intelligent and adaptive sequence of questions of the form: “is object a more similar to b or c?”, which we pose to people using crowdsourcing techniques. Using this data, we construct a model of the human notion of similarity for these objects. We then use this model to build a visual interface that groups together similar objects, allowing users to browse through the database or search for a particular object, for example in order to shop.
+
+
+
+
+
+
+Key Aspects to Protect:  Summarize and prioritize what aspects of the invention should, in your view, be particularly important to protect.  For example, what aspects of your invention enable advantages or improvements over previous solutions or what aspects of your invention will Microsoft’s competitor’s want to practice?  Please list these aspects to be protected in order of priority.
+
+
+1. Agnostic crowdsourcing technique for learning the notion of similarity. 
+  Our system learns the human notion of similarity for any set of objects, without a need for specialized knowledge for different datasets. The sole input it requires is a way to represent each object, usually by an image, but perhaps even by a textual description. While for some datasets some notion of similarity can be deduced using currently available technology, no other technique achieves this result for generic datasets.
+
+2. Visual browsing and searching interface.
+  We use our learned human notion of similarity to enable people (in particular, shoppers) to visually search and browse through a database of objects. Our model can be used to predict which set of objects, when displayed to a user, allows the user to most quickly indicate what kind of objects (or which specific object) he or she is most interested in. We use these predictions to repeatedly present users with intelligently chosen sets of objects, asking them to click on the one that is most similar to what they desire. This creates a natural browsing interface that users find intuitive and understandable. No previous solution achieves this, even without our crowdsourcing technique.
+
+
+
+
+
+
+
+
+
+Detailed Description of Your Solution:  Describe your solution to the above problem in more detail, pointing out any differences over prior solutions and advantages that flow from those differences.  Please describe your invention at the highest level in which your invention can be distinguished from previous solutions.  A specification and/or whitepaper may be attached to provide additional detail or background information, but should NOT be used to complete this question.
+
+
+  Our system consists of three modules: the crowdsourcing module, the learning model, and the visual interface module. The crowdsourcing module takes as input a set of objects, in the form of images. Its output is the crowd's answers to questions of the form: “is object a more similar to b or c?”. Given those answers, the learning module constructs a model of the human notion of similarity between these objects. Finally, given the images and model, the visual interface module constructs a browsing / searching interface for users.
+  The crowdsourcing module is innovative in its ability to quickly learn the human notion of similarity. Posing "triplet" questions of the form above, as opposed to "pair" questions of the form "how similar is object a to object b?" allows it to learn more information at a lower cost of time and money. It chooses questions to ask from which it will learn the most, avoiding questions whose answers it can deduce from previous ones.
+  The learning module constructs a model of the human notion of similarity for the set of objects. It can be used to predict how people will answer questions of the "triplet" form, as well as different questions. For example, it can predict which of a collection (of any size) of objects a user will find most similar to one that he or she is looking for. 
+  The visual interface shows users small collections of objects (e.g., nine objects) and asks them to click on the one most similar to the one (or type) they are looking for. Based on this click it shows another set, etc. It also shows previews of which sets will be displayed for each possible click. Using the learned model, it can choose sets for which it will learn the most from the user's click. In essence, this module categorizes and groups together the objects based on the human notion of similarity, rather than some algorithmic notion of similarity which may not match that of users, giving users a natural and intuitive experience.
+
+
+  
