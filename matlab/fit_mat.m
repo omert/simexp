@@ -28,8 +28,8 @@ last_L = mat_model_likelihood(S, IX, IA, IB, N);
 mu = 1;
 for i = 1:iter
     %dS = update_matrix(S, IX, IA, IB, N);
-    dS = logistic_deriv(S, IX, IA, IB, N);
-    %dS = distance_deriv(S, IX, IA, IB, N);
+    %dS = logistic_deriv(S, IX, IA, IB, N);
+    dS = distance_deriv(S, IX, IA, IB, N);
     %deriv_norm = norm(S - projectPSD_norm(S + dS, freedom_bound));
     %    fprintf(1, 'convergence: %f\n', deriv_norm);
     
